@@ -1,25 +1,19 @@
 package com.example.grocery_shop_backend.Dto;
 
-import lombok.*;
-
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-public class BlogErrorResponse
+public class errorResponse
 {
     private int status;
     private String message;
     private long timeStamp;
 
-    public BlogErrorResponse(int status, String message)
+    public errorResponse(int status, String message)
     {
         this.status = status;
         this.message = message;
         this.timeStamp = System.currentTimeMillis();
     }
 
-    public BlogErrorResponse(){ }
+    public errorResponse(){ }
     public int getStatus() {
         return status;
     }

@@ -1,7 +1,7 @@
 package com.example.grocery_shop_backend.Service;
 
 import com.example.grocery_shop_backend.Entities.Blog;
-import com.example.grocery_shop_backend.Exception.BlogNotFoundException;
+import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +31,7 @@ public class BlogService
         }
         else
         {
-            throw new BlogNotFoundException("Blog with id " + blogId + " not found");
+            throw new objectNotFoundException("Blog with id " + blogId + " not found");
         }
 
         return blog;
@@ -41,7 +41,7 @@ public class BlogService
     {
         Blog blog = blogRepository.findBlogBySlugTitle(slug);
         if (blog == null) {
-            throw new BlogNotFoundException("Blog with slug " + slug + " not found");
+            throw new objectNotFoundException("Blog with title " + slug + " not found");
         }
         return blog;
     }

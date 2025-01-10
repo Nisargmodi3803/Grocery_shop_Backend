@@ -1,9 +1,6 @@
 package com.example.grocery_shop_backend.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tbl_brand")
@@ -11,6 +8,7 @@ public class Brand
 {
     @Id
     @Column(name = "brand_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
     @Column(name = "brand_name")

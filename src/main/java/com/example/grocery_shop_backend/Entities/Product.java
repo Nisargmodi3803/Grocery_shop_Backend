@@ -8,27 +8,25 @@ public class Product
 {
     @Id
     @Column(name = "product_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
     //Product Category ID
     //Many to One Mapping with Category Table
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
-    @Column(name = "product_cat_id")
+    @JoinColumn(name = "product_cat_id")
     Category cat;
 
     //Product Sub-Category ID
     //Many to One Mapping with Sub-Category Table
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "subcategory_id")
-    @Column(name = "product_subcat_id")
+    @JoinColumn(name = "product_subcat_id")
     SubCategory subcat;
 
     //Product Brand ID
     //Many to One Mapping with Brand Table
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "brand_id")
-    @Column(name = "product_brand_id")
+    @JoinColumn(name = "product_brand_id")
     Brand brand;
 
     @Column(name = "product_reference_code")
@@ -36,9 +34,6 @@ public class Product
 
     @Column(name = "product_name")
     String name;
-
-    @Column(name = "product_varient_name")
-    String varient_name;
 
     @Column(name = "product_description")
     String description;
@@ -90,14 +85,13 @@ public class Product
 
     public Product(){}
 
-    public Product(int id, Category cat, SubCategory subcat, Brand brand, String reference_code, String name, String varient_name, String description, String long_description, String image_url, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, String seo_author, int no_of_rating, String average_rating, int is_deleted, String c_date) {
+    public Product(int id, Category cat, SubCategory subcat, Brand brand, String reference_code, String name, String description, String long_description, String image_url, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, String seo_author, int no_of_rating, String average_rating, int is_deleted, String c_date) {
         this.id = id;
         this.cat = cat;
         this.subcat = subcat;
         this.brand = brand;
         this.reference_code = reference_code;
         this.name = name;
-        this.varient_name = varient_name;
         this.description = description;
         this.long_description = long_description;
         this.image_url = image_url;
@@ -162,14 +156,6 @@ public class Product
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getVarient_name() {
-        return varient_name;
-    }
-
-    public void setVarient_name(String varient_name) {
-        this.varient_name = varient_name;
     }
 
     public String getDescription() {

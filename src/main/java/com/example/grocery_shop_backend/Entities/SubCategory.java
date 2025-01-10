@@ -8,13 +8,13 @@ public class SubCategory
 {
    @Id
    @Column(name = "subcategory_id")
+   @GeneratedValue(strategy = GenerationType.IDENTITY)
    int id;
 
     //Product Category ID
     //Many to One Mapping with Category Table
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
-   @Column(name = "subcategory_cat_id")
+    @JoinColumn(name = "subcategory_cat_id")
    Category category;
 
    @Column(name = "subcategory_name")
