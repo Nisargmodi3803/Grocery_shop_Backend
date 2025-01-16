@@ -18,8 +18,12 @@ public class Cart
     Customer customer;
 
     @ManyToMany
-    @JoinColumn(name = "cart_product_id")
-    Set<Product> products;
+    @JoinTable(
+            name = "tbl_product", // Name of the join table
+            joinColumns = @JoinColumn(name = "cart_id"), // Foreign key column for Cart
+            inverseJoinColumns = @JoinColumn(name = "product_id") // Foreign key column for Product
+    )
+    private Set<Product> products;
 
     @Column(name = "product_quantity")
     private int productQuantity;

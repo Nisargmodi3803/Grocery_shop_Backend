@@ -41,12 +41,6 @@ public class Customer
     @Column(name = "customer_dob")
     private String customerDob;
 
-    @Column(name = "customer_gst_num")
-    private String customerGstNum;
-
-    @Column(name = "customer_gst")
-    private String customerGst;
-
     @Column(name = "customer_otp")
     private String customerOtp;
 
@@ -62,15 +56,15 @@ public class Customer
     @Column(name = "customer_referral_code")
     private String customerReferralCode;
 
-    @Column(name = "customer_referral_by")
+    @Column(name = "customer_referred_by")
     private String customerReferralBy;
 
-    @Column(name = "customer_point")
+    @Column(name = "customer_points")
     private int customerPoint;
 
     public Customer(){}
 
-    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, String customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerGstNum, String customerGst, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, String customerReferralBy, int customerPoint) {
+    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, String customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, String customerReferralBy, int customerPoint) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -82,8 +76,6 @@ public class Customer
         this.customerPincode = customerPincode;
         this.customerGender = customerGender;
         this.customerDob = customerDob;
-        this.customerGstNum = customerGstNum;
-        this.customerGst = customerGst;
         this.customerOtp = customerOtp;
         this.customerAndroidToken = customerAndroidToken;
         this.customerIosToken = customerIosToken;
@@ -179,22 +171,6 @@ public class Customer
 
     public void setCustomerDob(String customerDob) {
         this.customerDob = customerDob;
-    }
-
-    public String getCustomerGstNum() {
-        return customerGstNum;
-    }
-
-    public void setCustomerGstNum(String customerGstNum) {
-        this.customerGstNum = customerGstNum;
-    }
-
-    public String getCustomerGst() {
-        return customerGst;
-    }
-
-    public void setCustomerGst(String customerGst) {
-        this.customerGst = customerGst;
     }
 
     public String getCustomerOtp() {

@@ -3,9 +3,11 @@ package com.example.grocery_shop_backend.Repository;
 import com.example.grocery_shop_backend.Entities.SubCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface SubCategoryRepository extends JpaRepository<SubCategory,Integer>
 {
     @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.id = :id")
