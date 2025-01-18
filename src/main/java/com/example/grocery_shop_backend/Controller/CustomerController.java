@@ -96,4 +96,11 @@ public class CustomerController
     {
         return customerService.getBasicDetails(mobile);
     }
+
+    // GET API {Customer By Mobile}
+    @GetMapping("/customer/mobile/{mobileNumber}")
+    public Customer getCustomerByMobile(@PathVariable String mobileNumber)
+    {
+        return customerService.getCustomerByMobile(mobileNumber);
+    }
 }

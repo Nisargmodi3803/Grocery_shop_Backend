@@ -24,14 +24,14 @@ public class WishlistController
     }
 
     //POST API {Add to Wishlist}
-    @PostMapping("/addWishlist")
+    @PostMapping("/add-wishlist")
     public ResponseEntity<String> addToWishlist(@RequestParam int customerId, @RequestParam int productId) {
         wishlistService.addToWishlist(customerId, productId);
         return ResponseEntity.ok("Product added to wishlist successfully!");
     }
 
-    //DELETE API {Remove from Wishlist}
-    @DeleteMapping("/removeWishlist")
+    //PATCH API {Remove from Wishlist}
+    @PatchMapping("/remove-wishlist")
     public ResponseEntity<String> removeFromWishlist(@RequestParam int customerId, @RequestParam int productId) {
         boolean removed = wishlistService.removeFromWishlist(customerId, productId);
         if (removed) {

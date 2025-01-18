@@ -23,13 +23,13 @@ public class CategoryController
         return categoryService.getAllCategories();
     }
 
-    @GetMapping("/category/{slugTitle}")
+    @GetMapping("/category-slug/{slugTitle}")
     public Category getCategoryBySlugTitle(@PathVariable String slugTitle)
     {
         return categoryService.getCategoryBySlugTitle(slugTitle);
     }
 
-    @GetMapping("/cate/{id}")
+    @GetMapping("/category-id/{id}")
     public Category getCategoryById(@PathVariable int id)
     {
         return categoryService.getCategoryById(id);

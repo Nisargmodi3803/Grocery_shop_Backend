@@ -20,13 +20,13 @@ public class BlogController
         return blogService.getAllBlogs();
     }
 
-    @GetMapping("/blogs/{blogId}")
+    @GetMapping("/blog-id/{blogId}")
     public Blog getBlogById(@PathVariable int blogId)
     {
         return blogService.getBlogById(blogId);
     }
 
-    @GetMapping("/blog/{slug}")
+    @GetMapping("/blog-slug/{slug}")
     public Blog getBlogBySlug(@PathVariable String slug)
     {
         return blogService.getBlogBySlug(slug);

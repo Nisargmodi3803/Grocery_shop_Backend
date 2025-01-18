@@ -1,16 +1,18 @@
 package com.example.grocery_shop_backend.Dto;
 
+import java.time.LocalTime;
+
 public class errorResponse
 {
     private int status;
     private String message;
-    private long timeStamp;
+    private String timeStamp;
 
-    public errorResponse(int status, String message)
+    public errorResponse(int status, String message, String timeStamp)
     {
         this.status = status;
         this.message = message;
-        this.timeStamp = System.currentTimeMillis();
+        this.timeStamp = timeStamp;
     }
 
     public errorResponse(){ }
@@ -30,11 +32,11 @@ public class errorResponse
         this.message = message;
     }
 
-    public long getTimeStamp() {
+    public String getTimeStamp() {
         return timeStamp;
     }
 
-    public void setTimeStamp(long timeStamp) {
+    public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
     }
 }

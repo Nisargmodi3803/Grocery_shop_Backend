@@ -3,7 +3,7 @@ package com.example.grocery_shop_backend.Entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "contact")
+@Table(name = "tbl_contact")
 public class Contact
 {
     @Id
@@ -18,6 +18,9 @@ public class Contact
     @Column(name = "name")
     String name;
 
+    @Column(name = "mobile")
+    String mobile;
+
     @Column(name = "email")
     String email;
 
@@ -29,13 +32,14 @@ public class Contact
 
     public Contact(){}
 
-    public Contact(int id, Customer customer, String name, String email, String message, String c_date) {
+    public Contact(int id, Customer customer, String name, String email, String message, String c_date,String mobile) {
         this.id = id;
         this.customer = customer;
         this.name = name;
         this.email = email;
         this.message = message;
         this.c_date = c_date;
+        this.mobile = mobile;
     }
 
     public int getId() {
@@ -84,5 +88,13 @@ public class Contact
 
     public void setC_date(String c_date) {
         this.c_date = c_date;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

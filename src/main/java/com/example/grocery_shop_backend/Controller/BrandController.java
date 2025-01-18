@@ -21,13 +21,13 @@ public class BrandController
         return brandService.findAllBrands();
     }
 
-    @GetMapping("/brand/{slugTitle}")
+    @GetMapping("/brand-slug/{slugTitle}")
     public Brand getBrandBySlugTitle(@PathVariable String slugTitle)
     {
         return brandService.findBrandBySlugTitle(slugTitle);
     }
 
-    @GetMapping("/brands/{id}")
+    @GetMapping("/brand-id/{id}")
     public Brand getBrandById(@PathVariable int id)
     {
         return brandService.findBrandById(id);

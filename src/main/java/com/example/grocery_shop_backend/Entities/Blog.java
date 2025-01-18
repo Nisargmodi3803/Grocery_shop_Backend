@@ -54,7 +54,7 @@ public class Blog
 //    Date c_date;
 
     @Column(name = "is_deleted")
-    int is_deleted;
+    int is_deleted; // 1 => Not Delete & 2 => Delete
 
     public Blog(int id, String title, String image_url, String description, String long_description, String date, String keywords, String slug_title, String seo_author, String seo_title, String c_date, int is_deleted) {
         this.id = id;

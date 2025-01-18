@@ -35,7 +35,7 @@ public class Customer
     @Column(name = "customer_pincode")
     private String customerPincode;
 
-    @Column(name = "customer_gender")
+    @Column(name = "customer_gender",nullable = true)
     private int customerGender;
 
     @Column(name = "customer_dob")

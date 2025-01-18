@@ -7,7 +7,9 @@ import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CustomerRepository;
 import com.example.grocery_shop_backend.Repository.ProductRepository;
 import com.example.grocery_shop_backend.Repository.WishlistRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -54,6 +56,7 @@ public class WishlistService
         wishlist.setCustomer(customer);
         wishlist.setProduct(product);
         wishlist.setC_date(formattedTimestamp);
+        wishlist.setIs_deleted(1);
 
         wishlistRepository.save(wishlist);
     }
@@ -66,8 +69,11 @@ public class WishlistService
             return false;
         else
         {
-            wishlistRepository.delete(wishlist);
+            wishlist.setIs_deleted(2);
+            wishlistRepository.save(wishlist);
             return true;
         }
     }
+
+
 }

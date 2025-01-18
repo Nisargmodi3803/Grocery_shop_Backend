@@ -13,17 +13,13 @@ public class Cart
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cart_customer_id")
-    Customer customer;
+    private Customer customer;
 
-    @ManyToMany
-    @JoinTable(
-            name = "tbl_product", // Name of the join table
-            joinColumns = @JoinColumn(name = "cart_id"), // Foreign key column for Cart
-            inverseJoinColumns = @JoinColumn(name = "product_id") // Foreign key column for Product
-    )
-    private Set<Product> products;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cart_product_id") // FK to Product
+    private Product product;
 
     @Column(name = "product_quantity")
     private int productQuantity;
@@ -31,14 +27,18 @@ public class Cart
     @Column(name = "c_date")
     private String c_date;
 
+    @Column(name = "is_deleted")
+    int is_deleted; // 1 => Not Delete & 2 => Delete
+
     public Cart(){}
 
-    public Cart(int id, Customer customer, Set<Product> products, int productQuantity, String c_date) {
+    public Cart(int id, Customer customer, Product product, int productQuantity, String c_date,int is_deleted) {
         this.id = id;
         this.customer = customer;
-        this.products = products;
+        this.product = product;
         this.productQuantity = productQuantity;
         this.c_date = c_date;
+        this.is_deleted = is_deleted;
     }
 
     public int getId() {
@@ -57,12 +57,12 @@ public class Cart
         this.customer = customer;
     }
 
-    public Set<Product> getProducts() {
-        return products;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProducts(Set<Product> products) {
-        this.products = products;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public int getProductQuantity() {
@@ -79,5 +79,13 @@ public class Cart
 
     public void setC_date(String c_date) {
         this.c_date = c_date;
+    }
+
+    public int getIs_deleted() {
+        return is_deleted;
+    }
+
+    public void setIs_deleted(int is_deleted) {
+        this.is_deleted = is_deleted;
     }
 }

@@ -7,16 +7,23 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+
 @ControllerAdvice
 public class MobileNumberExceptionHandler
 {
     @ExceptionHandler(MobileNumberAlreadyExistsException.class)
     public ResponseEntity<errorResponse> handleException(MobileNumberAlreadyExistsException ex)
     {
+        LocalTime time = LocalTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String timeStamp = time.format(formatter);
+
         errorResponse errorResponse = new errorResponse();
         errorResponse.setStatus(HttpStatus.CONFLICT.value());
         errorResponse.setMessage(ex.getMessage());
-        errorResponse.setTimeStamp(System.currentTimeMillis());
+        errorResponse.setTimeStamp(timeStamp);
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 }

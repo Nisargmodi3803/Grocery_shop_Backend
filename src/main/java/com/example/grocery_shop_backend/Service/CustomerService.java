@@ -154,4 +154,13 @@ public class CustomerService
         customerBasicDetailsDTO.setCustomerMobile(customer.getCustomerMobile());
         return customerBasicDetailsDTO;
     }
+
+    // Get Customer by MobileNumber Service
+    public Customer getCustomerByMobile(String customerMobile)
+    {
+        Customer customer = customerRepository.findCustomerByMobile(customerMobile);
+        if (customer == null)
+            throw new objectNotFoundException("Customer with mobile number "+customerMobile+" not found");
+        return customer;
+    }
 }

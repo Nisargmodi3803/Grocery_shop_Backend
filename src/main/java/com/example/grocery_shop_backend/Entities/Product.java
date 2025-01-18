@@ -13,24 +13,21 @@ public class Product
 
     //Product Category ID
     //Many to One Mapping with Category Table
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_cat_id")
     Category cat;
 
     //Product Sub-Category ID
     //Many to One Mapping with Sub-Category Table
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_subcat_id")
     SubCategory subcat;
 
     //Product Brand ID
     //Many to One Mapping with Brand Table
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_brand_id")
     Brand brand;
-
-    @Column(name = "product_reference_code")
-    String reference_code;
 
     @Column(name = "product_name")
     String name;
@@ -85,12 +82,11 @@ public class Product
 
     public Product(){}
 
-    public Product(int id, Category cat, SubCategory subcat, Brand brand, String reference_code, String name, String description, String long_description, String image_url, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, String seo_author, int no_of_rating, String average_rating, int is_deleted, String c_date) {
+    public Product(int id, Category cat, SubCategory subcat, Brand brand, String name, String description, String long_description, String image_url, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, String seo_author, int no_of_rating, String average_rating, int is_deleted, String c_date) {
         this.id = id;
         this.cat = cat;
         this.subcat = subcat;
         this.brand = brand;
-        this.reference_code = reference_code;
         this.name = name;
         this.description = description;
         this.long_description = long_description;
@@ -140,14 +136,6 @@ public class Product
 
     public void setBrand(Brand brand) {
         this.brand = brand;
-    }
-
-    public String getReference_code() {
-        return reference_code;
-    }
-
-    public void setReference_code(String reference_code) {
-        this.reference_code = reference_code;
     }
 
     public String getName() {

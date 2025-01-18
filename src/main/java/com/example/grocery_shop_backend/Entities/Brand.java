@@ -24,7 +24,7 @@ public class Brand
     String seo_author;
 
     @Column(name = "is_deleted")
-    int is_deleted;
+    int is_deleted; // 1 => Not Delete & 2 => Delete
 
     @Column(name = "c_date")
     String c_date;
