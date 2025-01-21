@@ -29,7 +29,7 @@ public class DeliveryBoy
     @Column(name = "delivery_route")
     private String deliveryRoute;
 
-    @Column(name = "is_deleted")
+    @Column(name = "is_delete")
     private int isDeleted; // 1 => Not deleted & 2 => Deleted
 
     @Column(name = "c_date")

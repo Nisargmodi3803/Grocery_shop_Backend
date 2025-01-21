@@ -2,8 +2,6 @@ package com.example.grocery_shop_backend.Entities;
 
 import jakarta.persistence.*;
 
-import javax.naming.Name;
-
 @Entity
 @Table(name = "tbl_invoice")
 public class Invoice
@@ -11,7 +9,7 @@ public class Invoice
     @Id
     @Column(name = "invoice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int invoiceId;
+    private Integer invoiceId;
 
     @Column(name = "invoice_num",unique = true)
     private String invoiceNum;
@@ -41,23 +39,20 @@ public class Invoice
     @Column(name = "invoice_email_id")
     private String invoiceEmailId;
 
-    @Column(name = "invoice_city")
-    private String invoiceCity;
-
     @Column(name = "invoice_address")
     private String invoiceAddress;
 
     @Column(name = "invoice_total_amount")
-    private double invoiceTotalAmount;
+    private Double invoiceTotalAmount;
 
     @Column(name = "invoice_payable")
-    private double invoicePayable;
+    private Double invoicePayable;
 
     @Column(name = "invoice_remaining_amount")
-    private double invoiceRemainingAmount;
+    private Double invoiceRemainingAmount;
 
     @Column(name = "invoice_received_amount")
-    private double invoiceReceivedAmount;
+    private Double invoiceReceivedAmount;
 
     @Column(name = "invoice_pincode")
     private String invoicePincode;
@@ -66,23 +61,20 @@ public class Invoice
     private String invoiceDeliveryCharges;
 
     @Column(name = "invoice_discount")
-    private double invoiceDiscount;
+    private Double invoiceDiscount;
 
     @Column(name = "invoice_coupon_code_discount")
-    private double invoiceCouponCodeDiscount;
+    private Double invoiceCouponCodeDiscount;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "invoice_coupon_id")
     private CouponCode couponCode;
 
     @Column(name = "invoice_payment_mode")
-    private int invoicePaymentMode; // 1 => COD & 2 => Online
-
-    @Column(name = "invoice_generated_by")
-    private String invoiceGeneratedBy;
+    private Integer invoicePaymentMode; // 1 => COD & 2 => Online
 
     @Column(name = "invoice_updated_by")
-    private int invoiceUpdatedBy;
+    private Integer invoiceUpdatedBy;
 
     @Column(name = "invoice_updated_date")
     private String invoiceUpdatedDate;
@@ -106,13 +98,13 @@ public class Invoice
     private String invoiceIsHold; // 1 => YES(to hold) & 2 => NO(to hold) [Generally 2]
 
     @Column(name = "invoice_status")
-    private int invoiceStatus;//1 => Pending, 2 => Confirm, 3 => Dispatched, 4 => Delivered, 5 => Rejected, 6 => Canceled
+    private Integer invoiceStatus; // 1 => Pending, 2 => Confirm, 3 => Dispatched, 4 => Delivered, 5 => Rejected, 6 => Canceled
 
-    @Column(name = "invoice_razorpayOrderId")
+    @Column(name = "invoice_razorpay_order_id")
     private String invoiceRazorpayOrderId;
 
     @Column(name = "invoice_razorpay_status")
-    private int invoiceRazorpayStatus; // 1 => Pending, 2 => Success, 3 => Failure.
+    private Integer invoiceRazorpayStatus; // 1 => Pending, 2 => Success, 3 => Failure.
 
     @Column(name = "invoice_razorpay_payment_id")
     private String invoiceRazorpayPaymentId;
@@ -121,14 +113,14 @@ public class Invoice
     private String invoiceRazorpaySignature;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted; // 1 => Not deleted & 2 => Deleted
+    private Integer isDeleted; // 1 => Not deleted & 2 => Deleted
 
     @Column(name = "c_date")
     private String cDate;
 
     public Invoice(){}
 
-    public Invoice(int invoiceId, String invoiceNum, String invoicePrefix, String invoiceDate, String invoiceTime, String invoiceFinancialYear, Customer customer, String invoiceMobile, String invoiceName, String invoiceEmailId, String invoiceCity, String invoiceAddress, double invoiceTotalAmount, double invoicePayable, double invoiceRemainingAmount, double invoiceReceivedAmount, String invoicePincode, String invoiceDeliveryCharges, double invoiceDiscount, double invoiceCouponCodeDiscount, CouponCode couponCode, int invoicePaymentMode, String invoiceGeneratedBy, int invoiceUpdatedBy, String invoiceUpdatedDate, String invoiceDeliveryDate, String invoiceSpecialInstruction, DeliveryBoy deliveryBoy, DeliveryTimeSlot deliveryTimeSlot, String invoiceIsHold, int invoiceStatus, String invoiceRazorpayOrderId, int invoiceRazorpayStatus, String invoiceRazorpayPaymentId, String invoiceRazorpaySignature, boolean isDeleted, String cDate) {
+    public Invoice(Integer invoiceId, String invoiceNum, String invoicePrefix, String invoiceDate, String invoiceTime, String invoiceFinancialYear, Customer customer, String invoiceMobile, String invoiceName, String invoiceEmailId, String invoiceAddress, Double invoiceTotalAmount, Double invoicePayable, Double invoiceRemainingAmount, Double invoiceReceivedAmount, String invoicePincode, String invoiceDeliveryCharges, Double invoiceDiscount, Double invoiceCouponCodeDiscount, CouponCode couponCode, Integer invoicePaymentMode, Integer invoiceUpdatedBy, String invoiceUpdatedDate, String invoiceDeliveryDate, String invoiceSpecialInstruction, DeliveryBoy deliveryBoy, DeliveryTimeSlot deliveryTimeSlot, String invoiceIsHold, Integer invoiceStatus, String invoiceRazorpayOrderId, Integer invoiceRazorpayStatus, String invoiceRazorpayPaymentId, String invoiceRazorpaySignature, Integer isDeleted, String cDate) {
         this.invoiceId = invoiceId;
         this.invoiceNum = invoiceNum;
         this.invoicePrefix = invoicePrefix;
@@ -139,7 +131,6 @@ public class Invoice
         this.invoiceMobile = invoiceMobile;
         this.invoiceName = invoiceName;
         this.invoiceEmailId = invoiceEmailId;
-        this.invoiceCity = invoiceCity;
         this.invoiceAddress = invoiceAddress;
         this.invoiceTotalAmount = invoiceTotalAmount;
         this.invoicePayable = invoicePayable;
@@ -151,7 +142,6 @@ public class Invoice
         this.invoiceCouponCodeDiscount = invoiceCouponCodeDiscount;
         this.couponCode = couponCode;
         this.invoicePaymentMode = invoicePaymentMode;
-        this.invoiceGeneratedBy = invoiceGeneratedBy;
         this.invoiceUpdatedBy = invoiceUpdatedBy;
         this.invoiceUpdatedDate = invoiceUpdatedDate;
         this.invoiceDeliveryDate = invoiceDeliveryDate;
@@ -168,11 +158,11 @@ public class Invoice
         this.cDate = cDate;
     }
 
-    public int getInvoiceId() {
-        return invoiceId;
+    public Integer getInvoiceId() {
+        return invoiceId != null ? invoiceId : 0;
     }
 
-    public void setInvoiceId(int invoiceId) {
+    public void setInvoiceId(Integer invoiceId) {
         this.invoiceId = invoiceId;
     }
 
@@ -248,14 +238,6 @@ public class Invoice
         this.invoiceEmailId = invoiceEmailId;
     }
 
-    public String getInvoiceCity() {
-        return invoiceCity;
-    }
-
-    public void setInvoiceCity(String invoiceCity) {
-        this.invoiceCity = invoiceCity;
-    }
-
     public String getInvoiceAddress() {
         return invoiceAddress;
     }
@@ -264,35 +246,35 @@ public class Invoice
         this.invoiceAddress = invoiceAddress;
     }
 
-    public double getInvoiceTotalAmount() {
-        return invoiceTotalAmount;
+    public Double getInvoiceTotalAmount() {
+        return invoiceTotalAmount != null ? invoiceTotalAmount : 0.0;
     }
 
-    public void setInvoiceTotalAmount(double invoiceTotalAmount) {
+    public void setInvoiceTotalAmount(Double invoiceTotalAmount) {
         this.invoiceTotalAmount = invoiceTotalAmount;
     }
 
-    public double getInvoicePayable() {
-        return invoicePayable;
+    public Double getInvoicePayable() {
+        return invoicePayable != null ? invoicePayable : 0.0;
     }
 
-    public void setInvoicePayable(double invoicePayable) {
+    public void setInvoicePayable(Double invoicePayable) {
         this.invoicePayable = invoicePayable;
     }
 
-    public double getInvoiceRemainingAmount() {
-        return invoiceRemainingAmount;
+    public Double getInvoiceRemainingAmount() {
+        return invoiceRemainingAmount != null ? invoiceRemainingAmount : 0.0;
     }
 
-    public void setInvoiceRemainingAmount(double invoiceRemainingAmount) {
+    public void setInvoiceRemainingAmount(Double invoiceRemainingAmount) {
         this.invoiceRemainingAmount = invoiceRemainingAmount;
     }
 
-    public double getInvoiceReceivedAmount() {
-        return invoiceReceivedAmount;
+    public Double getInvoiceReceivedAmount() {
+        return invoiceReceivedAmount != null ? invoiceReceivedAmount : 0.0;
     }
 
-    public void setInvoiceReceivedAmount(double invoiceReceivedAmount) {
+    public void setInvoiceReceivedAmount(Double invoiceReceivedAmount) {
         this.invoiceReceivedAmount = invoiceReceivedAmount;
     }
 
@@ -312,19 +294,19 @@ public class Invoice
         this.invoiceDeliveryCharges = invoiceDeliveryCharges;
     }
 
-    public double getInvoiceDiscount() {
-        return invoiceDiscount;
+    public Double getInvoiceDiscount() {
+        return invoiceDiscount != null ? invoiceDiscount : 0.0;
     }
 
-    public void setInvoiceDiscount(double invoiceDiscount) {
+    public void setInvoiceDiscount(Double invoiceDiscount) {
         this.invoiceDiscount = invoiceDiscount;
     }
 
-    public double getInvoiceCouponCodeDiscount() {
-        return invoiceCouponCodeDiscount;
+    public Double getInvoiceCouponCodeDiscount() {
+        return invoiceCouponCodeDiscount != null ? invoiceCouponCodeDiscount : 0.0;
     }
 
-    public void setInvoiceCouponCodeDiscount(double invoiceCouponCodeDiscount) {
+    public void setInvoiceCouponCodeDiscount(Double invoiceCouponCodeDiscount) {
         this.invoiceCouponCodeDiscount = invoiceCouponCodeDiscount;
     }
 
@@ -336,27 +318,19 @@ public class Invoice
         this.couponCode = couponCode;
     }
 
-    public int getInvoicePaymentMode() {
-        return invoicePaymentMode;
+    public Integer getInvoicePaymentMode() {
+        return invoicePaymentMode != null ? invoicePaymentMode : 0;
     }
 
-    public void setInvoicePaymentMode(int invoicePaymentMode) {
+    public void setInvoicePaymentMode(Integer invoicePaymentMode) {
         this.invoicePaymentMode = invoicePaymentMode;
     }
 
-    public String getInvoiceGeneratedBy() {
-        return invoiceGeneratedBy;
+    public Integer getInvoiceUpdatedBy() {
+        return invoiceUpdatedBy != null ? invoiceUpdatedBy : 0;
     }
 
-    public void setInvoiceGeneratedBy(String invoiceGeneratedBy) {
-        this.invoiceGeneratedBy = invoiceGeneratedBy;
-    }
-
-    public int getInvoiceUpdatedBy() {
-        return invoiceUpdatedBy;
-    }
-
-    public void setInvoiceUpdatedBy(int invoiceUpdatedBy) {
+    public void setInvoiceUpdatedBy(Integer invoiceUpdatedBy) {
         this.invoiceUpdatedBy = invoiceUpdatedBy;
     }
 
@@ -408,11 +382,11 @@ public class Invoice
         this.invoiceIsHold = invoiceIsHold;
     }
 
-    public int getInvoiceStatus() {
-        return invoiceStatus;
+    public Integer getInvoiceStatus() {
+        return invoiceStatus != null ? invoiceStatus : 0;
     }
 
-    public void setInvoiceStatus(int invoiceStatus) {
+    public void setInvoiceStatus(Integer invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
     }
 
@@ -424,11 +398,11 @@ public class Invoice
         this.invoiceRazorpayOrderId = invoiceRazorpayOrderId;
     }
 
-    public int getInvoiceRazorpayStatus() {
-        return invoiceRazorpayStatus;
+    public Integer getInvoiceRazorpayStatus() {
+        return invoiceRazorpayStatus != null ? invoiceRazorpayStatus : 0;
     }
 
-    public void setInvoiceRazorpayStatus(int invoiceRazorpayStatus) {
+    public void setInvoiceRazorpayStatus(Integer invoiceRazorpayStatus) {
         this.invoiceRazorpayStatus = invoiceRazorpayStatus;
     }
 
@@ -448,12 +422,12 @@ public class Invoice
         this.invoiceRazorpaySignature = invoiceRazorpaySignature;
     }
 
-    public boolean isDeleted() {
-        return isDeleted;
+    public Integer getIsDeleted() {
+        return isDeleted != null ? isDeleted : 0;
     }
 
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public void setIsDeleted(Integer isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public String getcDate() {
