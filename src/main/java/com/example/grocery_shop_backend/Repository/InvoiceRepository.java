@@ -18,4 +18,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer>
 
     @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceNum = :num AND invoice.isDeleted=1")
     Invoice findByInvoiceNum(int num);
+
+    @Query("SELECT MAX(invoice.invoiceNum) FROM Invoice invoice")
+    int findMaxInvoiceNum();
 }

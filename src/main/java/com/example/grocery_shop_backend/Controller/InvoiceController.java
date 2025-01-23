@@ -1,8 +1,10 @@
 package com.example.grocery_shop_backend.Controller;
 
+import com.example.grocery_shop_backend.Dto.OrderDTO;
 import com.example.grocery_shop_backend.Dto.UpdateDeliveryAddressDTO;
 import com.example.grocery_shop_backend.Entities.Invoice;
 import com.example.grocery_shop_backend.Service.InvoiceService;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,5 +57,17 @@ public class InvoiceController
             return new ResponseEntity<>("Order cancelled", HttpStatus.OK);
         else
             return new ResponseEntity<>("Order Already Cancelled", HttpStatus.BAD_REQUEST);
+    }
+
+    //POST API {Add Order}
+    @PostMapping("/add-order/{customerId}")
+    public void addOrder(@PathVariable int customerId, OrderDTO orderDTO)
+    {
+        try
+        {
+            invoiceService.addOrder(customerId,orderDTO);
+        } catch (BadRequestException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

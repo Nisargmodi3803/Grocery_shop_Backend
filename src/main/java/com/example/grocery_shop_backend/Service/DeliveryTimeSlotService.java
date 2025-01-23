@@ -22,4 +22,14 @@ public class DeliveryTimeSlotService
             throw new objectNotFoundException("No delivery slots found");
         return deliveryTimeSlots;
     }
+
+    // Find Slot by ID
+    public DeliveryTimeSlot findSlotById(int id)
+    {
+        DeliveryTimeSlot deliveryTimeSlot = deliveryTimeSlotRepository.getDeliveryTimeSlotById(id);
+
+        if (deliveryTimeSlot == null)
+            throw new objectNotFoundException("No delivery slot found");
+        return deliveryTimeSlot;
+    }
 }

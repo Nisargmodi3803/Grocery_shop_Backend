@@ -12,7 +12,7 @@ public class Invoice
     private Integer invoiceId;
 
     @Column(name = "invoice_num",unique = true)
-    private String invoiceNum;
+    private int invoiceNum;
 
     @Column(name = "invoice_prefix")
     private String invoicePrefix;
@@ -42,6 +42,10 @@ public class Invoice
     @Column(name = "invoice_address")
     private String invoiceAddress;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "invoice_city")
+    private City city;
+
     @Column(name = "invoice_total_amount")
     private Double invoiceTotalAmount;
 
@@ -58,10 +62,7 @@ public class Invoice
     private String invoicePincode;
 
     @Column(name = "invoice_delivery_charges")
-    private String invoiceDeliveryCharges;
-
-    @Column(name = "invoice_discount")
-    private Double invoiceDiscount;
+    private int invoiceDeliveryCharges;
 
     @Column(name = "invoice_coupon_code_discount")
     private Double invoiceCouponCodeDiscount;
@@ -95,7 +96,7 @@ public class Invoice
 
     // To hold the payment
     @Column(name = "invoice_is_hold")
-    private String invoiceIsHold; // 1 => YES(to hold) & 2 => NO(to hold) [Generally 2]
+    private int invoiceIsHold; // 1 => YES(to hold) & 2 => NO(to hold) [Generally 2]
 
     @Column(name = "invoice_status")
     private Integer invoiceStatus; // 1 => Pending, 2 => Confirm, 3 => Dispatched, 4 => Delivered, 5 => Rejected, 6 => Canceled
@@ -120,7 +121,7 @@ public class Invoice
 
     public Invoice(){}
 
-    public Invoice(Integer invoiceId, String invoiceNum, String invoicePrefix, String invoiceDate, String invoiceTime, String invoiceFinancialYear, Customer customer, String invoiceMobile, String invoiceName, String invoiceEmailId, String invoiceAddress, Double invoiceTotalAmount, Double invoicePayable, Double invoiceRemainingAmount, Double invoiceReceivedAmount, String invoicePincode, String invoiceDeliveryCharges, Double invoiceDiscount, Double invoiceCouponCodeDiscount, CouponCode couponCode, Integer invoicePaymentMode, Integer invoiceUpdatedBy, String invoiceUpdatedDate, String invoiceDeliveryDate, String invoiceSpecialInstruction, DeliveryBoy deliveryBoy, DeliveryTimeSlot deliveryTimeSlot, String invoiceIsHold, Integer invoiceStatus, String invoiceRazorpayOrderId, Integer invoiceRazorpayStatus, String invoiceRazorpayPaymentId, String invoiceRazorpaySignature, Integer isDeleted, String cDate) {
+    public Invoice(Integer invoiceId, int invoiceNum, String invoicePrefix, String invoiceDate, String invoiceTime, String invoiceFinancialYear, Customer customer, String invoiceMobile, String invoiceName, String invoiceEmailId, String invoiceAddress, Double invoiceTotalAmount, Double invoicePayable, Double invoiceRemainingAmount, Double invoiceReceivedAmount, String invoicePincode, int invoiceDeliveryCharges, Double invoiceCouponCodeDiscount, CouponCode couponCode, Integer invoicePaymentMode, Integer invoiceUpdatedBy, String invoiceUpdatedDate, String invoiceDeliveryDate, String invoiceSpecialInstruction, DeliveryBoy deliveryBoy, DeliveryTimeSlot deliveryTimeSlot, int invoiceIsHold, Integer invoiceStatus, String invoiceRazorpayOrderId, Integer invoiceRazorpayStatus, String invoiceRazorpayPaymentId, String invoiceRazorpaySignature, Integer isDeleted, String cDate,City city) {
         this.invoiceId = invoiceId;
         this.invoiceNum = invoiceNum;
         this.invoicePrefix = invoicePrefix;
@@ -138,7 +139,6 @@ public class Invoice
         this.invoiceReceivedAmount = invoiceReceivedAmount;
         this.invoicePincode = invoicePincode;
         this.invoiceDeliveryCharges = invoiceDeliveryCharges;
-        this.invoiceDiscount = invoiceDiscount;
         this.invoiceCouponCodeDiscount = invoiceCouponCodeDiscount;
         this.couponCode = couponCode;
         this.invoicePaymentMode = invoicePaymentMode;
@@ -156,6 +156,7 @@ public class Invoice
         this.invoiceRazorpaySignature = invoiceRazorpaySignature;
         this.isDeleted = isDeleted;
         this.cDate = cDate;
+        this.city = city;
     }
 
     public Integer getInvoiceId() {
@@ -166,11 +167,11 @@ public class Invoice
         this.invoiceId = invoiceId;
     }
 
-    public String getInvoiceNum() {
+    public int getInvoiceNum() {
         return invoiceNum;
     }
 
-    public void setInvoiceNum(String invoiceNum) {
+    public void setInvoiceNum(int invoiceNum) {
         this.invoiceNum = invoiceNum;
     }
 
@@ -286,20 +287,12 @@ public class Invoice
         this.invoicePincode = invoicePincode;
     }
 
-    public String getInvoiceDeliveryCharges() {
+    public int getInvoiceDeliveryCharges() {
         return invoiceDeliveryCharges;
     }
 
-    public void setInvoiceDeliveryCharges(String invoiceDeliveryCharges) {
+    public void setInvoiceDeliveryCharges(int invoiceDeliveryCharges) {
         this.invoiceDeliveryCharges = invoiceDeliveryCharges;
-    }
-
-    public Double getInvoiceDiscount() {
-        return invoiceDiscount != null ? invoiceDiscount : 0.0;
-    }
-
-    public void setInvoiceDiscount(Double invoiceDiscount) {
-        this.invoiceDiscount = invoiceDiscount;
     }
 
     public Double getInvoiceCouponCodeDiscount() {
@@ -374,11 +367,11 @@ public class Invoice
         this.deliveryTimeSlot = deliveryTimeSlot;
     }
 
-    public String getInvoiceIsHold() {
+    public int getInvoiceIsHold() {
         return invoiceIsHold;
     }
 
-    public void setInvoiceIsHold(String invoiceIsHold) {
+    public void setInvoiceIsHold(int invoiceIsHold) {
         this.invoiceIsHold = invoiceIsHold;
     }
 
@@ -436,5 +429,13 @@ public class Invoice
 
     public void setcDate(String cDate) {
         this.cDate = cDate;
+    }
+
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
     }
 }
