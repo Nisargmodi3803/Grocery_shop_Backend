@@ -9,12 +9,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer,Integer>
 {
-    @Query("SELECT customer FROM Customer customer WHERE customer.customerId = :id")
+    @Query("SELECT customer FROM Customer customer WHERE customer.customerId = :id AND customer.isDeleted=1")
     public Customer findCustomerById(int id);
 
-    @Query("SELECT customer FROM Customer customer WHERE customer.customerMobile = :mobile")
+    @Query("SELECT customer FROM Customer customer WHERE customer.customerMobile = :mobile AND customer.isDeleted=1")
     public Customer findCustomerByMobile(String mobile);
 
-    @Query("SELECT customer.customerPassword FROM Customer customer WHERE customer.customerMobile = :mobile")
+    @Query("SELECT customer.customerPassword FROM Customer customer WHERE customer.customerMobile = :mobile AND customer.isDeleted=1")
     public String getHashedPassword(@Param("mobile")String mobile);
 }

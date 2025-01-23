@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category,Integer>
 {
-    @Query("SELECT cat FROM Category cat WHERE cat.id = :id")
+    @Query("SELECT cat FROM Category cat WHERE cat.id = :id AND cat.is_deleted=1")
     Category findCategoryById(int id);
 
-    @Query("SELECT cat FROM Category cat WHERE cat.slug_title = :slugTitle")
+    @Query("SELECT cat FROM Category cat WHERE cat.slug_title = :slugTitle AND cat.is_deleted=1")
     Category findCategoryBySlugTitle(String slugTitle);
 }

@@ -20,7 +20,7 @@ public class InvoiceController
     @Autowired
     private InvoiceService invoiceService;
 
-    // GET API {Find Order List by Customer Id}
+    // GET API {Find Order List by Customer ID}
     @GetMapping("/order-customer-id/{id}")
     public List<Invoice> findOrderListByCustomerId(@PathVariable int id)
     {
@@ -61,13 +61,22 @@ public class InvoiceController
 
     //POST API {Add Order}
     @PostMapping("/add-order/{customerId}")
-    public void addOrder(@PathVariable int customerId, OrderDTO orderDTO)
+    public ResponseEntity<String> addOrder(@PathVariable int customerId, @RequestBody OrderDTO orderDTO)
     {
         try
         {
             invoiceService.addOrder(customerId,orderDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Order added successfully");
         } catch (BadRequestException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // PATCH API {Delete Order}
+    @PatchMapping("/delete-order/{invoiceNum}")
+    public ResponseEntity<String> deleteOrder(@PathVariable int invoiceNum)
+    {
+        invoiceService.deleteOrder(invoiceNum);
+        return ResponseEntity.status(HttpStatus.OK).body("Order deleted successfully");
     }
 }

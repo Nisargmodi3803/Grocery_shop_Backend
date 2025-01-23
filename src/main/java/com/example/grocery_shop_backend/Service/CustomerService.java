@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Service
 public class CustomerService
 {
@@ -34,6 +37,10 @@ public class CustomerService
     {
         Customer existingCustomer = customerRepository.findCustomerByMobile(customerMobile);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String cDate = now.format(formatter);
+
         if(existingCustomer != null)
         {
             throw new MobileNumberAlreadyExistsException("Mobile number "+customerMobile+" already exists");
@@ -47,6 +54,8 @@ public class CustomerService
             customer.setCustomerPassword(encodedPassword);
             customer.setCustomerOtp(customerOtp);
             customer.setCustomerImage("http://localhost:9001/default.png");
+            customer.setIsDeleted(1);
+            customer.setcDate(cDate);
             customerRepository.save(customer);
         }
     }

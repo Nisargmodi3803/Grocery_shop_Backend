@@ -62,9 +62,12 @@ public class Customer
     @Column(name = "customer_points")
     private int customerPoint;
 
+    @Column(name = "is_deleted")
+    private int isDeleted;
+
     public Customer(){}
 
-    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, String customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, String customerReferralBy, int customerPoint) {
+    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, String customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, String customerReferralBy, int customerPoint, int isDeleted) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -83,6 +86,7 @@ public class Customer
         this.customerReferralCode = customerReferralCode;
         this.customerReferralBy = customerReferralBy;
         this.customerPoint = customerPoint;
+        this.isDeleted = isDeleted;;
     }
 
     public int getCustomerId() {
@@ -227,5 +231,13 @@ public class Customer
 
     public void setCustomerPoint(int customerPoint) {
         this.customerPoint = customerPoint;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

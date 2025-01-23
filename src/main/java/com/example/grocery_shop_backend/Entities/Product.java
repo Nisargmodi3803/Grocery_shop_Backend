@@ -32,6 +32,9 @@ public class Product
     @Column(name = "product_name")
     String name;
 
+    @Column(name = "product_variant_name")
+    String variantName;
+
     @Column(name = "product_description")
     String description;
 
@@ -82,7 +85,7 @@ public class Product
 
     public Product(){}
 
-    public Product(int id, Category cat, SubCategory subcat, Brand brand, String name, String description, String long_description, String image_url, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, String seo_author, int no_of_rating, String average_rating, int is_deleted, String c_date) {
+    public Product(int id, Category cat, SubCategory subcat, Brand brand, String name, String description, String long_description, String image_url, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, String seo_author, int no_of_rating, String average_rating, int is_deleted, String c_date,String variantName) {
         this.id = id;
         this.cat = cat;
         this.subcat = subcat;
@@ -104,6 +107,7 @@ public class Product
         this.average_rating = average_rating;
         this.is_deleted = is_deleted;
         this.c_date = c_date;
+        this.variantName = variantName;
     }
 
     public int getId() {
@@ -272,5 +276,13 @@ public class Product
 
     public void setC_date(String c_date) {
         this.c_date = c_date;
+    }
+
+    public String getVariantName() {
+        return variantName;
+    }
+
+    public void setVariantName(String variantName) {
+        this.variantName = variantName;
     }
 }

@@ -9,7 +9,7 @@ public class Invoice
     @Id
     @Column(name = "invoice_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer invoiceId;
+    private int invoiceId;
 
     @Column(name = "invoice_num",unique = true)
     private int invoiceNum;
@@ -121,7 +121,7 @@ public class Invoice
 
     public Invoice(){}
 
-    public Invoice(Integer invoiceId, int invoiceNum, String invoicePrefix, String invoiceDate, String invoiceTime, String invoiceFinancialYear, Customer customer, String invoiceMobile, String invoiceName, String invoiceEmailId, String invoiceAddress, Double invoiceTotalAmount, Double invoicePayable, Double invoiceRemainingAmount, Double invoiceReceivedAmount, String invoicePincode, int invoiceDeliveryCharges, Double invoiceCouponCodeDiscount, CouponCode couponCode, Integer invoicePaymentMode, Integer invoiceUpdatedBy, String invoiceUpdatedDate, String invoiceDeliveryDate, String invoiceSpecialInstruction, DeliveryBoy deliveryBoy, DeliveryTimeSlot deliveryTimeSlot, int invoiceIsHold, Integer invoiceStatus, String invoiceRazorpayOrderId, Integer invoiceRazorpayStatus, String invoiceRazorpayPaymentId, String invoiceRazorpaySignature, Integer isDeleted, String cDate,City city) {
+    public Invoice(int invoiceId, int invoiceNum, String invoicePrefix, String invoiceDate, String invoiceTime, String invoiceFinancialYear, Customer customer, String invoiceMobile, String invoiceName, String invoiceEmailId, String invoiceAddress, Double invoiceTotalAmount, Double invoicePayable, Double invoiceRemainingAmount, Double invoiceReceivedAmount, String invoicePincode, int invoiceDeliveryCharges, Double invoiceCouponCodeDiscount, CouponCode couponCode, Integer invoicePaymentMode, Integer invoiceUpdatedBy, String invoiceUpdatedDate, String invoiceDeliveryDate, String invoiceSpecialInstruction, DeliveryBoy deliveryBoy, DeliveryTimeSlot deliveryTimeSlot, int invoiceIsHold, Integer invoiceStatus, String invoiceRazorpayOrderId, Integer invoiceRazorpayStatus, String invoiceRazorpayPaymentId, String invoiceRazorpaySignature, Integer isDeleted, String cDate,City city) {
         this.invoiceId = invoiceId;
         this.invoiceNum = invoiceNum;
         this.invoicePrefix = invoicePrefix;
@@ -159,11 +159,11 @@ public class Invoice
         this.city = city;
     }
 
-    public Integer getInvoiceId() {
-        return invoiceId != null ? invoiceId : 0;
+    public int getInvoiceId() {
+        return invoiceId;
     }
 
-    public void setInvoiceId(Integer invoiceId) {
+    public void setInvoiceId(int invoiceId) {
         this.invoiceId = invoiceId;
     }
 

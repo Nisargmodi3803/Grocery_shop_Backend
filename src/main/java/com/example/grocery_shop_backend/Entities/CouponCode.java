@@ -2,6 +2,8 @@ package com.example.grocery_shop_backend.Entities;
 
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "tbl_coupon_code")
 public class CouponCode
@@ -22,6 +24,9 @@ public class CouponCode
 
     @Column(name = "coupon_end_date")
     private String couponEndDate;
+
+    @Column(name = "coupon_dates")
+    private String couponDates;
 
     @Column(name = "coupon_type")
     private int couponType;
@@ -47,9 +52,13 @@ public class CouponCode
     @Column(name = "c_date")
     private String cDate;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "coupon_category")
+    List<Category> categories;
+
     public CouponCode() {}
 
-    public CouponCode(int couponId, String couponCode, String couponTitle, String couponStartDate, String couponEndDate, int couponType, int couponCodeFor, double couponValue, double couponMinimumBillAmount, double couponMaxDiscount, int couponStatus, int isDeleted, String cDate) {
+    public CouponCode(int couponId, String couponCode, String couponTitle, String couponStartDate, String couponEndDate, int couponType, int couponCodeFor, double couponValue, double couponMinimumBillAmount, double couponMaxDiscount, int couponStatus, int isDeleted, String cDate,String couponDates, List<Category> categories) {
         this.couponId = couponId;
         this.couponCode = couponCode;
         this.couponTitle = couponTitle;
@@ -63,6 +72,8 @@ public class CouponCode
         this.couponStatus = couponStatus;
         this.isDeleted = isDeleted;
         this.cDate = cDate;
+        this.couponDates = couponDates;
+        this.categories = categories;
     }
 
     public int getCouponId() {
@@ -167,5 +178,21 @@ public class CouponCode
 
     public void setcDate(String cDate) {
         this.cDate = cDate;
+    }
+
+    public String getCouponDates() {
+        return couponDates;
+    }
+
+    public void setCouponDates(String couponDates) {
+        this.couponDates = couponDates;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
     }
 }

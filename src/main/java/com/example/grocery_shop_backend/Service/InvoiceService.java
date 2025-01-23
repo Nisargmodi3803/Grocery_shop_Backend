@@ -8,6 +8,7 @@ import com.example.grocery_shop_backend.Repository.*;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +33,9 @@ public class InvoiceService
     @Autowired
     private CityRepository cityRepository;
 
+    @Autowired
+    private InvoiceDetailRepository invoiceDetailRepository;
+
     // find order list by customerId Service
     public List<Invoice> findOrderListByCustomerId(int customerId)
     {
@@ -51,13 +55,20 @@ public class InvoiceService
     }
 
     // Update Delivery Address Service
+    @Transactional
     public Invoice updateDeliveryAddress(int invoiceNum, UpdateDeliveryAddressDTO deliveryAddress)
     {
         Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime dateTime = LocalDateTime.now();
+        String date = dateTime.format(dateFormat);
+
         if (invoice!=null)
         {
-            if(deliveryAddress!=null)
+            if(deliveryAddress!=null) {
                 invoice.setInvoiceAddress(deliveryAddress.getDeliveryAddress());
+                invoice.setInvoiceUpdatedDate(date);
+            }
             else
                 throw new objectNotFoundException("No Update delivery address found for this invoice");
         }
@@ -76,6 +87,7 @@ public class InvoiceService
     }
 
     // Cancel order Service
+    @Transactional
     public boolean cancelOrder(int invoiceNum)
     {
         Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
@@ -93,11 +105,12 @@ public class InvoiceService
     }
 
     // Add Order Service
+    @Transactional
     public void addOrder(int customerId, OrderDTO orderDTO) throws BadRequestException {
         Customer customer = customerRepository.findCustomerById(customerId);
 
         // Date and time formatting
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
         DateTimeFormatter yearFormat = DateTimeFormatter.ofPattern("yyyy");
         DateTimeFormatter cDateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -110,8 +123,8 @@ public class InvoiceService
 
         int invoiceNum = invoiceRepository.findMaxInvoiceNum();
 
-        if (customer != null) {
-            // Validate deliveryTimeSlot and city
+        if (customer != null)
+        {
             DeliveryTimeSlot deliveryTimeSlot = deliveryTimeSlotRepository.getDeliveryTimeSlotById(orderDTO.getDeliveryTimeSlotId());
             if (deliveryTimeSlot == null) {
                 throw new objectNotFoundException("Delivery time slot not found");
@@ -122,16 +135,14 @@ public class InvoiceService
                 throw new objectNotFoundException("City not found");
             }
 
-            // Handle nullable couponId
             CouponCode couponCode = null;
             if (orderDTO.getCouponId() != null) {
                 couponCode = couponCodeRepository.findCouponById(orderDTO.getCouponId());
             }
 
-            // Create and populate the invoice
             Invoice invoice = new Invoice();
             invoice.setInvoicePrefix("BI - ");
-            invoice.setInvoiceNum(invoiceNum);
+            invoice.setInvoiceNum(invoiceNum+1);
             invoice.setInvoiceDate(invoiceDate);
             invoice.setInvoiceTime(timeDate);
             invoice.setInvoiceFinancialYear(financialYear);
@@ -145,7 +156,6 @@ public class InvoiceService
             invoice.setInvoicePayable(orderDTO.getTotalAmount());
             invoice.setInvoicePaymentMode(orderDTO.getPaymentMode());
 
-            // Handle payment modes
             if (orderDTO.getPaymentMode() == 1) { // COD
                 invoice.setInvoiceRemainingAmount(orderDTO.getTotalAmount());
                 invoice.setInvoiceReceivedAmount(0.00);
@@ -158,14 +168,12 @@ public class InvoiceService
 
             invoice.setInvoicePincode(orderDTO.getPincode());
 
-            // Delivery charges
             if (orderDTO.getTotalAmount() >= 500) {
                 invoice.setInvoiceDeliveryCharges(0);
             } else {
-                invoice.setInvoiceDeliveryCharges(1);
+                invoice.setInvoiceDeliveryCharges(15);
             }
 
-            // Handle coupon code and discount
             invoice.setCouponCode(couponCode);
             if (couponCode == null) {
                 invoice.setInvoiceCouponCodeDiscount(0.00);
@@ -180,10 +188,30 @@ public class InvoiceService
             invoice.setIsDeleted(1);
             invoice.setcDate(cDate);
 
-            // Save the invoice
             invoiceRepository.save(invoice);
         } else {
             throw new objectNotFoundException("Customer not found");
+        }
+    }
+
+    // Delete Order Service [Admin]
+    @Transactional
+    public void deleteOrder(int invoiceNum)
+    {
+        Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
+        if(invoice==null)
+            throw new objectNotFoundException("No Invoice found for order BI - "+invoiceNum);
+        else
+        {
+            invoice.setIsDeleted(2);
+            invoiceRepository.save(invoice);
+
+            List<InvoiceDetail> invoiceDetails = invoiceDetailRepository.autoDeleteByInvoiceNum(invoiceNum);
+            for (InvoiceDetail invoiceDetail : invoiceDetails)
+            {
+                invoiceDetail.setIsDeleted(2);
+                invoiceDetailRepository.save(invoiceDetail);
+            }
         }
     }
 }

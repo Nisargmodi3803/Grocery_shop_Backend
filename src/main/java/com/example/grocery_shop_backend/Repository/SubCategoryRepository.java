@@ -10,15 +10,15 @@ import java.util.List;
 @Repository
 public interface SubCategoryRepository extends JpaRepository<SubCategory,Integer>
 {
-    @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.id = :id")
+    @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.id = :id AND subCate.is_deleted=1")
     public SubCategory findSubCategoryById(int id);
 
-    @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.slug_title = :slugTitle")
+    @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.slug_title = :slugTitle AND subCate.is_deleted=1")
     public SubCategory findSubCategoryBySlugTitle(String slugTitle);
 
-    @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.category.id = :cateID")
+    @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.is_deleted=1 AND (subCate.category.id = :cateID AND subCate.category.is_deleted=1)")
     public List<SubCategory> findSubCategoryByCategoryID(int cateID);
 
-    @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.category.slug_title = :cateSlugTitle")
+    @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.is_deleted=1 AND (subCate.category.slug_title = :cateSlugTitle AND subCate.category.is_deleted=1)")
     public List<SubCategory> findSubCategoryByCategorySlugTitle(String cateSlugTitle);
 }
