@@ -65,7 +65,7 @@ public class InvoiceDetailService
 
                    double totalPayable = product.getPrice() * addProductOrderDTO.getQuantity();
                    if (totalPayable >= 500)
-                       invoiceDetail.setTotalPayable(totalPayable);
+                       invoiceDetail.setTotalPayable(addProductOrderDTO.getTotalPayable());
                    else
                        invoiceDetail.setTotalPayable(totalPayable + 15.00);
 

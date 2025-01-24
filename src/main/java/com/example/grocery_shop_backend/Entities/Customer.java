@@ -60,14 +60,14 @@ public class Customer
     private String customerReferralBy;
 
     @Column(name = "customer_points")
-    private int customerPoint;
+    private double customerPoint;
 
     @Column(name = "is_deleted")
     private int isDeleted;
 
     public Customer(){}
 
-    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, String customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, String customerReferralBy, int customerPoint, int isDeleted) {
+    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, String customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, String customerReferralBy, double customerPoint, int isDeleted) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -225,11 +225,11 @@ public class Customer
         this.customerReferralBy = customerReferralBy;
     }
 
-    public int getCustomerPoint() {
+    public double getCustomerPoint() {
         return customerPoint;
     }
 
-    public void setCustomerPoint(int customerPoint) {
+    public void setCustomerPoint(double customerPoint) {
         this.customerPoint = customerPoint;
     }
 

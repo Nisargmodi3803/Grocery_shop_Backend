@@ -16,15 +16,15 @@ public class CustomerPoint
     private Customer customer;
     
     @Column(name = "customer_point")
-    private String customerPoint;
+    private double customerPoint;
 
     @Column(name = "customer_available_point")
-    private String customerAvailablePoint;
+    private double customerAvailablePoint;
 
-    // 1 => Welcome Point
-    // 2 => Used Point
+    // 1 => In
+    // 2 => Out
     @Column(name = "customer_point_type")
-    private String customerPointType;
+    private int customerPointType;
 
     @Column(name = "customer_point_detail")
     private String customerPointDetail;
@@ -32,9 +32,12 @@ public class CustomerPoint
     @Column(name = "c_date")
     private String c_date;
 
+    @Column(name = "is_deleted")
+    private int isDeleted;
+
     public CustomerPoint(){}
 
-    public CustomerPoint(int id, Customer customer, String customerPoint, String customerAvailablePoint, String customerPointType, String customerPointDetail, String c_date) {
+    public CustomerPoint(int id, Customer customer, double customerPoint, double customerAvailablePoint, int customerPointType, String customerPointDetail, String c_date, int isDeleted) {
         this.id = id;
         this.customer = customer;
         this.customerPoint = customerPoint;
@@ -42,6 +45,7 @@ public class CustomerPoint
         this.customerPointType = customerPointType;
         this.customerPointDetail = customerPointDetail;
         this.c_date = c_date;
+        this.isDeleted = isDeleted;
     }
 
     public int getId() {
@@ -60,27 +64,27 @@ public class CustomerPoint
         this.customer = customer;
     }
 
-    public String getCustomerPoint() {
+    public double getCustomerPoint() {
         return customerPoint;
     }
 
-    public void setCustomerPoint(String customerPoint) {
+    public void setCustomerPoint(double customerPoint) {
         this.customerPoint = customerPoint;
     }
 
-    public String getCustomerAvailablePoint() {
+    public double getCustomerAvailablePoint() {
         return customerAvailablePoint;
     }
 
-    public void setCustomerAvailablePoint(String customerAvailablePoint) {
+    public void setCustomerAvailablePoint(double customerAvailablePoint) {
         this.customerAvailablePoint = customerAvailablePoint;
     }
 
-    public String getCustomerPointType() {
+    public int getCustomerPointType() {
         return customerPointType;
     }
 
-    public void setCustomerPointType(String customerPointType) {
+    public void setCustomerPointType(int customerPointType) {
         this.customerPointType = customerPointType;
     }
 
@@ -98,5 +102,13 @@ public class CustomerPoint
 
     public void setC_date(String c_date) {
         this.c_date = c_date;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

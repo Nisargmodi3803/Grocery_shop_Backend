@@ -5,13 +5,15 @@ public class AddProductOrderDTO
     private int [] productId;
     private int orderNum;
     private int quantity;
+    private double totalPayable;
 
     public AddProductOrderDTO(){ }
 
-    public AddProductOrderDTO(int[] productId, int orderNum,int quantity) {
+    public AddProductOrderDTO(int[] productId, int orderNum,int quantity, double totalPayable) {
         this.productId = productId;
         this.orderNum = orderNum;
         this.quantity = quantity;
+        this.totalPayable = totalPayable;
     }
 
     public int[] getProductId() {
@@ -36,5 +38,13 @@ public class AddProductOrderDTO
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public double getTotalPayable() {
+        return totalPayable;
+    }
+
+    public void setTotalPayable(double totalPayable) {
+        this.totalPayable = totalPayable;
     }
 }

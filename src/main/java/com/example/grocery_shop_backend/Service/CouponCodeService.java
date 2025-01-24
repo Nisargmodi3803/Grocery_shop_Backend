@@ -7,6 +7,7 @@ import com.example.grocery_shop_backend.Repository.CouponCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -68,21 +69,27 @@ public class CouponCodeService
     }
 
     // Update start-date & end-date Service
+    @Transactional
     public CouponCode updateDates(int couponCodeId,CouponDatesUpdateDTO couponDates)
     {
-        CouponCode couponCode = couponCodeRepository.findById(couponCodeId)
-                .orElseThrow(() -> new objectNotFoundException("Coupon Code Not Found"));
-        if(couponDates!=null)
+        CouponCode couponCode = couponCodeRepository.findCouponById(couponCodeId);
+
+        if(couponCode!=null)
         {
-            if(couponDates.getStartDate()!=null)
-                couponCode.setCouponStartDate(couponDates.getStartDate());
-            if (couponDates.getEndDate()!=null)
-                couponCode.setCouponEndDate(couponDates.getEndDate());
+            if(couponDates!=null)
+            {
+                if(couponDates.getStartDate()!=null)
+                    couponCode.setCouponStartDate(couponDates.getStartDate());
+                if (couponDates.getEndDate()!=null)
+                    couponCode.setCouponEndDate(couponDates.getEndDate());
+            }
+            else
+            {
+                throw new objectNotFoundException("No Update Date Found");
+            }
+            return couponCodeRepository.save(couponCode);
         }
         else
-        {
-            throw new objectNotFoundException("No Update Date Found");
-        }
-        return couponCodeRepository.save(couponCode);
+            throw new objectNotFoundException("No coupons found");
     }
 }
