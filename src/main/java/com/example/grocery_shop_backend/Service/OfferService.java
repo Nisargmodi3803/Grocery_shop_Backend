@@ -1,6 +1,7 @@
 package com.example.grocery_shop_backend.Service;
 
 import com.example.grocery_shop_backend.Dto.CouponDatesUpdateDTO;
+import com.example.grocery_shop_backend.Dto.OfferDTO;
 import com.example.grocery_shop_backend.Dto.OfferDatesUpdateDTO;
 import com.example.grocery_shop_backend.Entities.CouponCode;
 import com.example.grocery_shop_backend.Entities.Offer;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -95,6 +97,7 @@ public class OfferService
             throw new objectNotFoundException("No Offer Found");
     }
 
+    // Delete Offer Service
     @Transactional
     public void deleteOffer(int offerId)
     {
@@ -107,5 +110,44 @@ public class OfferService
         }
         else
             throw new objectNotFoundException("No Offer Found");
+    }
+
+    // Insert Offer Service
+    @Transactional
+    public void insertOffer(OfferDTO offerDTO)
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String cDate = now.format(formatter);
+
+        Offer offer = new Offer();
+        offer.setCreateBannerFor(offerDTO.getBanner_for());
+        offer.setOfferTitle(offerDTO.getTitle());
+        offer.setOfferDescription(offerDTO.getDescription());
+        offer.setOfferImage(offerDTO.getImage());
+        offer.setOfferImageWeb(offerDTO.getImage_web());
+        offer.setOfferStartDate(offerDTO.getStartDate());
+        offer.setOfferEndDate(offerDTO.getEndDate());
+        offer.setSlugTitle(offerDTO.getSlugTitle());
+        offer.setOfferIsInBanner(1);
+        offer.setIsDeleted(1);
+        offer.setcDate(cDate);
+        offerRepository.save(offer);
+    }
+
+    // Retrieve Offer Service
+    @Transactional
+    public boolean retrieveOffer(int offerId)
+    {
+        Offer offer = offerRepository.findById(offerId)
+                .orElseThrow(() -> new objectNotFoundException("Offer id " + offerId + " not found"));
+
+        if(offer.getIsDeleted()==1)
+            return false;
+        else
+        {
+            offer.setIsDeleted(1);
+            return true;
+        }
     }
 }

@@ -1,15 +1,19 @@
 package com.example.grocery_shop_backend.Service;
 
+import com.example.grocery_shop_backend.Dto.CouponCodeDTO;
 import com.example.grocery_shop_backend.Dto.CouponDatesUpdateDTO;
 import com.example.grocery_shop_backend.Entities.CouponCode;
+import com.example.grocery_shop_backend.Entities.Offer;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CouponCodeRepository;
+import jakarta.persistence.Temporal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -91,5 +95,60 @@ public class CouponCodeService
         }
         else
             throw new objectNotFoundException("No coupons found");
+    }
+
+    // Delete Coupon Code Service
+    @Transactional
+    public void deleteCouponCode(int couponCodeId)
+    {
+        CouponCode couponCode = couponCodeRepository.findCouponById(couponCodeId);
+        if(couponCode!=null)
+        {
+            couponCode.setIsDeleted(2);
+            couponCodeRepository.save(couponCode);
+        }
+        else
+            throw new objectNotFoundException("No coupons found");
+    }
+
+    // Insert Coupon Code Service
+    @Transactional
+    public void insertCouponCode(CouponCodeDTO couponCodeDTO)
+    {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String cDate = now.format(formatter);
+
+        CouponCode couponCode = new CouponCode();
+        couponCode.setCouponCode(couponCodeDTO.getCode());
+        couponCode.setCouponTitle(couponCodeDTO.getTitle());
+        couponCode.setCouponStartDate(couponCodeDTO.getStartDate());
+        couponCode.setCouponEndDate(couponCodeDTO.getEndDate());
+        couponCode.setCouponType(couponCodeDTO.getType());
+        couponCode.setCouponCodeFor(couponCodeDTO.getCodeFor());
+        couponCode.setCouponValue(couponCodeDTO.getValue());
+        couponCode.setCouponMinimumBillAmount(couponCodeDTO.getMinValue());
+        couponCode.setCouponMaxDiscount(couponCodeDTO.getMaxDiscount());
+        couponCode.setCouponStatus(1);
+        couponCode.setIsDeleted(1);
+        couponCode.setcDate(cDate);
+
+        couponCodeRepository.save(couponCode);
+    }
+
+    // Retrieve Coupon Code Service
+    @Transactional
+    public boolean retrieveCoupon(int couponCodeId)
+    {
+        CouponCode couponCode = couponCodeRepository.findById(couponCodeId)
+                .orElseThrow(() -> new objectNotFoundException("Offer id " + couponCodeId + " not found"));
+
+        if(couponCode.getIsDeleted()==1)
+            return false;
+        else
+        {
+            couponCode.setIsDeleted(1);
+            return true;
+        }
     }
 }

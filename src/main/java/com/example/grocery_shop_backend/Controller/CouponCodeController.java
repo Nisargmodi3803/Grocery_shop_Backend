@@ -1,5 +1,6 @@
 package com.example.grocery_shop_backend.Controller;
 
+import com.example.grocery_shop_backend.Dto.CouponCodeDTO;
 import com.example.grocery_shop_backend.Dto.CouponDatesUpdateDTO;
 import com.example.grocery_shop_backend.Entities.CouponCode;
 import com.example.grocery_shop_backend.Repository.CouponCodeRepository;
@@ -57,5 +58,42 @@ public class CouponCodeController
     public CouponCode updateDates(@PathVariable int id,@RequestBody CouponDatesUpdateDTO couponDates)
     {
         return couponCodeService.updateDates(id, couponDates);
+    }
+
+    // PATCH API {Delete Coupon Code}
+    @PatchMapping("/delete-coupon-code/{couponId}")
+    public ResponseEntity<String> deleteCoupon(@PathVariable int couponId)
+    {
+        couponCodeService.deleteCouponCode(couponId);
+        return ResponseEntity.ok("Successfully deleted coupon code");
+    }
+
+    // POST API {Insert Coupon Code}
+    @PostMapping("/insert-coupon-code")
+    public ResponseEntity<String> insertCoupon(@RequestBody CouponCodeDTO couponCodeDTO)
+    {
+        try {
+            couponCodeService.insertCouponCode(couponCodeDTO);
+            return ResponseEntity.ok("Successfully inserted coupon code");
+        }
+        catch (Exception e){
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // PATCH API {Retrieve Coupon Code}
+    @PatchMapping("retrieve-coupon-code/{id}")
+    public ResponseEntity<String> retrieveOffer(@PathVariable int id)
+    {
+        try {
+            if(couponCodeService.retrieveCoupon(id))
+                return ResponseEntity.ok("Successfully retrieved offer");
+            else
+                return ResponseEntity.ofNullable("Already Present[Not Deleted]");
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

@@ -1,15 +1,17 @@
 package com.example.grocery_shop_backend.Controller;
 
+import com.example.grocery_shop_backend.Dto.OfferDTO;
 import com.example.grocery_shop_backend.Dto.OfferDatesUpdateDTO;
 import com.example.grocery_shop_backend.Entities.Offer;
 import com.example.grocery_shop_backend.Service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@CrossOrigin(origins = "*")
 public class OfferController
 {
     @Autowired
@@ -63,5 +65,36 @@ public class OfferController
     {
         offerService.deleteOffer(offerId);
         return ResponseEntity.ok("Deleted offer");
+    }
+
+    // POST API {Insert Offer}
+    @PostMapping("/insert-offer")
+    public ResponseEntity<String> insertOffer(@RequestBody OfferDTO offerDTO)
+    {
+        try
+        {
+            offerService.insertOffer(offerDTO);
+            return ResponseEntity.ok("Successfully inserted offer");
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // PATCH API {Retrieve Offer}
+    @PatchMapping("retrieve-offer/{id}")
+    public ResponseEntity<String> retrieveOffer(@PathVariable int id)
+    {
+        try {
+            if(offerService.retrieveOffer(id))
+                return ResponseEntity.ok("Successfully retrieved offer");
+            else
+                return ResponseEntity.ofNullable("Already Present[Not Deleted]");
+        }
+        catch (Exception e)
+        {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

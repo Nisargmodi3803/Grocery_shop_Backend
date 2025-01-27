@@ -1,24 +1,23 @@
 package com.example.grocery_shop_backend.Entities;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.List;
 
 @Entity
 @Table(name = "tbl_offer")
-public class Offer
-{
+public class Offer {
+
     @Id
     @Column(name = "offer_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int offerId;
 
     @Column(name = "create_banner_for")
-    private int createBannerFor; // 1=Brand,2=Category,3=Subcategory,4=Selected Products
-
-    // ONE TO MANY with Product.
-    @OneToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "offer_product_ids")
-    private List<Product> products;
+    private int createBannerFor; // 1=Brand, 2=Category, 3=Subcategory, 4=Selected Products
 
     @Column(name = "offer_title")
     private String offerTitle;
@@ -41,9 +40,6 @@ public class Offer
     @Column(name = "offer_is_in_banner")
     private int offerIsInBanner;
 
-    @Column(name = "offer_dates")
-    private String offerDates;
-
     @Column(name = "slug_title")
     private String slugTitle;
 
@@ -53,12 +49,11 @@ public class Offer
     @Column(name = "is_deleted")
     private int isDeleted; // 1 = Not Deleted & 2 = Deleted
 
-    public Offer(){}
+    public Offer() {}
 
-    public Offer(int offerId, int createBannerFor, List<Product> products, String offerTitle, String offerDescription, String offerImage, String offerImageWeb, String offerStartDate, String offerEndDate, int offerIsInBanner, String offerDates, String slugTitle, String cDate, int isDeleted) {
+    public Offer(int offerId, int createBannerFor, String offerTitle, String offerDescription, String offerImage, String offerImageWeb, String offerStartDate, String offerEndDate, int offerIsInBanner, String slugTitle, String cDate, int isDeleted) {
         this.offerId = offerId;
         this.createBannerFor = createBannerFor;
-        this.products = products;
         this.offerTitle = offerTitle;
         this.offerDescription = offerDescription;
         this.offerImage = offerImage;
@@ -66,11 +61,11 @@ public class Offer
         this.offerStartDate = offerStartDate;
         this.offerEndDate = offerEndDate;
         this.offerIsInBanner = offerIsInBanner;
-        this.offerDates = offerDates;
         this.slugTitle = slugTitle;
         this.cDate = cDate;
         this.isDeleted = isDeleted;
     }
+
 
     public int getOfferId() {
         return offerId;
@@ -86,14 +81,6 @@ public class Offer
 
     public void setCreateBannerFor(int createBannerFor) {
         this.createBannerFor = createBannerFor;
-    }
-
-    public List<Product> getProducts() {
-        return products;
-    }
-
-    public void setProducts(List<Product> products) {
-        this.products = products;
     }
 
     public String getOfferTitle() {
@@ -150,14 +137,6 @@ public class Offer
 
     public void setOfferIsInBanner(int offerIsInBanner) {
         this.offerIsInBanner = offerIsInBanner;
-    }
-
-    public String getOfferDates() {
-        return offerDates;
-    }
-
-    public void setOfferDates(String offerDates) {
-        this.offerDates = offerDates;
     }
 
     public String getSlugTitle() {
