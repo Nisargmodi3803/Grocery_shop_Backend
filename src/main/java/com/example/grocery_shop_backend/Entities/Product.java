@@ -9,83 +9,83 @@ public class Product
     @Id
     @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
     //Product Category ID
     //Many to One Mapping with Category Table
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_cat_id")
-    Category cat;
+    private Category cat;
 
     //Product Sub-Category ID
     //Many to One Mapping with Sub-Category Table
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_subcat_id")
-    SubCategory subcat;
+    private SubCategory subcat;
 
     //Product Brand ID
     //Many to One Mapping with Brand Table
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "product_brand_id")
-    Brand brand;
+    private Brand brand;
 
     @Column(name = "product_name")
-    String name;
+    private String name;
 
     @Column(name = "product_variant_name")
-    String variantName;
+    private String variantName;
 
     @Column(name = "product_description")
-    String description;
+    private String description;
 
     @Column(name = "product_description_long")
-    String long_description;
+    private String long_description;
 
     @Column(name = "product_image")
-    String image_url;
+    private String image_url;
 
     @Column(name = "product_base_price")
-    double price;
+    private double price;
 
     @Column(name = "product_cgst")
-    double cgst;
+    private double cgst;
 
     @Column(name = "product_sgst")
-    double sgst;
+    private double sgst;
 
     @Column(name = "product_igst")
-    double igst;
+    private double igst;
 
     @Column(name = "product_mrp")
-    double mrp;
+    private double mrp;
 
     @Column(name = "product_discount_amt")
-    double discount_amt;
+    private double discount_amt;
 
     @Column(name = "product_wholesaler_amt")
-    double wholesaler_amt;
+    private double wholesaler_amt;
 
     @Column(name = "slug_title")
-    String slug_title;
+    private String slug_title;
 
     @Column(name = "seo_author")
-    String seo_author;
+    private String seo_author;
 
     @Column(name = "product_no_of_rating")
-    int no_of_rating;
+    private String no_of_rating;
 
     @Column(name = "product_average_rating")
-    String average_rating;
+    private String average_rating;
 
     @Column(name = "is_deleted")
-    int is_deleted;
+    private int is_deleted;
 
     @Column(name = "c_date")
-    String c_date;
+    private String c_date;
 
     public Product(){}
 
-    public Product(int id, Category cat, SubCategory subcat, Brand brand, String name, String description, String long_description, String image_url, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, String seo_author, int no_of_rating, String average_rating, int is_deleted, String c_date,String variantName) {
+    public Product(int id, Category cat, SubCategory subcat, Brand brand, String name, String description, String long_description, String image_url, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, String seo_author, String no_of_rating, String average_rating, int is_deleted, String c_date,String variantName) {
         this.id = id;
         this.cat = cat;
         this.subcat = subcat;
@@ -246,11 +246,11 @@ public class Product
         this.seo_author = seo_author;
     }
 
-    public int getNo_of_rating() {
+    public String getNo_of_rating() {
         return no_of_rating;
     }
 
-    public void setNo_of_rating(int no_of_rating) {
+    public void setNo_of_rating(String no_of_rating) {
         this.no_of_rating = no_of_rating;
     }
 

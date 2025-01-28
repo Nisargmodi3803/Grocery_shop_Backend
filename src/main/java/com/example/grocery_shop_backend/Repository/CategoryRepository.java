@@ -15,4 +15,7 @@ public interface CategoryRepository extends JpaRepository<Category,Integer>
 
     @Query("SELECT cat FROM Category cat WHERE cat.slug_title = :slugTitle AND cat.is_deleted=1")
     Category findCategoryBySlugTitle(String slugTitle);
+
+    @Query("SELECT MAX(category.priority) FROM Category category")
+    int findMaxPriority();
 }

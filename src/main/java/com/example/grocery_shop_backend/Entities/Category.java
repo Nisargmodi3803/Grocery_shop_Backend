@@ -9,27 +9,30 @@ public class Category
     @Id
     @Column(name = "category_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
     @Column(name = "category_name")
-    String name;
+    private String name;
 
     @Column(name = "category_image")
-    String image_url;
+    private String image_url;
 
     @Column(name = "category_description")
-    String description;
+    private String description;
 
     @Column(name = "slug_title")
-    String slug_title;
+    private String slug_title;
+
+    @Column(name = "category_priority")
+    private int priority;
 
     @Column(name = "is_deleted")
-    int is_deleted; // 1 => Not Delete & 2 => Delete
+    private int is_deleted; // 1 => Not Delete & 2 => Delete
 
     @Column(name = "c_date")
-    String c_date;
+    private String c_date;
 
-    public Category(int id, String name, String image_url, String description, String slug_title, int is_deleted, String c_date) {
+    public Category(int id, String name, String image_url, String description, String slug_title,int priority, int is_deleted, String c_date) {
         this.id = id;
         this.name = name;
         this.image_url = image_url;
@@ -37,6 +40,7 @@ public class Category
         this.slug_title = slug_title;
         this.is_deleted = is_deleted;
         this.c_date = c_date;
+        this.priority = priority;
     }
 
     public Category(){}
@@ -95,5 +99,13 @@ public class Category
 
     public void setC_date(String c_date) {
         this.c_date = c_date;
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public void setPriority(int priority) {
+        this.priority = priority;
     }
 }
