@@ -172,4 +172,34 @@ public class CustomerService
             throw new objectNotFoundException("Customer with mobile number "+customerMobile+" not found");
         return customer;
     }
+
+    // Delete Customer Service
+    public void deleteCustomer(int customerId)
+    {
+        Customer customer = customerRepository.findCustomerById(customerId);
+
+        if(customer!=null)
+        {
+            customer.setIsDeleted(2);
+            customerRepository.save(customer);
+        }
+        else
+            throw new objectNotFoundException("Customer with mobile number "+customerId+" not found");
+    }
+
+    // Retrieve Customer Service
+    public boolean retrieveCustomer(int customerId)
+    {
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new objectNotFoundException("Customer with mobile number "+customerId+" not found"));
+
+        if(customer.getIsDeleted()==2)
+        {
+            customer.setIsDeleted(1);
+            customerRepository.save(customer);
+            return true;
+        }
+        else
+            return false;
+    }
 }

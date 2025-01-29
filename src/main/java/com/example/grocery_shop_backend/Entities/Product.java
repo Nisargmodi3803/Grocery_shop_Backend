@@ -44,8 +44,11 @@ public class Product
     @Column(name = "product_image")
     private String image_url;
 
+    @Column(name = "product_is_inclusive_tax")
+    private int isInclusiveTax;  //1= yes, 2=no
+
     @Column(name = "product_base_price")
-    private double price;
+    private double basePrice;
 
     @Column(name = "product_cgst")
     private double cgst;
@@ -68,8 +71,8 @@ public class Product
     @Column(name = "slug_title")
     private String slug_title;
 
-    @Column(name = "seo_author")
-    private String seo_author;
+    @Column(name = "product_is_main")
+    private int is_main; // 1= yes(Show in list) and 2= no
 
     @Column(name = "product_no_of_rating")
     private String no_of_rating;
@@ -85,16 +88,18 @@ public class Product
 
     public Product(){}
 
-    public Product(int id, Category cat, SubCategory subcat, Brand brand, String name, String description, String long_description, String image_url, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, String seo_author, String no_of_rating, String average_rating, int is_deleted, String c_date,String variantName) {
+    public Product(int id, Category cat, SubCategory subcat, Brand brand, String name, String variantName, String description, String long_description, String image_url, int isInclusiveTax, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, int is_main, String no_of_rating, String average_rating, int is_deleted, String c_date) {
         this.id = id;
         this.cat = cat;
         this.subcat = subcat;
         this.brand = brand;
         this.name = name;
+        this.variantName = variantName;
         this.description = description;
         this.long_description = long_description;
         this.image_url = image_url;
-        this.price = price;
+        this.isInclusiveTax = isInclusiveTax;
+        this.basePrice = price;
         this.cgst = cgst;
         this.sgst = sgst;
         this.igst = igst;
@@ -102,12 +107,11 @@ public class Product
         this.discount_amt = discount_amt;
         this.wholesaler_amt = wholesaler_amt;
         this.slug_title = slug_title;
-        this.seo_author = seo_author;
+        this.is_main = is_main;
         this.no_of_rating = no_of_rating;
         this.average_rating = average_rating;
         this.is_deleted = is_deleted;
         this.c_date = c_date;
-        this.variantName = variantName;
     }
 
     public int getId() {
@@ -150,6 +154,14 @@ public class Product
         this.name = name;
     }
 
+    public String getVariantName() {
+        return variantName;
+    }
+
+    public void setVariantName(String variantName) {
+        this.variantName = variantName;
+    }
+
     public String getDescription() {
         return description;
     }
@@ -174,12 +186,20 @@ public class Product
         this.image_url = image_url;
     }
 
+    public int getIsInclusiveTax() {
+        return isInclusiveTax;
+    }
+
+    public void setIsInclusiveTax(int isInclusiveTax) {
+        this.isInclusiveTax = isInclusiveTax;
+    }
+
     public double getPrice() {
-        return price;
+        return basePrice;
     }
 
     public void setPrice(double price) {
-        this.price = price;
+        this.basePrice = price;
     }
 
     public double getCgst() {
@@ -238,12 +258,12 @@ public class Product
         this.slug_title = slug_title;
     }
 
-    public String getSeo_author() {
-        return seo_author;
+    public int getIs_main() {
+        return is_main;
     }
 
-    public void setSeo_author(String seo_author) {
-        this.seo_author = seo_author;
+    public void setIs_main(int is_main) {
+        this.is_main = is_main;
     }
 
     public String getNo_of_rating() {
@@ -276,13 +296,5 @@ public class Product
 
     public void setC_date(String c_date) {
         this.c_date = c_date;
-    }
-
-    public String getVariantName() {
-        return variantName;
-    }
-
-    public void setVariantName(String variantName) {
-        this.variantName = variantName;
     }
 }

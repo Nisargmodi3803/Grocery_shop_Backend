@@ -69,7 +69,7 @@ public class BlogController
         if(success)
             return new ResponseEntity<>("Successfully retrieved blog", HttpStatus.OK);
         else
-            return new ResponseEntity<>("Failed to retrieve blog", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Blog Already Present", HttpStatus.BAD_REQUEST);
     }
 
     // PATCH API {Update Blog}

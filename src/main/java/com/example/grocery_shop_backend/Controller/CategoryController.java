@@ -77,6 +77,6 @@ public class CategoryController
         if (success)
             return new ResponseEntity<>("Category retrieved successfully", HttpStatus.OK);
         else
-            return new ResponseEntity<>("Category retrieved failed", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Category Already Present", HttpStatus.BAD_REQUEST);
     }
 }

@@ -9,34 +9,30 @@ public class Brand
     @Id
     @Column(name = "brand_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
     @Column(name = "brand_name")
-    String name;
+    private String name;
 
     @Column(name = "brand_image")
-    String image_url;
+    private String image_url;
 
     @Column(name = "slug_title")
-    String slug_title;
-
-    @Column(name = "seo_author")
-    String seo_author;
+    private String slug_title;
 
     @Column(name = "is_deleted")
-    int is_deleted; // 1 => Not Delete & 2 => Delete
+    private int is_deleted; // 1 => Not Delete & 2 => Delete
 
     @Column(name = "c_date")
-    String c_date;
+    private String c_date;
 
     public Brand(){}
 
-    public Brand(int id, String name, String image_url, String slug_title, String seo_author, int is_deleted, String c_date) {
+    public Brand(int id, String name, String image_url, String slug_title, int is_deleted, String c_date) {
         this.id = id;
         this.name = name;
         this.image_url = image_url;
         this.slug_title = slug_title;
-        this.seo_author = seo_author;
         this.is_deleted = is_deleted;
         this.c_date = c_date;
     }
@@ -71,14 +67,6 @@ public class Brand
 
     public void setSlug_title(String slug_title) {
         this.slug_title = slug_title;
-    }
-
-    public String getSeo_author() {
-        return seo_author;
-    }
-
-    public void setSeo_author(String seo_author) {
-        this.seo_author = seo_author;
     }
 
     public int getIs_deleted() {

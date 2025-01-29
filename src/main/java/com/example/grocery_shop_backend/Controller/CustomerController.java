@@ -53,7 +53,7 @@ public class CustomerController
     }
 
     // PATCH API {Update Profile}
-    @PatchMapping("/updateProfile/{mobile}")
+    @PatchMapping("/update-profile/{mobile}")
     public CustomerBasicDetailsDTO updateProfile(@PathVariable String mobile,@RequestBody CustomerBasicDetailsDTO customerBasicDetailsDTO)
     {
         customerService.updateCustomerBasicDetails(mobile, customerBasicDetailsDTO);
@@ -61,7 +61,7 @@ public class CustomerController
     }
 
     // PATCH API {Change Password}
-    @PatchMapping("/changePassword/{mobile}")
+    @PatchMapping("/change-password/{mobile}")
     public ResponseEntity<String> changePassword(@PathVariable String mobile, @RequestBody UpdatePasswordDTO updatePasswordDTO)
     {
         try
@@ -76,7 +76,7 @@ public class CustomerController
     }
 
     // PATCH API {Change Profile Image}
-    @PatchMapping("/changeProfileImage/{mobile}")
+    @PatchMapping("/change-profile-image/{mobile}")
     public ResponseEntity<String> changeProfileImage(@PathVariable String mobile,@RequestParam String image )
     {
         try
@@ -98,9 +98,29 @@ public class CustomerController
     }
 
     // GET API {Customer By Mobile}
-    @GetMapping("/customer/mobile/{mobileNumber}")
+    @GetMapping("/customer-mobile/{mobileNumber}")
     public Customer getCustomerByMobile(@PathVariable String mobileNumber)
     {
         return customerService.getCustomerByMobile(mobileNumber);
+    }
+
+    // PATCH API {Delete Customer}
+    @PatchMapping("/delete-customer/{customerId}")
+    public ResponseEntity<String> deleteCustomer(@PathVariable int customerId)
+    {
+        customerService.deleteCustomer(customerId);
+        return ResponseEntity.ok("Customer deleted successfully!");
+    }
+
+    // PATCH API {Retrieve Customer}
+    @PatchMapping("/retrieve-customer/{customerId}")
+    public ResponseEntity<String> retrieveCustomer(@PathVariable int customerId)
+    {
+        boolean success = customerService.retrieveCustomer(customerId);
+
+        if(success)
+            return ResponseEntity.ok("Customer retrieved successfully!");
+        else
+            return new ResponseEntity<>("Customer Already Present in Database", HttpStatus.BAD_REQUEST);
     }
 }

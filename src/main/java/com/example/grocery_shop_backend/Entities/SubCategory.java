@@ -9,34 +9,34 @@ public class SubCategory
    @Id
    @Column(name = "subcategory_id")
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   int id;
+   private int id;
 
     //Product Category ID
     //Many to One Mapping with Category Table
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "subcategory_cat_id")
-   Category category;
+    private Category category;
 
    @Column(name = "subcategory_name")
-   String name;
+   private String name;
 
    @Column(name = "subcategory_image")
-   String image_url;
+   private String image_url;
 
    @Column(name = "subcategory_description")
-   String description;
+   private String description;
 
    @Column(name = "subcategory_priority")
-   int priority;
+   private int priority;
 
    @Column(name = "slug_title")
-   String slug_title;
+   private String slug_title;
 
    @Column(name = "is_deleted")
-   int is_deleted; // 1 => Not Delete & 2 => Delete
+   private int is_deleted; // 1 => Not Delete & 2 => Delete
 
    @Column(name = "c_date")
-   String c_date;
+   private String c_date;
 
    public SubCategory(){}
 
