@@ -8,7 +8,6 @@ import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CouponCodeRepository;
 import jakarta.persistence.Temporal;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
