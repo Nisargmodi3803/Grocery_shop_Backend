@@ -2,15 +2,15 @@ package com.example.grocery_shop_backend.Dto;
 
 public class OTPRequestDTO
 {
-    private String mobileNumber;
+    private String email;
     private String otp;
 
-    public String getMobileNumber() {
-        return mobileNumber;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getOtp() {

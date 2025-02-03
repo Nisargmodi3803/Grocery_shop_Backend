@@ -69,7 +69,7 @@ public class TwilioOTPService {
     // Validate OTP
     public Mono<String> validateOTP(OTPRequestDTO otpRequestDTO) {
         String userOTP = otpRequestDTO.getOtp();
-        String mobileNumber = otpRequestDTO.getMobileNumber();
+        String mobileNumber = otpRequestDTO.getEmail();
         OtpDetails otpDetails = otpMap.get(mobileNumber);
 
         String sanitizedMobileNumber = mobileNumber.replaceFirst("^\\+91\\s*", "");
@@ -112,19 +112,19 @@ public class TwilioOTPService {
     // Send OTP For Password Reset Service
     public Mono<OTPResponseDTO> sendOTPForPasswordReset(OTPRequestDTO passwordResetRequestDTO) {
         try {
-            PhoneNumber to = new PhoneNumber(passwordResetRequestDTO.getMobileNumber());
+            PhoneNumber to = new PhoneNumber(passwordResetRequestDTO.getEmail());
             PhoneNumber from = new PhoneNumber(twilioConfig.getTrailNumber());
 
             String OTP = generateOTP();
             String otpMessage = """
                 Dear Customer,
-        
-                Your One-Time Password (OTP) for resetting your account password is:  %s 
-        
+
+                Your One-Time Password (OTP) for resetting your account password is:  %s
+
                 This OTP is valid for 10 minutes. Please do not share it with anyone.
-        
+
                 If you did not request a password reset, please contact our support team immediately.
-        
+
                 Thank you.
                 """.formatted(OTP);
 
@@ -132,7 +132,7 @@ public class TwilioOTPService {
             Message message = Message.creator(to, from, otpMessage).create();
 
             // Store OTP details with timestamp
-            otpMap.put(passwordResetRequestDTO.getMobileNumber(), new OtpDetails(OTP, System.currentTimeMillis()));
+            otpMap.put(passwordResetRequestDTO.getEmail(), new OtpDetails(OTP, System.currentTimeMillis()));
 
             OTPResponseDTO = new OTPResponseDTO(OtpStatus.DELIVERED, otpMessage);
         } catch (Exception e) {

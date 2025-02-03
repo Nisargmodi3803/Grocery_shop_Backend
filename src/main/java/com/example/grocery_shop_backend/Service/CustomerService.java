@@ -1,10 +1,13 @@
 package com.example.grocery_shop_backend.Service;
 
 import com.example.grocery_shop_backend.Dto.CustomerBasicDetailsDTO;
+import com.example.grocery_shop_backend.Dto.CustomerLoginDTO;
+import com.example.grocery_shop_backend.Dto.CustomerRegistrationDTO;
 import com.example.grocery_shop_backend.Entities.Customer;
 import com.example.grocery_shop_backend.Exception.MobileNumberAlreadyExistsException;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CustomerRepository;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,11 +16,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/*
+    EMAIL TYPE [OTP VERIFICATION]
+
+    1 => Registration time Email OTP.
+    2 => Login with OTP.
+    3 => Forgot Password.
+ */
+
+
 @Service
 public class CustomerService
 {
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private EmailOTPService emailOTPService;
 
     // BCrypt Object
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -31,11 +46,12 @@ public class CustomerService
         return customer;
     }
 
+    //
+
     // Save Customer {Registration}
     @Transactional
-    public void saveCustomer(String customerName,String customerMobile,String customerPassword,String customerOtp)
-    {
-        Customer existingCustomer = customerRepository.findCustomerByMobile(customerMobile);
+    public void saveCustomer(CustomerRegistrationDTO customerRegistrationDTO) {
+        Customer existingCustomer = customerRepository.findCustomerByEmail(customerRegistrationDTO.getCustomerEmail());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
@@ -43,16 +59,17 @@ public class CustomerService
 
         if(existingCustomer != null)
         {
-            throw new MobileNumberAlreadyExistsException("Mobile number "+customerMobile+" already exists");
+            throw new MobileNumberAlreadyExistsException("Customer with Email "+customerRegistrationDTO.getCustomerEmail()+" already exists");
         }
         else
         {
-            String encodedPassword = passwordEncoder.encode(customerPassword);
+            String encodedPassword = passwordEncoder.encode(customerRegistrationDTO.getCustomerPassword());
             Customer customer = new Customer();
-            customer.setCustomerName(customerName);
-            customer.setCustomerMobile(customerMobile);
+            customer.setCustomerName(customerRegistrationDTO.getCustomerName());
+            customer.setCustomerMobile(customerRegistrationDTO.getCustomerMobile());
+            customer.setCustomerEmail(customerRegistrationDTO.getCustomerEmail());
             customer.setCustomerPassword(encodedPassword);
-            customer.setCustomerOtp(customerOtp);
+//            customer.setCustomerOtp(customerRegistrationDTO.getCustomerOtp());
             customer.setCustomerImage("http://localhost:9001/default.png");
             customer.setIsDeleted(1);
             customer.setcDate(cDate);
@@ -61,15 +78,15 @@ public class CustomerService
     }
 
     // Login Service
-    public String login(String customerMobile,String customerPassword)
+    public String login(CustomerLoginDTO loginDTO)
     {
-        String hashPassword = customerRepository.getHashedPassword(customerMobile);
+        String hashPassword = customerRepository.getHashedPassword(loginDTO.getCustomerEmail());
 
         if (hashPassword == null)
         {
             return "Mobile number not found";
         }
-        if(passwordEncoder.matches(customerPassword, hashPassword))
+        if(passwordEncoder.matches(loginDTO.getCustomerPassword(), hashPassword))
         {
             return "Login successful";
         }
@@ -170,6 +187,15 @@ public class CustomerService
         Customer customer = customerRepository.findCustomerByMobile(customerMobile);
         if (customer == null)
             throw new objectNotFoundException("Customer with mobile number "+customerMobile+" not found");
+        return customer;
+    }
+
+    // Find Customer by Email Service
+    public Customer getCustomerByEmail(String customerEmail)
+    {
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
+        if(customer == null)
+            throw new objectNotFoundException("Customer with email "+customerEmail+" not found");
         return customer;
     }
 

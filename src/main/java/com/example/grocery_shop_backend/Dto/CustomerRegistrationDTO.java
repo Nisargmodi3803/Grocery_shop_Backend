@@ -3,8 +3,8 @@ package com.example.grocery_shop_backend.Dto;
 public class CustomerRegistrationDTO {
     private String customerName;
     private String customerMobile;
+    private String customerEmail;
     private String customerPassword;
-    private String customerOtp;
     private String referralCode;
 
     public String getCustomerName() {
@@ -31,19 +31,19 @@ public class CustomerRegistrationDTO {
         this.customerPassword = customerPassword;
     }
 
-    public String getCustomerOtp() {
-        return customerOtp;
-    }
-
-    public void setCustomerOtp(String customerOtp) {
-        this.customerOtp = customerOtp;
-    }
-
     public String getReferralCode() {
         return referralCode;
     }
 
     public void setReferralCode(String referralCode) {
         this.referralCode = referralCode;
+    }
+
+    public String getCustomerEmail() {
+        return customerEmail;
+    }
+
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
     }
 }

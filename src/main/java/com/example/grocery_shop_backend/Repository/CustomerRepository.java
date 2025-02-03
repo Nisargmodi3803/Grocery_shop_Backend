@@ -15,8 +15,8 @@ public interface CustomerRepository extends JpaRepository<Customer,Integer>
     @Query("SELECT customer FROM Customer customer WHERE customer.customerMobile = :mobile AND customer.isDeleted=1")
     public Customer findCustomerByMobile(String mobile);
 
-    @Query("SELECT customer.customerPassword FROM Customer customer WHERE customer.customerMobile = :mobile AND customer.isDeleted=1")
-    public String getHashedPassword(@Param("mobile")String mobile);
+    @Query("SELECT customer.customerPassword FROM Customer customer WHERE customer.customerEmail = :email AND customer.isDeleted=1")
+    public String getHashedPassword(@Param("email") String email);
 
     @Query("SELECT customer FROM Customer customer WHERE customer.customerEmail = :customerEmail AND customer.isDeleted=1")
     public Customer findCustomerByEmail(String customerEmail);

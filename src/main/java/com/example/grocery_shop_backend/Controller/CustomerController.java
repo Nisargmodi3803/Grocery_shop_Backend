@@ -31,7 +31,7 @@ public class CustomerController
     {
         try
         {
-            customerService.saveCustomer(registrationDTO.getCustomerName(),registrationDTO.getCustomerMobile(),registrationDTO.getCustomerPassword(),registrationDTO.getCustomerOtp());
+            customerService.saveCustomer(registrationDTO);
             return "Customer saved successfully!";
         }
         catch (Exception e)
@@ -44,7 +44,7 @@ public class CustomerController
     @GetMapping("/login")
     public ResponseEntity<String> loginCustomer(@RequestBody CustomerLoginDTO loginDTO) {
         try {
-            String result = customerService.login(loginDTO.getCustomerMobile(), loginDTO.getCustomerPassword());
+            String result = customerService.login(loginDTO);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             // Return error response with exception message
@@ -102,6 +102,13 @@ public class CustomerController
     public Customer getCustomerByMobile(@PathVariable String mobileNumber)
     {
         return customerService.getCustomerByMobile(mobileNumber);
+    }
+
+    // GET API {Customer by Email}
+    @GetMapping("/customer-email/{email}")
+    public Customer getCustomerByEmail(@PathVariable String email)
+    {
+        return customerService.getCustomerByEmail(email);
     }
 
     // PATCH API {Delete Customer}
