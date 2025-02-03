@@ -5,6 +5,7 @@ public class CustomerRegistrationDTO {
     private String customerMobile;
     private String customerPassword;
     private String customerOtp;
+    private String referralCode;
 
     public String getCustomerName() {
         return customerName;
@@ -36,5 +37,13 @@ public class CustomerRegistrationDTO {
 
     public void setCustomerOtp(String customerOtp) {
         this.customerOtp = customerOtp;
+    }
+
+    public String getReferralCode() {
+        return referralCode;
+    }
+
+    public void setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
     }
 }

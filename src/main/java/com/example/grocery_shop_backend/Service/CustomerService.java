@@ -112,9 +112,9 @@ public class CustomerService
 
     // Change Password Service
     @Transactional
-    public String changePassword(String customerMobile,String oldPassword,String newPassword)
+    public String changePassword(String customerEmail,String oldPassword,String newPassword)
     {
-        Customer existingCustomer = customerRepository.findCustomerByMobile(customerMobile);
+        Customer existingCustomer = customerRepository.findCustomerByEmail(customerEmail);
         if(existingCustomer!=null)
         {
             if(passwordEncoder.matches(oldPassword, existingCustomer.getCustomerPassword()))
@@ -129,7 +129,7 @@ public class CustomerService
         }
         else
         {
-            throw new objectNotFoundException("Customer with mobile number "+customerMobile+" not found");
+            throw new objectNotFoundException("Customer with Email "+customerEmail+" not found");
         }
     }
 

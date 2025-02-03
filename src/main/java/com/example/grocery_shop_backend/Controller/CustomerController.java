@@ -76,12 +76,12 @@ public class CustomerController
     }
 
     // PATCH API {Change Profile Image}
-    @PatchMapping("/change-profile-image/{mobile}")
-    public ResponseEntity<String> changeProfileImage(@PathVariable String mobile,@RequestParam String image )
+    @PatchMapping("/change-profile-image/{email}")
+    public ResponseEntity<String> changeProfileImage(@PathVariable String email,@RequestParam String image )
     {
         try
         {
-            String result = customerService.changeProfileImage(mobile,image);
+            String result = customerService.changeProfileImage(email,image);
             return ResponseEntity.ok(result);
         }
         catch (Exception e)

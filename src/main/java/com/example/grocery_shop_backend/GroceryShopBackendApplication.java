@@ -26,16 +26,6 @@ public class GroceryShopBackendApplication {
         }
     }
 
-    @Autowired
-    private TwoFactorConfig twoFactorConfig;
-
-    @PostConstruct
-    public void initTwoFactor() {
-        // 2Factor configuration doesn't need initialization as Twilio does
-//        log.info("2Factor API Key: {}", twoFactorConfig.getApiKey());
-//        log.info("2Factor API URL: {}", twoFactorConfig.getApiUrl());
-    }
-
     public static void main(String[] args) {
         SpringApplication.run(GroceryShopBackendApplication.class, args);
     }
