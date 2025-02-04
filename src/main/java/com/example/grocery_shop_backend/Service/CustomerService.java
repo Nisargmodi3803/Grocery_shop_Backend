@@ -7,7 +7,9 @@ import com.example.grocery_shop_backend.Entities.Customer;
 import com.example.grocery_shop_backend.Exception.MobileNumberAlreadyExistsException;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CustomerRepository;
-import jakarta.mail.MessagingException;
+import com.example.grocery_shop_backend.Util.JwtUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,86 +18,80 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/*
-    EMAIL TYPE [OTP VERIFICATION]
-
-    1 => Registration time Email OTP.
-    2 => Login with OTP.
-    3 => Forgot Password.
- */
-
-
 @Service
-public class CustomerService
-{
+public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
     @Autowired
     private EmailOTPService emailOTPService;
 
-    // BCrypt Object
+    @Autowired
+    private JwtUtil jwtUtil;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // Get Customer By ID
-    public Customer getCustomerById(int id)
-    {
+    public Customer getCustomerById(int id) {
         Customer customer = customerRepository.findCustomerById(id);
-        if(customer == null)
-            throw new objectNotFoundException("Customer with id "+id+" not found");
+        if (customer == null)
+            throw new objectNotFoundException("Customer with id " + id + " not found");
         return customer;
     }
 
-    //
-
-    // Save Customer {Registration}
     @Transactional
-    public void saveCustomer(CustomerRegistrationDTO customerRegistrationDTO) {
+    public void saveCustomer(CustomerRegistrationDTO customerRegistrationDTO, HttpServletResponse response) {
         Customer existingCustomer = customerRepository.findCustomerByEmail(customerRegistrationDTO.getCustomerEmail());
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String cDate = now.format(formatter);
 
-        if(existingCustomer != null)
-        {
-            throw new MobileNumberAlreadyExistsException("Customer with Email "+customerRegistrationDTO.getCustomerEmail()+" already exists");
-        }
-        else
-        {
+        if (existingCustomer != null) {
+            throw new MobileNumberAlreadyExistsException("Customer with Email " + customerRegistrationDTO.getCustomerEmail() + " already exists");
+        } else {
             String encodedPassword = passwordEncoder.encode(customerRegistrationDTO.getCustomerPassword());
             Customer customer = new Customer();
             customer.setCustomerName(customerRegistrationDTO.getCustomerName());
             customer.setCustomerMobile(customerRegistrationDTO.getCustomerMobile());
             customer.setCustomerEmail(customerRegistrationDTO.getCustomerEmail());
             customer.setCustomerPassword(encodedPassword);
-//            customer.setCustomerOtp(customerRegistrationDTO.getCustomerOtp());
+            customer.setCustomerOtp(customerRegistrationDTO.getOtp());
             customer.setCustomerImage("http://localhost:9001/default.png");
             customer.setIsDeleted(1);
             customer.setcDate(cDate);
             customerRepository.save(customer);
+
+            String token = jwtUtil.generateToken(customer.getCustomerEmail(),customer.getCustomerId());
+            System.out.println("Generated JWT Token: " + token);
+            Cookie cookie = new Cookie("authToken", token);
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(60 * 60);  // 1 hr expiry
+
+            response.addCookie(cookie);
         }
     }
 
-    // Login Service
-    public String login(CustomerLoginDTO loginDTO)
-    {
+    public String login(CustomerLoginDTO loginDTO, HttpServletResponse response) {
         String hashPassword = customerRepository.getHashedPassword(loginDTO.getCustomerEmail());
 
-        if (hashPassword == null)
-        {
+        if (hashPassword == null) {
             return "Mobile number not found";
         }
-        if(passwordEncoder.matches(loginDTO.getCustomerPassword(), hashPassword))
-        {
+        if (passwordEncoder.matches(loginDTO.getCustomerPassword(), hashPassword)) {
+            Customer customer = customerRepository.findCustomerByEmail(loginDTO.getCustomerEmail());
+            String token = jwtUtil.generateToken(customer.getCustomerEmail(), customer.getCustomerId());
+            Cookie cookie = new Cookie("authToken", token);
+            cookie.setPath("/");
+            cookie.setHttpOnly(true);
+            cookie.setMaxAge(60 * 60);  // 1 hr expiry
+
+            response.addCookie(cookie);
             return "Login successful";
-        }
-        else
-        {
+        } else {
             return "Password Does Not Match";
         }
     }
-
     // Update Basic Customer Details Service
     @Transactional
     public Customer updateCustomerBasicDetails(String customerMobile, CustomerBasicDetailsDTO updateDTO)
@@ -227,5 +223,17 @@ public class CustomerService
         }
         else
             return false;
+    }
+
+    // Logout Service [In this Cookie which is put will be deleted]
+    public String logout(HttpServletResponse response)
+    {
+        Cookie cookie = new Cookie("authToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0); // Expire immediately
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+        return "Logout successful";
     }
 }

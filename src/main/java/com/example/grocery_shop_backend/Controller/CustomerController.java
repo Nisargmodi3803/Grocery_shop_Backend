@@ -6,13 +6,15 @@ import com.example.grocery_shop_backend.Dto.CustomerBasicDetailsDTO;
 import com.example.grocery_shop_backend.Dto.UpdatePasswordDTO;
 import com.example.grocery_shop_backend.Entities.Customer;
 import com.example.grocery_shop_backend.Service.CustomerService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class CustomerController
 {
     @Autowired
@@ -27,11 +29,11 @@ public class CustomerController
 
     // POST API {Registration API} Save Customer
     @PostMapping("/register")
-    public String saveCustomer(@RequestBody CustomerRegistrationDTO registrationDTO)
+    public String saveCustomer(@RequestBody CustomerRegistrationDTO registrationDTO, HttpServletResponse response)
     {
         try
         {
-            customerService.saveCustomer(registrationDTO);
+            customerService.saveCustomer(registrationDTO,response);
             return "Customer saved successfully!";
         }
         catch (Exception e)
@@ -40,11 +42,12 @@ public class CustomerController
         }
     }
 
-    // GET API {Login API}
-    @GetMapping("/login")
-    public ResponseEntity<String> loginCustomer(@RequestBody CustomerLoginDTO loginDTO) {
+    // POST API {Login API}
+    @PostMapping("/login")
+    public ResponseEntity<String> loginCustomer(@RequestBody CustomerLoginDTO loginDTO, HttpServletResponse response) {
         try {
-            String result = customerService.login(loginDTO);
+            String result = customerService.login(loginDTO,response);
+
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             // Return error response with exception message
@@ -130,4 +133,12 @@ public class CustomerController
         else
             return new ResponseEntity<>("Customer Already Present in Database", HttpStatus.BAD_REQUEST);
     }
+
+    // POST API {Logout }
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+        String result = customerService.logout(response);
+        return ResponseEntity.ok(result);
+    }
+
 }

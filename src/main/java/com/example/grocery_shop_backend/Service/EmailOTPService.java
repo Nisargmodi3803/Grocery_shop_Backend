@@ -74,12 +74,17 @@ public class EmailOTPService {
     public Mono<OTPResponseDTO> emailBody(OTPRequestDTO otpRequestDTO, int mailType) {
         String to = otpRequestDTO.getEmail();
         Customer customer = customerRepository.findCustomerByEmail(to);
+        String customerName = "";
 
-        if (customer == null) {
+        if (customer == null && mailType!=1) {
             throw new objectNotFoundException("Customer with Email address " + to + " not found");
         }
 
-        String customerName = customer.getCustomerName();
+        if(mailType==1)
+            customerName = otpRequestDTO.getName();
+        else
+            customerName = customer.getCustomerName();
+
         try {
             String OTP = generateOTP();
             String subject = "OTP Verification Email";
@@ -145,14 +150,14 @@ public class EmailOTPService {
             return Mono.error(new InvalidOTPException("OTP has expired! Please request a new one."));
         }
         if (userOTP.equals(otpDetails.getOTP())) {
-            Customer customer = customerRepository.findCustomerByEmail(email);
-            if (customer == null) {
-                return Mono.error(new objectNotFoundException("Customer with Email " + email + " not found."));
-            }
-            customer.setCustomerOtp(userOTP);
-            customerRepository.save(customer);
-            otpMap.remove(email);
-            logger.info("OTP verified successfully for: " + email);
+//            Customer customer = customerRepository.findCustomerByEmail(email);
+//            if (customer == null) {
+//                return Mono.error(new objectNotFoundException("Customer with Email " + email + " not found."));
+//            }
+//            customer.setCustomerOtp(userOTP);
+//            customerRepository.save(customer);
+//            otpMap.remove(email);
+//            logger.info("OTP verified successfully for: " + email);
             return Mono.just("Your OTP is valid");
         } else {
             return Mono.error(new InvalidOTPException("Invalid OTP! Please try again."));

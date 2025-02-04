@@ -4,6 +4,7 @@ public class OTPRequestDTO
 {
     private String email;
     private String otp;
+    private String name;
 
     public String getEmail() {
         return email;
@@ -19,5 +20,13 @@ public class OTPRequestDTO
 
     public void setOtp(String otp) {
         this.otp = otp;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

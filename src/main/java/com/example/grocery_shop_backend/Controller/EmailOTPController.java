@@ -4,6 +4,7 @@ import com.example.grocery_shop_backend.Dto.OTPRequestDTO;
 import com.example.grocery_shop_backend.Dto.OTPResponseDTO;
 import com.example.grocery_shop_backend.Dto.OtpStatus;
 import com.example.grocery_shop_backend.Entities.Customer;
+import com.example.grocery_shop_backend.Repository.CustomerRepository;
 import com.example.grocery_shop_backend.Service.CustomerService;
 import com.example.grocery_shop_backend.Service.EmailOTPService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +25,20 @@ import reactor.core.publisher.Mono;
 */
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class EmailOTPController
 {
     @Autowired
     private EmailOTPService emailOTPService;
 
     @Autowired
-    private CustomerService customerService;
+    private CustomerRepository customerRepository;
 
     // POST API {Send Email for Registration}
     @PostMapping("/send-email-registration")
     public ResponseEntity<Mono<OTPResponseDTO>> sendEmailRegistration(@RequestBody OTPRequestDTO otpRequestDTO)
     {
-        Customer customer = customerService.getCustomerByEmail(otpRequestDTO.getEmail());
+        Customer customer = customerRepository.findCustomerByEmail(otpRequestDTO.getEmail());
         if(customer == null) {
             Mono<OTPResponseDTO> response = emailOTPService.emailBody(otpRequestDTO, 1);
             return ResponseEntity.ok(response);
