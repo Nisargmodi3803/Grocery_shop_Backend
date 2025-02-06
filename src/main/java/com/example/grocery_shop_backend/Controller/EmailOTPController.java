@@ -4,6 +4,9 @@ import com.example.grocery_shop_backend.Dto.OTPRequestDTO;
 import com.example.grocery_shop_backend.Dto.OTPResponseDTO;
 import com.example.grocery_shop_backend.Dto.OtpStatus;
 import com.example.grocery_shop_backend.Entities.Customer;
+import com.example.grocery_shop_backend.Exception.ExpireOTPException;
+import com.example.grocery_shop_backend.Exception.InvalidOTPException;
+import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CustomerRepository;
 import com.example.grocery_shop_backend.Service.CustomerService;
 import com.example.grocery_shop_backend.Service.EmailOTPService;
@@ -68,9 +71,22 @@ public class EmailOTPController
 
     // POST API {Verify OTP}
     @PostMapping("/verify-otp")
-    public ResponseEntity<Mono<String>> verifyOTP(@RequestBody OTPRequestDTO otpRequestDTO)
-    {
-        Mono<String> response = emailOTPService.verifyOTP(otpRequestDTO);
-        return ResponseEntity.ok(response);
+    public Mono<ResponseEntity<String>> verifyOTP(@RequestBody OTPRequestDTO otpRequestDTO) {
+        return emailOTPService.verifyOTP(otpRequestDTO)
+                .map(response -> ResponseEntity.ok(response)) // OTP is valid (200 OK)
+
+                .onErrorResume(InvalidOTPException.class, ex ->
+                        Mono.just(ResponseEntity.badRequest().body(ex.getMessage())) // 400 Bad Request
+                )
+
+                .onErrorResume(ExpireOTPException.class, ex ->
+                        Mono.just(ResponseEntity.status(HttpStatus.GONE).body(ex.getMessage())) // 410 Gone (Expired OTP)
+                )
+
+                .onErrorResume(objectNotFoundException.class, ex ->
+                        Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage())) // 404 Not Found
+                );
     }
+
+
 }

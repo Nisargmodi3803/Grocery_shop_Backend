@@ -20,9 +20,9 @@ public class SubCategoryController
 
     // GET API {Find all Subcategories}
     @GetMapping("/subcategories")
-    public List<SubCategory> getAllSubCategory()
+    public ResponseEntity<List<SubCategory>> getAllSubCategory()
     {
-        return subCategoryService.getAllSubCategories();
+        return ResponseEntity.ok(subCategoryService.getAllSubCategories());
     }
 
     // GET API {Find Subcategory by Slug title}

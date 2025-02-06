@@ -20,7 +20,7 @@ public class CategoryService
     // Find All Categories  Service
     public List<Category> getAllCategories()
     {
-        return categoryRepository.findAll();
+        return categoryRepository.findAllCategories();
     }
 
     // Find Category by ID Service

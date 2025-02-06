@@ -21,7 +21,7 @@ public class BlogService
 
     public List<Blog> getAllBlogs()
     {
-        return blogRepository.findAll();
+        return blogRepository.findAllBlogs();
     }
 
     public Blog getBlogById(int blogId)

@@ -26,7 +26,7 @@ public class SubCategoryService
     // Find All Subcategories Service
     public List<SubCategory> getAllSubCategories()
     {
-        return subCategoryRepository.findAll();
+        return subCategoryRepository.findAllSubCategories();
     }
 
     // Find Subcategory by ID

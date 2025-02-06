@@ -2,22 +2,22 @@ package com.example.grocery_shop_backend.Dto;
 
 public class CustomerLoginDTO
 {
-    private String customerEmail;
-    private String customerPassword;
+    private String email;
+    private String password;
 
-    public String getCustomerEmail() {
-        return customerEmail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setCustomerEmail(String customerEmail) {
-        this.customerEmail = customerEmail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getCustomerPassword() {
-        return customerPassword;
+    public String getPassword() {
+        return password;
     }
 
-    public void setCustomerPassword(String customerPassword) {
-        this.customerPassword = customerPassword;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

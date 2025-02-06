@@ -20,7 +20,7 @@ public class BrandService
     // Find All Brands Service
     public List<Brand> findAllBrands()
     {
-        return brandRepository.findAll();
+        return brandRepository.findAllBrands();
     }
 
     // Find Brand by ID Service

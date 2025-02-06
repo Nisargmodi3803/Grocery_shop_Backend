@@ -17,4 +17,7 @@ public interface BlogRepository extends JpaRepository<Blog, Integer>
 
     @Query("SELECT blog FROM Blog blog WHERE blog.slug_title = :slug_title AND blog.is_deleted=1")
     Blog findBlogBySlugTitle(String slug_title);
+
+    @Query("SELECT blog FROM Blog blog WHERE blog.is_deleted=1")
+    List<Blog> findAllBlogs();
 }

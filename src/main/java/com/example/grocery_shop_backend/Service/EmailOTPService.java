@@ -4,6 +4,7 @@ import com.example.grocery_shop_backend.Dto.OTPRequestDTO;
 import com.example.grocery_shop_backend.Dto.OTPResponseDTO;
 import com.example.grocery_shop_backend.Dto.OtpStatus;
 import com.example.grocery_shop_backend.Entities.Customer;
+import com.example.grocery_shop_backend.Exception.ExpireOTPException;
 import com.example.grocery_shop_backend.Exception.InvalidOTPException;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CustomerRepository;
@@ -143,21 +144,13 @@ public class EmailOTPService {
         OtpDetails otpDetails = otpMap.get(email);
 
         if (otpDetails == null) {
-            return Mono.error(new InvalidOTPException("OTP not found! Please request a new one."));
+            return Mono.error(new objectNotFoundException("OTP not found! Please request a new one."));
         }
         if (otpDetails.isExpired()) {
             otpMap.remove(email);
-            return Mono.error(new InvalidOTPException("OTP has expired! Please request a new one."));
+            return Mono.error(new ExpireOTPException("OTP has expired! Please request a new one."));
         }
         if (userOTP.equals(otpDetails.getOTP())) {
-//            Customer customer = customerRepository.findCustomerByEmail(email);
-//            if (customer == null) {
-//                return Mono.error(new objectNotFoundException("Customer with Email " + email + " not found."));
-//            }
-//            customer.setCustomerOtp(userOTP);
-//            customerRepository.save(customer);
-//            otpMap.remove(email);
-//            logger.info("OTP verified successfully for: " + email);
             return Mono.just("Your OTP is valid");
         } else {
             return Mono.error(new InvalidOTPException("Invalid OTP! Please try again."));

@@ -21,4 +21,7 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory,Integer
 
     @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.is_deleted=1 AND (subCate.category.slug_title = :cateSlugTitle AND subCate.category.is_deleted=1)")
     public List<SubCategory> findSubCategoryByCategorySlugTitle(String cateSlugTitle);
+
+    @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.is_deleted=1")
+    public List<SubCategory> findAllSubCategories();
 }
