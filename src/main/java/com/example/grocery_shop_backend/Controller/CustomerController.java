@@ -123,4 +123,16 @@ public class CustomerController {
     public ResponseEntity<String> logout() {
         return ResponseEntity.ok("Logout successful! Please remove token from sessionStorage on the frontend.");
     }
+
+    // PATCH API {Forgot Password}
+    @PatchMapping("/forgot-password")
+    public ResponseEntity<String> forgotPassword(@RequestBody CustomerLoginDTO loginDTO) {
+        boolean result = customerService.forgotPassword(loginDTO);
+        if (result) {
+            return ResponseEntity.ok("Password forgot successful");
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not Found");
+        }
+    }
 }

@@ -189,4 +189,21 @@ public class CustomerService {
             return false;
         }
     }
+
+    // Forgot Password using OTP
+    @Transactional
+    public boolean forgotPassword(CustomerLoginDTO customerLoginDTO)
+    {
+        Customer customer = customerRepository.findCustomerByEmail(customerLoginDTO.getEmail());
+        if (customer == null) {
+//            throw new objectNotFoundException("Customer with mobile number " + customerLoginDTO.getEmail() + " not found");
+            return false;
+        }
+        else
+        {
+            customer.setCustomerPassword(passwordEncoder.encode(customerLoginDTO.getPassword()));
+            customerRepository.save(customer);
+            return true;
+        }
+    }
 }

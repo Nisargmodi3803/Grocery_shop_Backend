@@ -126,7 +126,7 @@ public class EmailOTPService {
                     """, customerName, OTP);
             case 3 -> body = String.format("""
                     <p>Dear %s,</p>
-                    <br?
+                    <br>
                     <p>Your OTP for password reset is:</p>
                     <h2 style="color:red;">%s</h2>
                     <p>This OTP is valid for 10 minutes.</p>
