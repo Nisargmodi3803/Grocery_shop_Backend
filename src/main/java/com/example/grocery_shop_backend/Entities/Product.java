@@ -11,6 +11,9 @@ public class Product
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "product_reference_code")
+    private String referenceCode;
+
     //Product Category ID
     //Many to One Mapping with Category Table
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
@@ -80,6 +83,9 @@ public class Product
     @Column(name = "product_average_rating")
     private String average_rating;
 
+    @Column(name = "product_is_active")
+    private int productIsActive; // 1=Buy now, 2=Out of stock,3=Coming soon,4=Inquiry Now
+
     @Column(name = "is_deleted")
     private int is_deleted;
 
@@ -88,8 +94,9 @@ public class Product
 
     public Product(){}
 
-    public Product(int id, Category cat, SubCategory subcat, Brand brand, String name, String variantName, String description, String long_description, String image_url, int isInclusiveTax, double price, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, int is_main, String no_of_rating, String average_rating, int is_deleted, String c_date) {
+    public Product(int id, String referenceCode, Category cat, SubCategory subcat, Brand brand, String name, String variantName, String description, String long_description, String image_url, int isInclusiveTax, double basePrice, double cgst, double sgst, double igst, double mrp, double discount_amt, double wholesaler_amt, String slug_title, int is_main, String no_of_rating, String average_rating, int productIsActive, int is_deleted, String c_date) {
         this.id = id;
+        this.referenceCode = referenceCode;
         this.cat = cat;
         this.subcat = subcat;
         this.brand = brand;
@@ -99,7 +106,7 @@ public class Product
         this.long_description = long_description;
         this.image_url = image_url;
         this.isInclusiveTax = isInclusiveTax;
-        this.basePrice = price;
+        this.basePrice = basePrice;
         this.cgst = cgst;
         this.sgst = sgst;
         this.igst = igst;
@@ -110,6 +117,7 @@ public class Product
         this.is_main = is_main;
         this.no_of_rating = no_of_rating;
         this.average_rating = average_rating;
+        this.productIsActive = productIsActive;
         this.is_deleted = is_deleted;
         this.c_date = c_date;
     }
@@ -120,6 +128,14 @@ public class Product
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getReferenceCode() {
+        return referenceCode;
+    }
+
+    public void setReferenceCode(String referenceCode) {
+        this.referenceCode = referenceCode;
     }
 
     public Category getCat() {
@@ -194,12 +210,12 @@ public class Product
         this.isInclusiveTax = isInclusiveTax;
     }
 
-    public double getPrice() {
+    public double getBasePrice() {
         return basePrice;
     }
 
-    public void setPrice(double price) {
-        this.basePrice = price;
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
     }
 
     public double getCgst() {
@@ -280,6 +296,14 @@ public class Product
 
     public void setAverage_rating(String average_rating) {
         this.average_rating = average_rating;
+    }
+
+    public int getProductIsActive() {
+        return productIsActive;
+    }
+
+    public void setProductIsActive(int productIsActive) {
+        this.productIsActive = productIsActive;
     }
 
     public int getIs_deleted() {

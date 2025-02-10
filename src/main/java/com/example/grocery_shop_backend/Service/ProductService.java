@@ -147,7 +147,7 @@ public class ProductService
             product.setVariantName(productDTO.getVariantName());
             product.setDescription(productDTO.getDescription());
             product.setImage_url(productDTO.getImageUrl());
-            product.setPrice(productDTO.getBasePrice());
+            product.setBasePrice(productDTO.getBasePrice());
             product.setIsInclusiveTax(productDTO.getIsInclusiveTax());
             product.setCgst(productDTO.getCgst());
             product.setSgst(productDTO.getSgst());
@@ -181,7 +181,7 @@ public class ProductService
             if(productDTO.getImageUrl()!=null)
                 product.setImage_url(productDTO.getImageUrl());
             if(productDTO.getBasePrice()!=0)
-                product.setPrice(productDTO.getBasePrice());
+                product.setBasePrice(productDTO.getBasePrice());
             if(productDTO.getIsInclusiveTax()!=0)
                 product.setIsInclusiveTax(productDTO.getIsInclusiveTax());
             if(productDTO.getCgst()!=0)
@@ -261,5 +261,11 @@ public class ProductService
         }
         else
             return false;
+    }
+
+    // Find Product's Variants
+    public List<Product> getProductVariants(String productName) {
+//        System.out.println("Name "+productName);
+        return productRepository.findVariantsByProductName(productName);
     }
 }

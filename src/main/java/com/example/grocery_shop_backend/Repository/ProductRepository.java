@@ -4,6 +4,7 @@ import com.example.grocery_shop_backend.Entities.Product;
 import org.hibernate.sql.ast.tree.expression.JdbcParameter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,4 +35,9 @@ public interface ProductRepository extends JpaRepository<Product,Integer>
 
     @Query("SELECT product FROM Product product WHERE product.is_deleted=1 AND (product.brand.slug_title = :brandSlugTitle AND product.is_deleted=1)")
     List<Product> findProductsByBrandSlugTitle(String brandSlugTitle);
+
+    @Query("SELECT p1 FROM Product p1 WHERE p1.referenceCode IN " +
+            "(SELECT p2.referenceCode FROM Product p2 WHERE p2.name = :name)")
+    List<Product> findVariantsByProductName(@Param("name") String name);
+
 }

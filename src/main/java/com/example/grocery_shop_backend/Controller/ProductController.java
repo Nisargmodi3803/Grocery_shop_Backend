@@ -26,56 +26,96 @@ public class ProductController
 
     // GET API {Find Product by ID}
     @GetMapping("/product/{id}")
-    public Product getProductById(@PathVariable int id)
+    public ResponseEntity<Product> getProductById(@PathVariable int id)
     {
-        return productService.getProductById(id);
+        try{
+            return ResponseEntity.ok(productService.getProductById(id));
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find Product by Slug title}
     @GetMapping("/product-title/{slugTitle}")
-    public Product getProductBySlugTitle(@PathVariable String slugTitle)
+    public ResponseEntity<Product> getProductBySlugTitle(@PathVariable String slugTitle)
     {
-        return productService.getProductBySlugTitle(slugTitle);
+        try{
+            return ResponseEntity.ok(productService.getProductBySlugTitle(slugTitle));
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Products by Category ID}
     @GetMapping("/products-category/{categoryId}")
-    public List<Product> getProductByCategoryId(@PathVariable int categoryId)
+    public ResponseEntity<List<Product>> getProductByCategoryId(@PathVariable int categoryId)
     {
-        return productService.getProductByCatgeoryId(categoryId);
+        try{
+            return ResponseEntity.ok(productService.getProductByCatgeoryId(categoryId));
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Products by Category Slug title}
     @GetMapping("/products-category-title/{categorySlugTitle}")
-    public List<Product> getProductByCategorySlugTitle(@PathVariable String categorySlugTitle)
+    public ResponseEntity<List<Product>> getProductByCategorySlugTitle(@PathVariable String categorySlugTitle)
     {
-        return productService.getProductByCategorySlugTitle(categorySlugTitle);
+        try{
+            return ResponseEntity.ok(productService.getProductByCategorySlugTitle(categorySlugTitle));
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Products by Subcategory ID}
     @GetMapping("/products-subcategory/{subCategoryId}")
-    public List<Product> getProductBySubCategoryId(@PathVariable("subCategoryId") int subCategoryId) {
-        return productService.getProductBySubCategoryId(subCategoryId);
+    public ResponseEntity<List<Product>> getProductBySubCategoryId(@PathVariable("subCategoryId") int subCategoryId) {
+        try{
+            return ResponseEntity.ok(productService.getProductBySubCategoryId(subCategoryId));
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Products by Subcategory Slug title}
     @GetMapping("/products-subcategory-title/{subCategorySlugTitle}")
-    public List<Product> getProductBySubCategorySlugTitle(@PathVariable("subCategorySlugTitle") String subCategorySlugTitle) {
-        return productService.getProductBySubCategorySlugTitle(subCategorySlugTitle);
+    public ResponseEntity<List<Product>> getProductBySubCategorySlugTitle(@PathVariable("subCategorySlugTitle") String subCategorySlugTitle) {
+        try{
+            return ResponseEntity.ok(productService.getProductBySubCategorySlugTitle(subCategorySlugTitle));
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Products by Brand ID}
     @GetMapping("/products-brand/{brandId}")
-    public List<Product> getProductByBrandId(@PathVariable int brandId)
+    public ResponseEntity<List<Product>> getProductByBrandId(@PathVariable int brandId)
     {
-        return productService.getProductByBrandId(brandId);
+        try{
+            return ResponseEntity.ok(productService.getProductByBrandId(brandId));
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Products by Brand Slug title}
     @GetMapping("/products-brand-title/{brandSlugTitle}")
-    public List<Product> getProductByBrandSlugTitle(@PathVariable String brandSlugTitle)
+    public ResponseEntity<List<Product>> getProductByBrandSlugTitle(@PathVariable String brandSlugTitle)
     {
-        return productService.getProductByBrandSlugTitle(brandSlugTitle);
+        try{
+            return ResponseEntity.ok(productService.getProductByBrandSlugTitle(brandSlugTitle));
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // POST API {Add New Product}
@@ -115,5 +155,17 @@ public class ProductController
             return new ResponseEntity<>("Product retrieved successfully", HttpStatus.OK);
         else
             return new ResponseEntity<>("Product Already Present", HttpStatus.BAD_REQUEST);
+    }
+
+
+    //GET API {Find Product's Variants}
+    @GetMapping("/product-variants")
+    public ResponseEntity<List<Product>> getProductVariants(@RequestParam String name) {
+        try{
+            return ResponseEntity.ok(productService.getProductVariants(name));
+        }
+        catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

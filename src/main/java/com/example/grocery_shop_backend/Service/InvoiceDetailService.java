@@ -58,12 +58,12 @@ public class InvoiceDetailService
                    invoiceDetail.setInvoice(invoice);
                    invoiceDetail.setProductName(product.getName());
                    invoiceDetail.setProductVariantName(product.getVariantName());
-                   invoiceDetail.setBasePrice(product.getPrice());
+                   invoiceDetail.setBasePrice(product.getBasePrice());
                    invoiceDetail.setMrp(product.getMrp());
                    invoiceDetail.setQuantity(addProductOrderDTO.getQuantity());
                    invoiceDetail.setTotalAmount(product.getDiscount_amt());
 
-                   double totalPayable = product.getPrice() * addProductOrderDTO.getQuantity();
+                   double totalPayable = product.getBasePrice() * addProductOrderDTO.getQuantity();
                    if (totalPayable >= 500)
                        invoiceDetail.setTotalPayable(addProductOrderDTO.getTotalPayable());
                    else
