@@ -17,6 +17,9 @@ public class Brand
     @Column(name = "brand_image")
     private String image_url;
 
+    @Column(name = "brand_description")
+    private String description;
+
     @Column(name = "slug_title")
     private String slug_title;
 
@@ -28,10 +31,11 @@ public class Brand
 
     public Brand(){}
 
-    public Brand(int id, String name, String image_url, String slug_title, int is_deleted, String c_date) {
+    public Brand(int id, String name, String image_url, String description, String slug_title, int is_deleted, String c_date) {
         this.id = id;
         this.name = name;
         this.image_url = image_url;
+        this.description = description;
         this.slug_title = slug_title;
         this.is_deleted = is_deleted;
         this.c_date = c_date;
@@ -83,5 +87,13 @@ public class Brand
 
     public void setC_date(String c_date) {
         this.c_date = c_date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

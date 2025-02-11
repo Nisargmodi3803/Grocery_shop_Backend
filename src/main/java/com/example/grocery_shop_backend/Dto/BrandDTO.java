@@ -5,6 +5,7 @@ public class BrandDTO
     private String name;
     private String image;
     private String slugTitle;
+    private String description;
 
     public String getName() {
         return name;
@@ -28,5 +29,13 @@ public class BrandDTO
 
     public void setSlugTitle(String slugTitle) {
         this.slugTitle = slugTitle;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

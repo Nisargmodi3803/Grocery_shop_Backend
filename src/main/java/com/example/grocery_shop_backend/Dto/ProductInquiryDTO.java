@@ -3,7 +3,7 @@ package com.example.grocery_shop_backend.Dto;
 public class ProductInquiryDTO
 {
     private int productId;
-    private int customerId;
+    private String customerEmail;
     private String message;
     private int quantity;
 
@@ -15,12 +15,12 @@ public class ProductInquiryDTO
         this.productId = productId;
     }
 
-    public int getCustomerId() {
-        return customerId;
+    public String getCustomerEmail() {
+        return customerEmail;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
     }
 
     public String getMessage() {

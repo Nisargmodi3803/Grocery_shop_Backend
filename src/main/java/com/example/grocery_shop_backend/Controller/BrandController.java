@@ -4,6 +4,7 @@ import com.example.grocery_shop_backend.Dto.BrandDTO;
 import com.example.grocery_shop_backend.Entities.Brand;
 import com.example.grocery_shop_backend.Service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,23 +19,35 @@ public class BrandController
 
     // GET API {Find All Brands}
     @GetMapping("/brand")
-    public List<Brand> getAllBrands()
+    public ResponseEntity<List<Brand>> getAllBrands()
     {
-        return brandService.findAllBrands();
+        try{
+            return ResponseEntity.ok(brandService.findAllBrands());
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find Brand by ID}
     @GetMapping("/brand-slug/{slugTitle}")
-    public Brand getBrandBySlugTitle(@PathVariable String slugTitle)
+    public ResponseEntity<Brand> getBrandBySlugTitle(@PathVariable String slugTitle)
     {
-        return brandService.findBrandBySlugTitle(slugTitle);
+        try {
+            return ResponseEntity.ok(brandService.findBrandBySlugTitle(slugTitle));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find Brand by Slug Title}
     @GetMapping("/brand-id/{id}")
-    public Brand getBrandById(@PathVariable int id)
+    public ResponseEntity<Brand> getBrandById(@PathVariable int id)
     {
-        return brandService.findBrandById(id);
+        try {
+            return ResponseEntity.ok(brandService.findBrandById(id));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // POST API {Add New Brand}

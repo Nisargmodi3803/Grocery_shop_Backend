@@ -61,7 +61,7 @@ public class ProductInquiryService
     public void addInquiry(ProductInquiryDTO productInquiryDTO)
     {
         Product product = productRepository.findProductById(productInquiryDTO.getProductId());
-        Customer customer = customerRepository.findCustomerById(productInquiryDTO.getCustomerId());
+        Customer customer = customerRepository.findCustomerByEmail(productInquiryDTO.getCustomerEmail());
 
         if(product == null || customer == null)
             throw new objectNotFoundException("Product or Customer Not Found");

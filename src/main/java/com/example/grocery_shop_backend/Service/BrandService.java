@@ -46,6 +46,7 @@ public class BrandService
         brand.setName(brandDTO.getName());
         brand.setImage_url(brandDTO.getImage());
         brand.setSlug_title(brandDTO.getSlugTitle());
+        brand.setDescription(brandDTO.getDescription());
         brand.setIs_deleted(1);
         brand.setC_date(cDate);
 
