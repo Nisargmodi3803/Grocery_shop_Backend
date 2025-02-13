@@ -168,4 +168,126 @@ public class ProductController
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // GET API {Find All Products by MRP Ascending Order - Subcategory}
+    @GetMapping("/product-ascending-sub-mrp/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductAscendingMrp(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsByAscendingMRP(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by MRP Descending Order - Subcategory}
+    @GetMapping("/product-descending-sub-mrp/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductDescendingMrp(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsByDescendingMRP(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by Name Ascending Order - Subcategory}
+    @GetMapping("/product-ascending-sub-name/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductAscendingName(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsAscendingName(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by Name Descending Order - Subcategory}
+    @GetMapping("/product-descending-sub-name/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductDescendingName(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsDescendingName(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by Discount Ascending Order - Subcategory}
+    @GetMapping("/product-ascending-sub-discount/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductAscendingDiscount(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsAscendingDiscount(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by Discount Descending Order - Subcategory}
+    @GetMapping("/product-descending-sub-discount/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductDescendingDiscount(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsDescendingDiscount(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // ======================= SORTING BY BRAND =======================
+
+    // GET API {Find All Products by MRP Ascending Order - Brand}
+    @GetMapping("/product-ascending-brand-mrp/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductByBrandAscendingMrp(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsByBrandAscendingMRP(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by MRP Descending Order - Brand}
+    @GetMapping("/product-descending-brand-mrp/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductByBrandDescendingMrp(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsByBrandDescendingMRP(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by Name Ascending Order - Brand}
+    @GetMapping("/product-ascending-brand-name/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductByBrandAscendingName(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsByBrandAscendingName(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by Name Descending Order - Brand}
+    @GetMapping("/product-descending-brand-name/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductByBrandDescendingName(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsByBrandDescendingName(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by Discount Ascending Order - Brand}
+    @GetMapping("/product-ascending-brand-discount/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductByBrandAscendingDiscount(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsByBrandAscendingDiscount(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Find All Products by Discount Descending Order - Brand}
+    @GetMapping("/product-descending-brand-discount/{slugTitle}")
+    public ResponseEntity<List<Product>> getProductByBrandDescendingDiscount(@PathVariable String slugTitle) {
+        try {
+            return ResponseEntity.ok(productService.findAllProductsByBrandDescendingDiscount(slugTitle));
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

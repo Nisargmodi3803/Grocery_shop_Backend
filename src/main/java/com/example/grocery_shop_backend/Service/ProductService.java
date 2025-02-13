@@ -10,7 +10,10 @@ import com.example.grocery_shop_backend.Repository.BrandRepository;
 import com.example.grocery_shop_backend.Repository.CategoryRepository;
 import com.example.grocery_shop_backend.Repository.ProductRepository;
 import com.example.grocery_shop_backend.Repository.SubCategoryRepository;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -267,5 +270,125 @@ public class ProductService
     public List<Product> getProductVariants(String productName) {
 //        System.out.println("Name "+productName);
         return productRepository.findVariantsByProductName(productName);
+    }
+
+    // Find All Products by MRP Ascending Order
+    public List<Product> findAllProductsByAscendingMRP(String slugTitle)
+    {
+        List<Product> products = productRepository.findAllProductsByAscendingMRP(slugTitle);
+
+        if(products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+        return products;
+    }
+
+    // Find All Products by MRP Descending Order
+    public List<Product> findAllProductsByDescendingMRP(String slugTitle)
+    {
+        List<Product> products = productRepository.findAllProductsByDescendingMRP(slugTitle);
+
+        if(products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+        return products;
+    }
+
+    // Find All Products by Name Ascending Order
+    public List<Product> findAllProductsAscendingName(String slugTitle)
+    {
+        List<Product> products = productRepository.findAllProductsByAscendingName(slugTitle);
+
+        if(products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+        return products;
+    }
+
+    // Find All Products by Name Descending Order
+    public List<Product> findAllProductsDescendingName(String slugTitle)
+    {
+        List<Product> products = productRepository.findAllProductsByDescendingName(slugTitle);
+
+        if(products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+        return products;
+    }
+
+    // Find All Products by Discount Ascending Order
+    public List<Product> findAllProductsAscendingDiscount(String slugTitle)
+    {
+        List<Product> products = productRepository.findAllProductsByAscendingDiscount(slugTitle);
+
+        if(products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+        return products;
+    }
+
+    // Find All Products by Discount Descending Order
+    public List<Product> findAllProductsDescendingDiscount(String slugTitle)
+    {
+        List<Product> products = productRepository.findAllProductsByDescendingDiscount(slugTitle);
+
+        if(products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+        return products;
+    }
+
+    // Find All Products by MRP Ascending Order (Brand)
+    public List<Product> findAllProductsByBrandAscendingMRP(String slugTitle) {
+        List<Product> products = productRepository.findAllProductsByBrandAscendingMRP(slugTitle);
+
+        if (products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+
+        return products;
+    }
+
+    // Find All Products by MRP Descending Order (Brand)
+    public List<Product> findAllProductsByBrandDescendingMRP(String slugTitle) {
+        List<Product> products = productRepository.findAllProductsByBrandDescendingMRP(slugTitle);
+
+        if (products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+
+        return products;
+    }
+
+    // Find All Products by Name Ascending Order (Brand)
+    public List<Product> findAllProductsByBrandAscendingName(String slugTitle) {
+        List<Product> products = productRepository.findAllProductsByBrandAscendingName(slugTitle);
+
+        if (products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+
+        return products;
+    }
+
+    // Find All Products by Name Descending Order (Brand)
+    public List<Product> findAllProductsByBrandDescendingName(String slugTitle) {
+        List<Product> products = productRepository.findAllProductsByBrandDescendingName(slugTitle);
+
+        if (products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+
+        return products;
+    }
+
+    // Find All Products by Discount Ascending Order (Brand)
+    public List<Product> findAllProductsByBrandAscendingDiscount(String slugTitle) {
+        List<Product> products = productRepository.findAllProductsByBrandAscendingDiscount(slugTitle);
+
+        if (products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+
+        return products;
+    }
+
+    // Find All Products by Discount Descending Order (Brand)
+    public List<Product> findAllProductsByBrandDescendingDiscount(String slugTitle) {
+        List<Product> products = productRepository.findAllProductsByBrandDescendingDiscount(slugTitle);
+
+        if (products.isEmpty())
+            throw new objectNotFoundException("Product with name " + slugTitle + " not found");
+
+        return products;
     }
 }
