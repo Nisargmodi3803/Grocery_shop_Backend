@@ -28,6 +28,5 @@ public class ContactController
         catch (Exception e){
             return ResponseEntity.badRequest().body("Insert failed");
         }
-
     }
 }

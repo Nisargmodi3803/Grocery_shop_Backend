@@ -26,20 +26,17 @@ public class ContactService
     @Transactional
     public void insertContact(ContactDTO contactDTO)
     {
-        Customer customer = customerRepository.findById(contactDTO.getCustomerId())
-                .orElseThrow(() -> new objectNotFoundException("Customer not found"));
-
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String currentDateTime = now.format(formatter);
 
         Contact contact = new Contact();
-        contact.setCustomer(customer);
         contact.setName(contactDTO.getName());
         contact.setEmail(contactDTO.getEmail());
         contact.setMessage(contactDTO.getMessage());
         contact.setMobile(contactDTO.getMobile());
         contact.setC_date(currentDateTime);
+        contact.setIsDeleted(1);
         contactRepository.save(contact);
     }
 }

@@ -22,35 +22,55 @@ public class SubCategoryController
     @GetMapping("/subcategories")
     public ResponseEntity<List<SubCategory>> getAllSubCategory()
     {
-        return ResponseEntity.ok(subCategoryService.getAllSubCategories());
+        try {
+            return ResponseEntity.ok(subCategoryService.getAllSubCategories());
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     // GET API {Find Subcategory by Slug title}
     @GetMapping("/subcategory-title/{slugTitle}")
-    public SubCategory getSubCategoryBySlugTitle(@PathVariable String slugTitle)
+    public ResponseEntity<SubCategory> getSubCategoryBySlugTitle(@PathVariable String slugTitle)
     {
-        return subCategoryService.getSubCategoryBySlugTitle(slugTitle);
+        try {
+            return ResponseEntity.ok(subCategoryService.getSubCategoryBySlugTitle(slugTitle));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     // GET API {Find Subcategory by ID}
     @GetMapping("/subcategory/{id}")
-    public SubCategory getSubCategoryById(@PathVariable int id)
+    public ResponseEntity<SubCategory> getSubCategoryById(@PathVariable int id)
     {
-        return subCategoryService.getSubCategoryById(id);
+        try{
+            return ResponseEntity.ok(subCategoryService.getSubCategoryById(id));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     // GET API {Find Subcategories by Category ID}
     @GetMapping("/subcategories-category/{id}")
-    public List<SubCategory> getSubCategoryByCategoryId(@PathVariable int id)
+    public ResponseEntity<List<SubCategory>> getSubCategoryByCategoryId(@PathVariable int id)
     {
-        return subCategoryService.getSubCategoryByCategoryId(id);
+       try {
+           return ResponseEntity.ok(subCategoryService.getSubCategoryByCategoryId(id));
+       }catch (Exception e){
+           return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+       }
     }
 
     // GET API {Find Subcategories by Category Slug title}
     @GetMapping("/subcategories-category-title/{slugTitle}")
-    public List<SubCategory> getSubCategoryByCategorySlugTitle(@PathVariable String slugTitle)
+    public ResponseEntity<List<SubCategory>> getSubCategoryByCategorySlugTitle(@PathVariable String slugTitle)
     {
-        return subCategoryService.getSubCategoryByCategorySlugTitle(slugTitle);
+        try{
+            return ResponseEntity.ok(subCategoryService.getSubCategoryByCategorySlugTitle(slugTitle));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     // POST API {Add New Subcategory}

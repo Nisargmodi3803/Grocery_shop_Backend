@@ -11,10 +11,6 @@ public class Contact
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "customer_id")
-    Customer customer;
-
     @Column(name = "name")
     String name;
 
@@ -30,16 +26,19 @@ public class Contact
     @Column(name = "c_date")
     String c_date;
 
+    @Column(name = "is_deleted")
+    int isDeleted;
+
     public Contact(){}
 
-    public Contact(int id, Customer customer, String name, String email, String message, String c_date,String mobile) {
+    public Contact(int id, String name, String mobile, String email, String message, String c_date, int isDeleted) {
         this.id = id;
-        this.customer = customer;
         this.name = name;
+        this.mobile = mobile;
         this.email = email;
         this.message = message;
         this.c_date = c_date;
-        this.mobile = mobile;
+        this.isDeleted = isDeleted;
     }
 
     public int getId() {
@@ -50,20 +49,20 @@ public class Contact
         this.id = id;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
     public String getName() {
         return name;
     }
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 
     public String getEmail() {
@@ -90,11 +89,11 @@ public class Contact
         this.c_date = c_date;
     }
 
-    public String getMobile() {
-        return mobile;
+    public int getIsDeleted() {
+        return isDeleted;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 }

@@ -2,19 +2,10 @@ package com.example.grocery_shop_backend.Dto;
 
 public class ContactDTO
 {
-    private int customerId;
     private String name;
     private String mobile;
     private String email;
     private String message;
-
-    public int getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
 
     public String getName() {
         return name;
