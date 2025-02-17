@@ -9,6 +9,7 @@ public class CustomerBasicDetailsDTO
     private String customerDob;
     private String customerImage;
     private String customerMobile;
+    private double customerPoints;
 
     public String getCustomerName() {
         return customerName;
@@ -64,5 +65,13 @@ public class CustomerBasicDetailsDTO
 
     public void setCustomerMobile(String customerMobile) {
         this.customerMobile = customerMobile;
+    }
+
+    public double getCustomerPoints() {
+        return customerPoints;
+    }
+
+    public void setCustomerPoints(double customerPoints) {
+        this.customerPoints = customerPoints;
     }
 }

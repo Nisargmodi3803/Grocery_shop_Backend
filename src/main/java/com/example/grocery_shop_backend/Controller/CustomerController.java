@@ -7,11 +7,15 @@ import com.example.grocery_shop_backend.Dto.UpdatePasswordDTO;
 import com.example.grocery_shop_backend.Entities.Customer;
 import com.example.grocery_shop_backend.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
+
+import static org.springframework.web.servlet.function.ServerResponse.status;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -54,17 +58,17 @@ public class CustomerController {
     }
 
     // PATCH API {Update Profile}
-    @PatchMapping("/update-profile/{mobile}")
-    public ResponseEntity<CustomerBasicDetailsDTO> updateProfile(@PathVariable String mobile, @RequestBody CustomerBasicDetailsDTO customerBasicDetailsDTO) {
-        customerService.updateCustomerBasicDetails(mobile, customerBasicDetailsDTO);
-        return ResponseEntity.ok(customerService.getBasicDetails(mobile));
+    @PatchMapping("/update-profile/{email}")
+    public ResponseEntity<CustomerBasicDetailsDTO> updateProfile(@PathVariable String email, @RequestBody CustomerBasicDetailsDTO customerBasicDetailsDTO) {
+        customerService.updateCustomerBasicDetails(email, customerBasicDetailsDTO);
+        return ResponseEntity.ok(customerService.getBasicDetails(email));
     }
 
     // PATCH API {Change Password}
-    @PatchMapping("/change-password/{mobile}")
-    public ResponseEntity<String> changePassword(@PathVariable String mobile, @RequestBody UpdatePasswordDTO updatePasswordDTO) {
+    @PatchMapping("/change-password/{email}")
+    public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody UpdatePasswordDTO updatePasswordDTO) {
         try {
-            String result = customerService.changePassword(mobile, updatePasswordDTO.getOldPassword(), updatePasswordDTO.getNewPassword());
+            String result = customerService.changePassword(email, updatePasswordDTO.getOldPassword(), updatePasswordDTO.getNewPassword());
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
@@ -73,19 +77,24 @@ public class CustomerController {
 
     // PATCH API {Change Profile Image}
     @PatchMapping("/change-profile-image/{email}")
-    public ResponseEntity<String> changeProfileImage(@PathVariable String email, @RequestParam String image) {
+    public ResponseEntity<String> changeProfileImage(@PathVariable String email, @RequestParam("file") MultipartFile file) {
         try {
-            String result = customerService.changeProfileImage(email, image);
+            String result = customerService.changeProfileImage(email, file);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
     }
 
+
     // GET API {Profile}
-    @GetMapping("/profile/{mobile}")
-    public ResponseEntity<CustomerBasicDetailsDTO> profile(@PathVariable String mobile) {
-        return ResponseEntity.ok(customerService.getBasicDetails(mobile));
+    @GetMapping("/profile/{email}")
+    public ResponseEntity<CustomerBasicDetailsDTO> profile(@PathVariable String email) {
+        try{
+            return ResponseEntity.ok(customerService.getBasicDetails(email));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Customer By Mobile}

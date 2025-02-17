@@ -19,23 +19,35 @@ public class BlogController
 
     // GET API {Find All Blog}
     @GetMapping("/blogs")
-    public List<Blog> getAllBlogs()
+    public ResponseEntity<List<Blog>> getAllBlogs()
     {
-        return blogService.getAllBlogs();
+        try{
+            return new ResponseEntity<>(blogService.getAllBlogs(), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find Blog by ID}
     @GetMapping("/blog-id/{blogId}")
-    public Blog getBlogById(@PathVariable int blogId)
+    public ResponseEntity<Blog> getBlogById(@PathVariable int blogId)
     {
-        return blogService.getBlogById(blogId);
+        try{
+            return new ResponseEntity<>(blogService.getBlogById(blogId), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find Blog By Slug Title}
     @GetMapping("/blog-slug/{slug}")
-    public Blog getBlogBySlug(@PathVariable String slug)
+    public ResponseEntity<Blog> getBlogBySlug(@PathVariable String slug)
     {
-        return blogService.getBlogBySlug(slug);
+        try{
+            return new ResponseEntity<>(blogService.getBlogBySlug(slug), HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // POST API {Add Blog}

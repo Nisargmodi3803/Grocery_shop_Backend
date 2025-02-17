@@ -8,11 +8,19 @@ import com.example.grocery_shop_backend.Exception.MobileNumberAlreadyExistsExcep
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CustomerRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -21,6 +29,9 @@ public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Value("${upload.dir}")
+    private String uploadDir; // Directory where images will be stored
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -50,7 +61,7 @@ public class CustomerService {
         customer.setCustomerEmail(customerRegistrationDTO.getCustomerEmail());
         customer.setCustomerPassword(encodedPassword);
         customer.setCustomerOtp(customerRegistrationDTO.getOtp());
-        customer.setCustomerImage("http://localhost:9001/default.png");
+        customer.setCustomerImage("default.png");
         customer.setIsDeleted(1);
         customer.setcDate(cDate);
         customerRepository.save(customer);
@@ -77,8 +88,8 @@ public class CustomerService {
 
     // Update Basic Customer Details Service
     @Transactional
-    public Customer updateCustomerBasicDetails(String customerMobile, CustomerBasicDetailsDTO updateDTO) {
-        Customer existingCustomer = customerRepository.findCustomerByMobile(customerMobile);
+    public Customer updateCustomerBasicDetails(String customerEmail, CustomerBasicDetailsDTO updateDTO) {
+        Customer existingCustomer = customerRepository.findCustomerByEmail(customerEmail);
 
         if (existingCustomer != null) {
             if (updateDTO.getCustomerName() != null)
@@ -96,7 +107,7 @@ public class CustomerService {
             if (updateDTO.getCustomerDob() != null)
                 existingCustomer.setCustomerDob(updateDTO.getCustomerDob());
         } else {
-            throw new objectNotFoundException("Customer with mobile number " + customerMobile + " not found");
+            throw new objectNotFoundException("Customer with mobile number " + customerEmail + " not found");
         }
 
         return customerRepository.save(existingCustomer);
@@ -120,21 +131,37 @@ public class CustomerService {
 
     // Change Profile Image Service
     @Transactional
-    public String changeProfileImage(String customerMobile, String profileImage) {
-        Customer existingCustomer = customerRepository.findCustomerByMobile(customerMobile);
+    public String changeProfileImage(String customerEmail, MultipartFile file) throws IOException {
+        Customer existingCustomer = customerRepository.findCustomerByEmail(customerEmail);
         if (existingCustomer != null) {
-            existingCustomer.setCustomerImage(profileImage);
+            // Create the upload directory if it doesn't exist
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // Generate a unique filename or use the customer's email as the filename
+            String fileName = customerEmail + "-" + file.getOriginalFilename();
+            Path filePath = uploadPath.resolve(fileName);
+
+            // Save the image to the upload directory
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Update the customer profile image name in the database
+            existingCustomer.setCustomerImage(fileName);
+            customerRepository.save(existingCustomer);  // Save changes to the database
+
             return "Profile updated successfully";
         } else {
-            throw new objectNotFoundException("Customer with mobile number " + customerMobile + " not found");
+            throw new objectNotFoundException("Customer with Email " + customerEmail + " not found");
         }
     }
 
     // Get Basic Details using Mobile Number Service
-    public CustomerBasicDetailsDTO getBasicDetails(String customerMobile) {
-        Customer customer = customerRepository.findCustomerByMobile(customerMobile);
+    public CustomerBasicDetailsDTO getBasicDetails(String customerEmail) {
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
         if (customer == null) {
-            throw new objectNotFoundException("Customer with mobile number " + customerMobile + " not found");
+            throw new objectNotFoundException("Customer with mobile number " + customerEmail + " not found");
         }
 
         CustomerBasicDetailsDTO customerBasicDetailsDTO = new CustomerBasicDetailsDTO();
@@ -145,6 +172,7 @@ public class CustomerService {
         customerBasicDetailsDTO.setCustomerDob(customer.getCustomerDob());
         customerBasicDetailsDTO.setCustomerImage(customer.getCustomerImage());
         customerBasicDetailsDTO.setCustomerMobile(customer.getCustomerMobile());
+        customerBasicDetailsDTO.setCustomerPoints(customer.getCustomerPoint());
         return customerBasicDetailsDTO;
     }
 
