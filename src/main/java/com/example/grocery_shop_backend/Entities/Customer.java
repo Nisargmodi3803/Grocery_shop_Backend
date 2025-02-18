@@ -36,7 +36,7 @@ public class Customer
     private String customerPincode;
 
     @Column(name = "customer_gender",nullable = true)
-    private int customerGender;
+    private int customerGender; // 0 = not mention yet, 1=Male, 2=Female, 3=others
 
     @Column(name = "customer_dob")
     private String customerDob;

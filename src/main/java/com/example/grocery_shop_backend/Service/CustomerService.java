@@ -234,4 +234,31 @@ public class CustomerService {
             return true;
         }
     }
+
+    // Delete Profile Image Service
+    @Transactional
+    public void deleteProfileImage(String customerEmail) {
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
+        if (customer == null) {
+            throw new objectNotFoundException("Customer with Email " + customerEmail + " not found");
+        }
+
+        String imageName = customer.getCustomerImage();
+
+        // Ensure the image is not the default one before deleting
+        if (imageName != null && !imageName.equals("default.png")) {
+            Path imagePath = Paths.get(uploadDir, imageName);
+
+            try {
+                Files.deleteIfExists(imagePath); // Delete the file if it exists
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to delete profile image: " + imageName, e);
+            }
+        }
+
+        // Set profile image to default and update in DB
+        customer.setCustomerImage("default.png");
+        customerRepository.save(customer);
+    }
+
 }

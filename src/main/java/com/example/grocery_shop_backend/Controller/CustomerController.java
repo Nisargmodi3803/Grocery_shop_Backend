@@ -59,9 +59,13 @@ public class CustomerController {
 
     // PATCH API {Update Profile}
     @PatchMapping("/update-profile/{email}")
-    public ResponseEntity<CustomerBasicDetailsDTO> updateProfile(@PathVariable String email, @RequestBody CustomerBasicDetailsDTO customerBasicDetailsDTO) {
-        customerService.updateCustomerBasicDetails(email, customerBasicDetailsDTO);
-        return ResponseEntity.ok(customerService.getBasicDetails(email));
+    public ResponseEntity<String> updateProfile(@PathVariable String email, @RequestBody CustomerBasicDetailsDTO customerBasicDetailsDTO) {
+        try{
+            customerService.updateCustomerBasicDetails(email, customerBasicDetailsDTO);
+            return ResponseEntity.ok("Successfully updated profile");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // PATCH API {Change Password}
@@ -142,6 +146,17 @@ public class CustomerController {
         }
         else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email not Found");
+        }
+    }
+
+    //PATCH API {Delete Profile Image}
+    @PatchMapping("/delete-profile-image/{email}")
+    public ResponseEntity<String> deleteProfileImage(@PathVariable String email) {
+        try{
+            customerService.deleteProfileImage(email);
+            return ResponseEntity.ok("Delete profile image successfully");
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
