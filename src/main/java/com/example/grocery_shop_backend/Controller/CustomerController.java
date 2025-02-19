@@ -72,10 +72,15 @@ public class CustomerController {
     @PatchMapping("/change-password/{email}")
     public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody UpdatePasswordDTO updatePasswordDTO) {
         try {
-            String result = customerService.changePassword(email, updatePasswordDTO.getOldPassword(), updatePasswordDTO.getNewPassword());
-            return ResponseEntity.ok(result);
+            boolean result = customerService.changePassword(email, updatePasswordDTO.getOldPassword(), updatePasswordDTO.getNewPassword());
+            if(result){
+                return ResponseEntity.ok("Password changed successfully");
+            }else{
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Old Password does not match");
+            }
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

@@ -17,23 +17,31 @@ public class WishlistController
     private WishlistService wishlistService;
 
     //GET API {get Wishlist}
-    @GetMapping("/wishlist/{id}")
-    public List<Wishlist> getWishlist(@PathVariable int id)
+    @GetMapping("/wishlist/{email}")
+    public ResponseEntity<List<Wishlist>> getWishlist(@PathVariable String email)
     {
-        return wishlistService.getWishlist(id);
+        try{
+            return new ResponseEntity<>(wishlistService.getWishlist(email), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     //POST API {Add to Wishlist}
     @PostMapping("/add-wishlist")
-    public ResponseEntity<String> addToWishlist(@RequestParam int customerId, @RequestParam int productId) {
-        wishlistService.addToWishlist(customerId, productId);
-        return ResponseEntity.ok("Product added to wishlist successfully!");
+    public ResponseEntity<String> addToWishlist(@RequestParam String customerEmail, @RequestParam int productId) {
+        try{
+            wishlistService.addToWishlist(customerEmail, productId);
+            return ResponseEntity.ok("Product added to wishlist successfully!");
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     //PATCH API {Remove from Wishlist}
     @PatchMapping("/remove-wishlist")
-    public ResponseEntity<String> removeFromWishlist(@RequestParam int customerId, @RequestParam int productId) {
-        boolean removed = wishlistService.removeFromWishlist(customerId, productId);
+    public ResponseEntity<String> removeFromWishlist(@RequestParam String customerEmail, @RequestParam int productId) {
+        boolean removed = wishlistService.removeFromWishlist(customerEmail, productId);
         if (removed) {
             return ResponseEntity.ok("Product removed from wishlist successfully.");
         }

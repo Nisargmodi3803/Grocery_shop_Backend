@@ -29,42 +29,55 @@ public class WishlistService
     private CustomerRepository customerRepository;
 
     // Get Wishlist of Customers using MobileNo. Service
-    public List<Wishlist> getWishlist(int id)
+    public List<Wishlist> getWishlist(String email)
     {
-        List<Wishlist> wishlists = wishlistRepository.findByCustomerId(id);
+        List<Wishlist> wishlists = wishlistRepository.findWishlistByCustomer(email);
         if (wishlists.isEmpty())
         {
-            throw new objectNotFoundException("No Wishlist found with present customer with id " + id);
+            throw new objectNotFoundException("No Wishlist found with present customer with email " + email);
         }
 
         return wishlists;
     }
 
     // Add to Wishlist Service
-    public void addToWishlist(int customerId, int productId)
+    public void addToWishlist(String customerEmail, int productId)
     {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new objectNotFoundException("Customer with id " + customerId + " not found"));
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new objectNotFoundException("Product with id " + productId + " not found"));
-
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedTimestamp = now.format(formatter);
 
-        Wishlist wishlist = new Wishlist();
-        wishlist.setCustomer(customer);
-        wishlist.setProduct(product);
-        wishlist.setC_date(formattedTimestamp);
-        wishlist.setIs_deleted(1);
+        Wishlist existingWishlist = wishlistRepository.findByCustomerProduct(customerEmail, productId);
 
-        wishlistRepository.save(wishlist);
+        if (existingWishlist == null) {
+
+            Customer customer = customerRepository.findCustomerByEmail(customerEmail);
+            if(customer == null){
+                throw new objectNotFoundException("Customer with email " + customerEmail + " not found");
+            }
+
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new objectNotFoundException("Product with id " + productId + " not found"));
+
+            Wishlist wishlist = new Wishlist();
+            wishlist.setCustomer(customer);
+            wishlist.setProduct(product);
+            wishlist.setC_date(formattedTimestamp);
+            wishlist.setIs_deleted(1);
+
+            wishlistRepository.save(wishlist);
+        }
+        else{
+            existingWishlist.setIs_deleted(1);
+            existingWishlist.setC_date(formattedTimestamp);
+            wishlistRepository.save(existingWishlist);
+        }
     }
 
     // Remove from Wishlist Service
-    public Boolean removeFromWishlist(int customerId, int productId)
+    public Boolean removeFromWishlist(String customerEmail, int productId)
     {
-        Wishlist wishlist = wishlistRepository.findByCustomerIdProductId(customerId, productId);
+        Wishlist wishlist = wishlistRepository.findByCustomerProduct(customerEmail, productId);
         if (wishlist == null)
             return false;
         else

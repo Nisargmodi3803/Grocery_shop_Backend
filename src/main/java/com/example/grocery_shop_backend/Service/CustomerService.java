@@ -115,14 +115,14 @@ public class CustomerService {
 
     // Change Password Service
     @Transactional
-    public String changePassword(String customerEmail, String oldPassword, String newPassword) {
+    public boolean changePassword(String customerEmail, String oldPassword, String newPassword) {
         Customer existingCustomer = customerRepository.findCustomerByEmail(customerEmail);
         if (existingCustomer != null) {
             if (passwordEncoder.matches(oldPassword, existingCustomer.getCustomerPassword())) {
                 existingCustomer.setCustomerPassword(passwordEncoder.encode(newPassword));
-                return "Password updated successfully";
+                return true;
             } else {
-                return "Old Password Does Not Match";
+                return false;
             }
         } else {
             throw new objectNotFoundException("Customer with Email " + customerEmail + " not found");
