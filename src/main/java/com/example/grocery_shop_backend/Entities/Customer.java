@@ -56,8 +56,9 @@ public class Customer
     @Column(name = "customer_referral_code")
     private String customerReferralCode;
 
-    @Column(name = "customer_referred_by")
-    private String customerReferralBy;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_referred_by")
+    private Customer customerReferralBy;
 
     @Column(name = "customer_points")
     private double customerPoint;
@@ -67,7 +68,7 @@ public class Customer
 
     public Customer(){}
 
-    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, String customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, String customerReferralBy, double customerPoint, int isDeleted) {
+    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, String customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, Customer customerReferralBy, double customerPoint, int isDeleted) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -86,7 +87,7 @@ public class Customer
         this.customerReferralCode = customerReferralCode;
         this.customerReferralBy = customerReferralBy;
         this.customerPoint = customerPoint;
-        this.isDeleted = isDeleted;;
+        this.isDeleted = isDeleted;
     }
 
     public int getCustomerId() {
@@ -217,11 +218,11 @@ public class Customer
         this.customerReferralCode = customerReferralCode;
     }
 
-    public String getCustomerReferralBy() {
+    public Customer getCustomerReferralBy() {
         return customerReferralBy;
     }
 
-    public void setCustomerReferralBy(String customerReferralBy) {
+    public void setCustomerReferralBy(Customer customerReferralBy) {
         this.customerReferralBy = customerReferralBy;
     }
 

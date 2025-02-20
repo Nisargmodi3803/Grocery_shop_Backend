@@ -4,6 +4,7 @@ import com.example.grocery_shop_backend.Dto.CustomerPointDTO;
 import com.example.grocery_shop_backend.Entities.CustomerPoint;
 import com.example.grocery_shop_backend.Service.CustomerPointService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,10 +39,15 @@ public class CustomerPointController
     }
 
     // POST API {Insert into Customer Point}
-    @PostMapping("/customer-point/{customerId}")
-    public ResponseEntity<String> insertIntoCustomerPoint(@PathVariable int customerId, @RequestBody CustomerPointDTO customerPointDTO)
+    @PostMapping("/customer-point/{customerEmail}")
+    public ResponseEntity<String> insertIntoCustomerPoint(@PathVariable String customerEmail, @RequestBody CustomerPointDTO customerPointDTO)
     {
-        customerPointService.addCustomerPoint( customerId, customerPointDTO );
-        return ResponseEntity.ok("Success");
+        try{
+            customerPointService.addCustomerPoint( customerEmail, customerPointDTO );
+            return ResponseEntity.ok("Success");
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
     }
 }

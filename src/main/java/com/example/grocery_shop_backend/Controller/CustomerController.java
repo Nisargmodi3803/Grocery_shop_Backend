@@ -115,7 +115,11 @@ public class CustomerController {
     // GET API {Customer by Email}
     @GetMapping("/customer-email/{email}")
     public ResponseEntity<Customer> getCustomerByEmail(@PathVariable String email) {
-        return ResponseEntity.ok(customerService.getCustomerByEmail(email));
+        try{
+            return ResponseEntity.ok(customerService.getCustomerByEmail(email));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     // PATCH API {Delete Customer}
@@ -160,6 +164,27 @@ public class CustomerController {
         try{
             customerService.deleteProfileImage(email);
             return ResponseEntity.ok("Delete profile image successfully");
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //Get API {Check Referral Code Exist or not}
+    @GetMapping("/check-referral-code")
+    public ResponseEntity<String> checkReferralCode(@RequestParam String referralCode) {
+        boolean result = customerService.checkReferralCode(referralCode);
+        if (result) {
+            return ResponseEntity.ok("Referral code is valid");
+        }else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Referral code is not valid");
+        }
+    }
+
+    // GET API {Get Customer by Referral Code}
+    @GetMapping("/customer-referral-code")
+    public ResponseEntity<Customer> getCustomerReferralCode(@RequestParam String referralCode) {
+        try {
+            return ResponseEntity.ok(customerService.getCustomerByReferralCode(referralCode));
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

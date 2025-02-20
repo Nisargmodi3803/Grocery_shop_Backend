@@ -53,12 +53,12 @@ public class CustomerPointService
 
     // Insert Customer Points Service
     @Transactional
-    public void addCustomerPoint(int customerId,CustomerPointDTO customerPointDTO)
+    public void addCustomerPoint(String customerEmail,CustomerPointDTO customerPointDTO)
     {
-        Customer customer = customerRepository.findCustomerById(customerId);
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
 
         if(customer == null)
-            throw new objectNotFoundException("Customer Not Found with ID: " + customerId);
+            throw new objectNotFoundException("Customer Not Found with Email : " + customerEmail);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
@@ -81,7 +81,7 @@ public class CustomerPointService
             // Deduct Points
             double currentPoints = customer.getCustomerPoint();
             if(currentPoints < customerPointDTO.getPoints())
-                throw new InsufficientPointsException("Insufficient Points with customer ID: " + customerId);
+                throw new InsufficientPointsException("Insufficient Points with customer Email : " + customerEmail);
             customerPoint.setCustomerAvailablePoint(currentPoints - customerPointDTO.getPoints());
             customer.setCustomerPoint(currentPoints - customerPointDTO.getPoints());
         }

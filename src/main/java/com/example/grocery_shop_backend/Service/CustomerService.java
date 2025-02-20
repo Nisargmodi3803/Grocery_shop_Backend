@@ -21,6 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -34,6 +35,27 @@ public class CustomerService {
     private String uploadDir; // Directory where images will be stored
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final SecureRandom random = new SecureRandom();
+
+    public String generateUniqueReferralCode(){
+        String code;
+
+        do{
+            code = generateReferralCode();
+        }while (customerRepository.getReferralCode(code) == code);
+
+        return code;
+    }
+
+    public String generateReferralCode(){
+        StringBuilder referralCode = new StringBuilder(8);
+        for(int i = 0; i < 8; i++){
+            referralCode.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+        return referralCode.toString();
+    }
 
     public Customer getCustomerById(int id) {
         Customer customer = customerRepository.findCustomerById(id);
@@ -55,6 +77,7 @@ public class CustomerService {
         }
 
         String encodedPassword = passwordEncoder.encode(customerRegistrationDTO.getCustomerPassword());
+        String referralCode = generateUniqueReferralCode();
         Customer customer = new Customer();
         customer.setCustomerName(customerRegistrationDTO.getCustomerName());
         customer.setCustomerMobile(customerRegistrationDTO.getCustomerMobile());
@@ -62,8 +85,22 @@ public class CustomerService {
         customer.setCustomerPassword(encodedPassword);
         customer.setCustomerOtp(customerRegistrationDTO.getOtp());
         customer.setCustomerImage("default.png");
+        customer.setCustomerReferralCode(referralCode);
         customer.setIsDeleted(1);
         customer.setcDate(cDate);
+        if(customerRegistrationDTO.getReferralCode() != ""){
+            Customer refferedCustomer = customerRepository.findCustomerByReferralCode(customerRegistrationDTO.getReferralCode());
+            if(refferedCustomer == null){
+                throw new objectNotFoundException("Customer with referral code " + customerRegistrationDTO.getReferralCode() + " do not exists");
+            }
+            customer.setCustomerReferralBy(refferedCustomer);
+//            customer.setCustomerPoint(25.00);
+
+//            refferedCustomer.setCustomerPoint(refferedCustomer.getCustomerPoint() + 15.00);
+            customerRepository.save(refferedCustomer);
+        }else{
+//            customer.setCustomerPoint(25.00);
+        }
         customerRepository.save(customer);
 
         // Return the customer data directly (no token needed)
@@ -259,6 +296,25 @@ public class CustomerService {
         // Set profile image to default and update in DB
         customer.setCustomerImage("default.png");
         customerRepository.save(customer);
+    }
+
+    // Check Referral Code Exists or not Service
+    public boolean checkReferralCode(String referralCode) {
+        Customer customer = customerRepository.findCustomerByReferralCode(referralCode);
+        if(customer == null) {
+            return false;
+        }else{
+            return true;
+        }
+    }
+
+    // Get Customer on the basis of Referral Code Service
+    public Customer getCustomerByReferralCode(String referralCode) {
+        Customer customer = customerRepository.findCustomerByReferralCode(referralCode);
+        if(customer == null) {
+            throw new objectNotFoundException("Customer with Referral Code : " + referralCode + " not found");
+        }
+        return customer;
     }
 
 }

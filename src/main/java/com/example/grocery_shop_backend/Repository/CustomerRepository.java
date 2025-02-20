@@ -20,4 +20,12 @@ public interface CustomerRepository extends JpaRepository<Customer,Integer>
 
     @Query("SELECT customer FROM Customer customer WHERE customer.customerEmail = :customerEmail AND customer.isDeleted=1")
     public Customer findCustomerByEmail(String customerEmail);
+
+    @Query("SELECT customer.customerReferralCode FROM Customer customer WHERE customer.customerReferralCode = :code AND customer.isDeleted=1")
+    public String getReferralCode(String code);
+
+    @Query("SELECT customer FROM Customer customer WHERE customer.customerReferralCode = :referralCode AND customer.isDeleted=1")
+    public Customer findCustomerByReferralCode(String referralCode);
+
+
 }
