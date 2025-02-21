@@ -35,31 +35,47 @@ public class CartService
         return carts;
     }
 
+    public List<Cart> findByCustomerEmail(String customerEmail){
+        List<Cart> carts = cartRepository.findByCustomerEmail(customerEmail);
+        if (carts.isEmpty())
+            throw new objectNotFoundException("Cart associated with customer email " + customerEmail + " not found");
+        return carts;
+    }
+
     // Add to Cart Service
-    public void addToCart(int customerId,int productId,int productQuantity)
+    public void addToCart(String customerEmail,int productId)
     {
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new objectNotFoundException("Customer id " + customerId + " not found"));
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new objectNotFoundException("Product id " + productId + " not found"));
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
+        Product product = productRepository.findProductById(productId);
+
+        if(customer == null && product == null){
+            throw new objectNotFoundException("Customer or product not found");
+        }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String currentDateTime = now.format(formatter);
 
-        Cart cart = new Cart();
-        cart.setCustomer(customer);
-        cart.setProduct(product);
-        cart.setProductQuantity(productQuantity);
-        cart.setIs_deleted(1);
-        cart.setC_date(currentDateTime);
-        cartRepository.save(cart);
+        Cart existingCart = cartRepository.findByCustomerEmail(customerEmail,productId);
+        if(existingCart == null){
+            Cart cart = new Cart();
+            cart.setCustomer(customer);
+            cart.setProduct(product);
+            cart.setProductQuantity(1);
+            cart.setIs_deleted(1);
+            cart.setC_date(currentDateTime);
+            cartRepository.save(cart);
+        }else{
+            existingCart.setC_date(currentDateTime);
+            existingCart.setIs_deleted(1);
+            cartRepository.save(existingCart);
+        }
     }
 
     // Remove from Cart
-    public boolean removeFromCart(int customerId,int productId)
+    public boolean removeFromCart(String customerEmail,int productId)
     {
-        Cart cart = cartRepository.findByCustomerIdProductId(customerId,productId);
+        Cart cart = cartRepository.findByCustomerEmailProductId(customerEmail,productId);
         if(cart == null)
         {
             return false;
@@ -73,9 +89,9 @@ public class CartService
     }
 
     // Increment one item at a time Service
-    public boolean incrementItem(int customerId,int productId)
+    public boolean incrementItem(String customerEmail,int productId)
     {
-        Cart cart = cartRepository.findByCustomerIdProductId(customerId,productId);
+        Cart cart = cartRepository.findByCustomerEmailProductId(customerEmail,productId);
         if(cart == null)
             return false;
         else
@@ -87,9 +103,9 @@ public class CartService
     }
 
     // Decrement one item at a time Service
-    public boolean decrementItem(int customerId,int productId)
+    public boolean decrementItem(String customerEmail,int productId)
     {
-        Cart cart = cartRepository.findByCustomerIdProductId(customerId,productId);
+        Cart cart = cartRepository.findByCustomerEmailProductId(customerEmail,productId);
         if (cart == null)
             return false;
         else

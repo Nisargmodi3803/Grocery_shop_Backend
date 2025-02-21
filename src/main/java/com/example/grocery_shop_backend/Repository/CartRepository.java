@@ -14,6 +14,12 @@ public interface CartRepository extends JpaRepository<Cart, Integer>
     @Query("SELECT cart FROM Cart cart WHERE cart.customer.customerId = :customerId AND cart.is_deleted=1")
     List<Cart> findByCustomerId(@Param("customerId") int customerId);
 
-    @Query("SELECT cart FROM Cart cart WHERE (cart.customer.customerId = :customerId AND cart.product.id = :productId) AND cart.is_deleted=1")
-    Cart findByCustomerIdProductId(@Param("customerId") int customerId, @Param("productId") int productId);
+    @Query("SELECT cart FROM Cart cart WHERE cart.customer.customerEmail = :customerEmail AND cart.is_deleted=1")
+    List<Cart> findByCustomerEmail(@Param("customerEmail") String customerEmail);
+
+    @Query("SELECT cart FROM Cart cart WHERE (cart.customer.customerEmail = :customerEmail AND cart.product.id = :productId) AND cart.is_deleted=1")
+    Cart findByCustomerEmailProductId(@Param("customerEmail") String customerEmail, @Param("productId") int productId);
+
+    @Query("SELECT cart FROM Cart cart WHERE (cart.customer.customerEmail = :customerEmail AND cart.product.id = :productId) AND cart.is_deleted=2")
+    Cart findByCustomerEmail(@Param("customerEmail") String customerEmail, @Param("productId") int productId);
 }

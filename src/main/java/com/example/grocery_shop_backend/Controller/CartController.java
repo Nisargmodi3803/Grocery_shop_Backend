@@ -17,31 +17,45 @@ public class CartController {
     private CartService cartService;
 
     // GET API {Cart By CustomerID}
-    @GetMapping("/cart/{customerID}")
-    public List<Cart> getCartByCustomerId(@PathVariable int customerID) {
-        return cartService.getByCustomerId(customerID);
+    @GetMapping("/cart-customer/{customerID}")
+    public ResponseEntity<List<Cart>> getCartByCustomerId(@PathVariable int customerID) {
+        try {
+            return ResponseEntity.ok(cartService.getByCustomerId(customerID));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    // GET API {Cart by Customer Email}
+    @GetMapping("/cart/{customerEmail}")
+    public ResponseEntity<List<Cart>> getCartByCustomerEmail(@PathVariable String customerEmail) {
+        try {
+            return ResponseEntity.ok(cartService.findByCustomerEmail(customerEmail));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     //POST API {Add to Cart}
     @PostMapping("/add-cart")
-    public ResponseEntity<String> addCart(@RequestParam int customerId,@RequestParam int productId,@RequestParam int productQuantity)
+    public ResponseEntity<String> addCart(@RequestParam String customerEmail,@RequestParam int productId)
     {
         try
         {
-            cartService.addToCart(customerId,productId,productQuantity);
+            cartService.addToCart(customerEmail,productId);
             return ResponseEntity.ok("Product added successfully.");
         }
         catch(Exception e)
         {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     //PATCH API {Remove From Cart}
     @PatchMapping("/remove-cart")
-    public ResponseEntity<String> removeCart(@RequestParam int customerId,@RequestParam int productId)
+    public ResponseEntity<String> removeCart(@RequestParam String customerEmail,@RequestParam int productId)
     {
-        boolean success = cartService.removeFromCart(customerId,productId);
+        boolean success = cartService.removeFromCart(customerEmail,productId);
         if(success)
             return ResponseEntity.ok("Product removed successfully.");
         else
@@ -50,9 +64,9 @@ public class CartController {
 
     //PATCH API {Increment one item at a time}
     @PatchMapping("/cart-increment")
-    public ResponseEntity<String> incrementItem(@RequestParam int customerId,@RequestParam int productId)
+    public ResponseEntity<String> incrementItem(@RequestParam String customerEmail,@RequestParam int productId)
     {
-        boolean success = cartService.incrementItem(customerId,productId);
+        boolean success = cartService.incrementItem(customerEmail,productId);
         if (success)
             return ResponseEntity.ok("Product incremented successfully.");
         else
@@ -61,9 +75,9 @@ public class CartController {
 
     //PATCH API {Decrement one item at a time}
     @PatchMapping("/cart-decrement")
-    public ResponseEntity<String> decrementItem(@RequestParam int customerId,@RequestParam int productId)
+    public ResponseEntity<String> decrementItem(@RequestParam String customerEmail,@RequestParam int productId)
     {
-        boolean success = cartService.decrementItem(customerId,productId);
+        boolean success = cartService.decrementItem(customerEmail,productId);
         System.out.println(success);
         if(success)
             return ResponseEntity.ok("Product decremented successfully.");
