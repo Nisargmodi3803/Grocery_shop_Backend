@@ -37,6 +37,10 @@ public class DeliveryTimeSlot
         this.cDate = cDate;
     }
 
+    public int getDeliveryTimeSlotId() {
+        return deliveryTimeSlotId;
+    }
+
     public void setDeliveryTimeSlotId(int deliveryTimeSlotId) {
         this.deliveryTimeSlotId = deliveryTimeSlotId;
     }

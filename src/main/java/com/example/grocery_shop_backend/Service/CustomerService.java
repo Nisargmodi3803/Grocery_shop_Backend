@@ -3,9 +3,12 @@ package com.example.grocery_shop_backend.Service;
 import com.example.grocery_shop_backend.Dto.CustomerBasicDetailsDTO;
 import com.example.grocery_shop_backend.Dto.CustomerLoginDTO;
 import com.example.grocery_shop_backend.Dto.CustomerRegistrationDTO;
+import com.example.grocery_shop_backend.Dto.CustomerUpdatePlaceOrderDTO;
+import com.example.grocery_shop_backend.Entities.City;
 import com.example.grocery_shop_backend.Entities.Customer;
 import com.example.grocery_shop_backend.Exception.MobileNumberAlreadyExistsException;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
+import com.example.grocery_shop_backend.Repository.CityRepository;
 import com.example.grocery_shop_backend.Repository.CustomerRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.ObjectNotFoundException;
@@ -30,6 +33,9 @@ public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
+    @Autowired
+    private CityRepository cityRepository;
 
     @Value("${upload.dir}")
     private String uploadDir; // Directory where images will be stored
@@ -317,4 +323,29 @@ public class CustomerService {
         return customer;
     }
 
+    @Transactional
+    public void updateCustomer(String customerEmail,CustomerUpdatePlaceOrderDTO customerUpdatePlaceOrderDTO) {
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
+        if (customer == null) {
+            throw new objectNotFoundException("Customer with email " + customerEmail + " not found");
+        }
+
+        if(customerUpdatePlaceOrderDTO != null) {
+            if(customerUpdatePlaceOrderDTO.getCityId()!=0){
+                City city = cityRepository.findCityById(customerUpdatePlaceOrderDTO.getCityId());
+                if(city == null) {
+                    throw new objectNotFoundException("City with id " + customerUpdatePlaceOrderDTO.getCityId() + " not found");
+                }
+                customer.setCustomerCity(city);
+            }
+        }
+
+        if(customerUpdatePlaceOrderDTO.getPincode()!=null){
+            customer.setCustomerPincode(customerUpdatePlaceOrderDTO.getPincode());
+        }
+
+        if(customerUpdatePlaceOrderDTO.getPoints()!=0){
+            customer.setCustomerPoint(customerUpdatePlaceOrderDTO.getPoints());
+        }
+    }
 }

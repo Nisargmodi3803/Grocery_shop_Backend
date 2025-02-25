@@ -17,7 +17,7 @@ public class DeliveryTimeSlotService
     // Get All Time Slots Service
     public List<DeliveryTimeSlot> getAllTimeSlot()
     {
-        List<DeliveryTimeSlot> deliveryTimeSlots = deliveryTimeSlotRepository.findAll();
+        List<DeliveryTimeSlot> deliveryTimeSlots = deliveryTimeSlotRepository.getDeliveryTimeSlots();
         if (deliveryTimeSlots.isEmpty())
             throw new objectNotFoundException("No delivery slots found");
         return deliveryTimeSlots;

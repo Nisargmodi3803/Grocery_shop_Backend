@@ -82,6 +82,7 @@ public class CartService
         }
         else
         {
+            cart.setProductQuantity(1);
             cart.setIs_deleted(2);
             cartRepository.save(cart);
             return true;

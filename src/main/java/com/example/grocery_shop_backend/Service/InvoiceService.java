@@ -106,8 +106,8 @@ public class InvoiceService
 
     // Add Order Service
     @Transactional
-    public void addOrder(int customerId, OrderDTO orderDTO) throws BadRequestException {
-        Customer customer = customerRepository.findCustomerById(customerId);
+    public void addOrder(String customerEmail, OrderDTO orderDTO) throws BadRequestException {
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
 
         // Date and time formatting
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");

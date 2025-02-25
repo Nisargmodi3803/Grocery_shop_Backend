@@ -61,14 +61,14 @@ public class InvoiceController
 
     //POST API {Add Order}
     @PostMapping("/add-order/{customerId}")
-    public ResponseEntity<String> addOrder(@PathVariable int customerId, @RequestBody OrderDTO orderDTO)
+    public ResponseEntity<String> addOrder(@PathVariable String customerEmail, @RequestBody OrderDTO orderDTO)
     {
         try
         {
-            invoiceService.addOrder(customerId,orderDTO);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Order added successfully");
-        } catch (BadRequestException e) {
-            throw new RuntimeException(e);
+            invoiceService.addOrder(customerEmail,orderDTO);
+            return ResponseEntity.status(HttpStatus.OK).body("Order added successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

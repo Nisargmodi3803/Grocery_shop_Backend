@@ -1,9 +1,6 @@
 package com.example.grocery_shop_backend.Controller;
 
-import com.example.grocery_shop_backend.Dto.CustomerLoginDTO;
-import com.example.grocery_shop_backend.Dto.CustomerRegistrationDTO;
-import com.example.grocery_shop_backend.Dto.CustomerBasicDetailsDTO;
-import com.example.grocery_shop_backend.Dto.UpdatePasswordDTO;
+import com.example.grocery_shop_backend.Dto.*;
 import com.example.grocery_shop_backend.Entities.Customer;
 import com.example.grocery_shop_backend.Service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -187,6 +184,16 @@ public class CustomerController {
             return ResponseEntity.ok(customerService.getCustomerByReferralCode(referralCode));
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/customer-update/{customerEmail}")
+    public ResponseEntity<String> updateCustomer(@PathVariable String customerEmail, @RequestBody CustomerUpdatePlaceOrderDTO customerUpdatePlaceOrderDTO){
+        try {
+            customerService.updateCustomer(customerEmail, customerUpdatePlaceOrderDTO);
+            return ResponseEntity.ok("Customer updated successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 }

@@ -26,8 +26,9 @@ public class Customer
     @Column(name = "customer_password")
     private String customerPassword;
 
-    @Column(name = "customer_city")
-    private String customerCity;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "customer_city")
+    private City customerCity;
 
     @Column(name = "customer_address")
     private String customerAddress;
@@ -68,7 +69,7 @@ public class Customer
 
     public Customer(){}
 
-    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, String customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, Customer customerReferralBy, double customerPoint, int isDeleted) {
+    public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, City customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, Customer customerReferralBy, double customerPoint, int isDeleted) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerEmail = customerEmail;
@@ -138,11 +139,11 @@ public class Customer
         this.customerPassword = customerPassword;
     }
 
-    public String getCustomerCity() {
+    public City getCustomerCity() {
         return customerCity;
     }
 
-    public void setCustomerCity(String customerCity) {
+    public void setCustomerCity(City customerCity) {
         this.customerCity = customerCity;
     }
 
