@@ -36,6 +36,12 @@ public class InvoiceService
     @Autowired
     private InvoiceDetailRepository invoiceDetailRepository;
 
+    @Autowired
+    private InvoiceDetailService invoiceDetailService;
+
+    @Autowired
+    private CartService cartService;
+
     // find order list by customerId Service
     public List<Invoice> findOrderListByCustomerId(int customerId)
     {
@@ -106,7 +112,7 @@ public class InvoiceService
 
     // Add Order Service
     @Transactional
-    public void addOrder(String customerEmail, OrderDTO orderDTO) throws BadRequestException {
+    public void addOrder(String customerEmail, OrderDTO orderDTO) {
         Customer customer = customerRepository.findCustomerByEmail(customerEmail);
 
         // Date and time formatting
@@ -162,8 +168,6 @@ public class InvoiceService
             } else if (orderDTO.getPaymentMode() == 2) { // Online
                 invoice.setInvoiceRemainingAmount(0.00);
                 invoice.setInvoiceReceivedAmount(orderDTO.getTotalAmount());
-            } else {
-                throw new BadRequestException("Invalid payment mode");
             }
 
             invoice.setInvoicePincode(orderDTO.getPincode());
@@ -189,6 +193,15 @@ public class InvoiceService
             invoice.setcDate(cDate);
 
             invoiceRepository.save(invoice);
+
+            Cart[] carts = orderDTO.getCarts();
+
+            invoiceDetailService.addProductOrder(carts,invoice.getInvoiceNum(),orderDTO.getTotalAmount());
+
+            for(Cart cart : carts){
+                cartService.removeFromCart(customerEmail,cart.getProduct().getId());
+            }
+
         } else {
             throw new objectNotFoundException("Customer not found");
         }

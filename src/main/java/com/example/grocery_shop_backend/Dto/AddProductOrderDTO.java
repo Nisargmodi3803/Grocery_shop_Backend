@@ -1,27 +1,19 @@
 package com.example.grocery_shop_backend.Dto;
 
+import com.example.grocery_shop_backend.Entities.Cart;
+
 public class AddProductOrderDTO
 {
-    private int [] productId;
+    private Cart[] carts;
     private int orderNum;
-    private int quantity;
     private double totalPayable;
 
-    public AddProductOrderDTO(){ }
-
-    public AddProductOrderDTO(int[] productId, int orderNum,int quantity, double totalPayable) {
-        this.productId = productId;
-        this.orderNum = orderNum;
-        this.quantity = quantity;
-        this.totalPayable = totalPayable;
+    public Cart[] getCarts() {
+        return carts;
     }
 
-    public int[] getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int[] productId) {
-        this.productId = productId;
+    public void setCarts(Cart[] carts) {
+        this.carts = carts;
     }
 
     public int getOrderNum() {
@@ -32,13 +24,6 @@ public class AddProductOrderDTO
         this.orderNum = orderNum;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     public double getTotalPayable() {
         return totalPayable;

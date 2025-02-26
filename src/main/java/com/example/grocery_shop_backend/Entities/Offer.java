@@ -22,6 +22,9 @@ public class Offer {
     @Column(name = "offer_title")
     private String offerTitle;
 
+    @Column(name = "offer_product_ids")
+    private String offerProductIds;
+
     @Column(name = "offer_description")
     private String offerDescription;
 
@@ -66,6 +69,13 @@ public class Offer {
         this.isDeleted = isDeleted;
     }
 
+    public String getOfferProductIds() {
+        return offerProductIds;
+    }
+
+    public void setOfferProductIds(String offerProductIds) {
+        this.offerProductIds = offerProductIds;
+    }
 
     public int getOfferId() {
         return offerId;

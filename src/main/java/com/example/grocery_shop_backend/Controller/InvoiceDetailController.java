@@ -19,16 +19,24 @@ public class InvoiceDetailController
 
     // GET API {Find Product Order List by Invoice Num}
     @GetMapping("product-order/{invoiceNum}")
-    public List<ProductOrderListDTO> findProductOrderByInvoiceNum(@PathVariable int invoiceNum)
+    public ResponseEntity<List<ProductOrderListDTO>> findProductOrderByInvoiceNum(@PathVariable int invoiceNum)
     {
-        return invoiceDetailService.findProductOrderByInvoiceNum(invoiceNum);
+        try {
+            return new ResponseEntity<>(invoiceDetailService.findProductOrderByInvoiceNum(invoiceNum), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // POST API {Insert into Product Order}
-    @PostMapping("/add-product-order")
-    public ResponseEntity<String> addProductOrder(@RequestBody AddProductOrderDTO addProductOrderDTO)
-    {
-        invoiceDetailService.addProductOrder(addProductOrderDTO);
-        return new ResponseEntity<>("Success", HttpStatus.OK);
-    }
+//    @PostMapping("/add-product-order")
+//    public ResponseEntity<String> addProductOrder(@RequestBody AddProductOrderDTO addProductOrderDTO)
+//    {
+//        try {
+//            invoiceDetailService.addProductOrder(addProductOrderDTO);
+//            return new ResponseEntity<>("Success", HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

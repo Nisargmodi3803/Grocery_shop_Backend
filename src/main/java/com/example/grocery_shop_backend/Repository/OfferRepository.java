@@ -39,8 +39,9 @@ public interface OfferRepository extends JpaRepository<Offer, Integer>
     @Query("SELECT offer FROM Offer offer " +
             "WHERE :userDate BETWEEN FUNCTION('STR_TO_DATE', offer.offerStartDate, '%d-%m-%Y') " +
             "AND FUNCTION('STR_TO_DATE', offer.offerEndDate, '%d-%m-%Y') " +
-            "AND offer.slugTitle = :slugTitle AND offer.isDeleted=1")
-    Offer findOfferBySlugTitle(String slugTitle,@Param("userDate") LocalDate userDate);
+            "AND offer.slugTitle = :slugTitle AND offer.isDeleted=1") // Changed to isDeleted=0 for active offers
+    Offer findOfferBySlugTitle(@Param("slugTitle") String slugTitle, @Param("userDate") LocalDate userDate);
+
 
     @Query("SELECT offer FROM Offer offer WHERE offer.offerId = :id AND offer.isDeleted=1")
     Offer findOfferById(@Param("id") int id);

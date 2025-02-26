@@ -5,9 +5,12 @@ import com.example.grocery_shop_backend.Dto.OfferDatesUpdateDTO;
 import com.example.grocery_shop_backend.Entities.Offer;
 import com.example.grocery_shop_backend.Service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -19,38 +22,75 @@ public class OfferController
 
     // GET API {Find All Offers by Brand}
     @GetMapping("/offer-brand")
-    public List<Offer> findAllOffersByBrand(@RequestParam String userDate)
+    public ResponseEntity<List<Offer>> findAllOffersByBrand(@RequestParam String userDate)
     {
-        return offerService.findAllOffersByBrand(userDate);
+        try {
+            return new ResponseEntity<>(offerService.findAllOffersByBrand(userDate), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Offers by Category}
     @GetMapping("/offer-category")
-    public List<Offer> findAllOffersByCategory(@RequestParam String userDate)
+    public ResponseEntity<List<Offer>> findAllOffersByCategory()
     {
-        return offerService.findAllOffersByCategory(userDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        String userDate = now.format(formatter);
+
+        try {
+            return new ResponseEntity<>(offerService.findAllOffersByCategory(userDate), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Offers by SubCategory}
     @GetMapping("/offer-subcategory")
-    public List<Offer> findAllOffersBySubCategory(@RequestParam String userDate)
+    public ResponseEntity<List<Offer>> findAllOffersBySubCategory()
     {
-        return offerService.findAllOffersBySubCategory(userDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        String userDate = now.format(formatter);
+
+        try {
+            return new ResponseEntity<>(offerService.findAllOffersBySubCategory(userDate), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Offers by Products}
     @GetMapping("offer-products")
-    public List<Offer> findAllOffersByProducts(@RequestParam String userDate)
+    public ResponseEntity<List<Offer>> findAllOffersByProducts()
     {
-        return offerService.findAllOffersByProducts(userDate);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime now = LocalDateTime.now();
+        String userDate = now.format(formatter);
+
+        try {
+            return new ResponseEntity<>(offerService.findAllOffersByProducts(userDate), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All Offers by slug title}
     @GetMapping("/offer-slug-title/{slugTitle}")
-    public Offer findOfferBySlugTitle(@PathVariable String slugTitle, @RequestParam String userDate)
-    {
-        return offerService.findAllOffersBySlugTitle(slugTitle,userDate);
+    public ResponseEntity<Offer> findOfferBySlugTitle(@PathVariable String slugTitle) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy"); // Fixed Format
+        LocalDateTime now = LocalDateTime.now();
+        String userDate = now.format(formatter);
+
+        try {
+            Offer offer = offerService.findAllOffersBySlugTitle(slugTitle, userDate); // Fixed argument order
+            return ResponseEntity.ok(offer);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Handle exception properly
+        }
     }
+
 
     // PATCH API {Update start-date & end-date}
     @PatchMapping("/update-offer-dates/{offerId}")

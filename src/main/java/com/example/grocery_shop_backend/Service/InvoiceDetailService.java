@@ -2,6 +2,7 @@ package com.example.grocery_shop_backend.Service;
 
 import com.example.grocery_shop_backend.Dto.AddProductOrderDTO;
 import com.example.grocery_shop_backend.Dto.ProductOrderListDTO;
+import com.example.grocery_shop_backend.Entities.Cart;
 import com.example.grocery_shop_backend.Entities.Invoice;
 import com.example.grocery_shop_backend.Entities.InvoiceDetail;
 import com.example.grocery_shop_backend.Entities.Product;
@@ -40,17 +41,16 @@ public class InvoiceDetailService
 
    // Insert Product Order Service
    @Transactional
-   public void addProductOrder(AddProductOrderDTO addProductOrderDTO) {
-       Invoice invoice = invoiceRepository.findByInvoiceNum(addProductOrderDTO.getOrderNum());
+   public void addProductOrder(Cart[] carts,int orderNum,double totalPayable) {
+       Invoice invoice = invoiceRepository.findByInvoiceNum(orderNum);
 
        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
        LocalDateTime now = LocalDateTime.now();
        String cDate = now.format(formatter);
 
        if (invoice != null) {
-           int[] productIds = addProductOrderDTO.getProductId();
-           for (int productId : productIds) {
-               Product product = productRepository.findProductById(productId);
+           for (Cart cart : carts) {
+               Product product = productRepository.findProductById(cart.getProduct().getId());
                if (product != null) {
                    InvoiceDetail invoiceDetail = new InvoiceDetail();
 
@@ -60,25 +60,21 @@ public class InvoiceDetailService
                    invoiceDetail.setProductVariantName(product.getVariantName());
                    invoiceDetail.setBasePrice(product.getBasePrice());
                    invoiceDetail.setMrp(product.getMrp());
-                   invoiceDetail.setQuantity(addProductOrderDTO.getQuantity());
+                   invoiceDetail.setQuantity(cart.getProductQuantity());
                    invoiceDetail.setTotalAmount(product.getDiscount_amt());
 
-                   double totalPayable = product.getBasePrice() * addProductOrderDTO.getQuantity();
-                   if (totalPayable >= 500)
-                       invoiceDetail.setTotalPayable(addProductOrderDTO.getTotalPayable());
-                   else
-                       invoiceDetail.setTotalPayable(totalPayable + 15.00);
+                   invoiceDetail.setTotalPayable(totalPayable);
 
                    invoiceDetail.setIsDeleted(1);
                    invoiceDetail.setcDate(cDate);
 
                    invoiceDetailRepository.save(invoiceDetail);
                } else {
-                   throw new objectNotFoundException("Product Not Found with id: " + productId);
+                   throw new objectNotFoundException("Product Not Found with id: " + cart.getProduct().getId());
                }
            }
        } else {
-           throw new objectNotFoundException("No Invoice found for order BI - " + addProductOrderDTO.getOrderNum());
+           throw new objectNotFoundException("No Invoice found for order BI - " + orderNum);
        }
    }
 

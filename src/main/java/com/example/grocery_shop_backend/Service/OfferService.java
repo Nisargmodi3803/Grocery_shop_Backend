@@ -7,6 +7,7 @@ import com.example.grocery_shop_backend.Entities.CouponCode;
 import com.example.grocery_shop_backend.Entities.Offer;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.OfferRepository;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,14 +54,16 @@ public class OfferService
     }
 
     // Find All Offers by Slug title
-    public Offer findAllOffersBySlugTitle(String slugTitle,String userDate)
-    {
-        LocalDate date = LocalDate.parse(userDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        Offer offer = offerRepository.findOfferBySlugTitle(slugTitle,date);
-        if(offer == null)
+    public Offer findAllOffersBySlugTitle(String slugTitle, String userDate) { // Fixed argument order
+        LocalDate date = LocalDate.parse(userDate, DateTimeFormatter.ofPattern("dd-MM-yyyy")); // Fixed Format
+        Offer offer = offerRepository.findOfferBySlugTitle(slugTitle, date);
+
+        if (offer == null) {
             throw new objectNotFoundException("No offers found");
+        }
         return offer;
     }
+
 
     // Find All Offers by Products
     public List<Offer> findAllOffersByProducts(String userDate)

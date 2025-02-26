@@ -60,9 +60,8 @@ public class InvoiceController
     }
 
     //POST API {Add Order}
-    @PostMapping("/add-order/{customerId}")
-    public ResponseEntity<String> addOrder(@PathVariable String customerEmail, @RequestBody OrderDTO orderDTO)
-    {
+    @PostMapping("/add-order/{customerEmail}")
+    public ResponseEntity<String> addOrder(@PathVariable String customerEmail, @RequestBody OrderDTO orderDTO){
         try
         {
             invoiceService.addOrder(customerEmail,orderDTO);

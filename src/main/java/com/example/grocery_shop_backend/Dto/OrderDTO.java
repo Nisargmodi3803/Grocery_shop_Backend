@@ -1,5 +1,7 @@
 package com.example.grocery_shop_backend.Dto;
 
+import com.example.grocery_shop_backend.Entities.Cart;
+
 public class OrderDTO
 {
     private String mobile;
@@ -14,6 +16,7 @@ public class OrderDTO
     private Integer couponId; // ID
     private int deliveryTimeSlotId; // ID
     private String pincode;
+    private Cart[] carts;
 
     public String getMobile() {
         return mobile;
@@ -109,5 +112,13 @@ public class OrderDTO
 
     public void setPincode(String pincode) {
         this.pincode = pincode;
+    }
+
+    public Cart[] getCarts() {
+        return carts;
+    }
+
+    public void setCarts(Cart[] carts) {
+        this.carts = carts;
     }
 }
