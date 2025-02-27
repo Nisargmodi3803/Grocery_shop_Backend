@@ -2,16 +2,24 @@ package com.example.grocery_shop_backend.Controller;
 
 import com.example.grocery_shop_backend.Dto.OrderDTO;
 import com.example.grocery_shop_backend.Dto.UpdateDeliveryAddressDTO;
+import com.example.grocery_shop_backend.Dto.VerifyPaymentDTO;
 import com.example.grocery_shop_backend.Entities.Invoice;
 import com.example.grocery_shop_backend.Service.InvoiceService;
+import com.example.grocery_shop_backend.Service.RazorpayService;
+import com.razorpay.Order;
+import com.razorpay.RazorpayClient;
 import org.apache.coyote.BadRequestException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -19,6 +27,9 @@ public class InvoiceController
 {
     @Autowired
     private InvoiceService invoiceService;
+
+    @Autowired
+    RazorpayService razorpayService;
 
     // GET API {Find Order List by Customer ID}
     @GetMapping("/order-customer-id/{id}")
@@ -59,18 +70,6 @@ public class InvoiceController
             return new ResponseEntity<>("Order Already Cancelled", HttpStatus.BAD_REQUEST);
     }
 
-    //POST API {Add Order}
-    @PostMapping("/add-order/{customerEmail}")
-    public ResponseEntity<String> addOrder(@PathVariable String customerEmail, @RequestBody OrderDTO orderDTO){
-        try
-        {
-            invoiceService.addOrder(customerEmail,orderDTO);
-            return ResponseEntity.status(HttpStatus.OK).body("Order added successfully");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
     // PATCH API {Delete Order}
     @PatchMapping("/delete-order/{invoiceNum}")
     public ResponseEntity<String> deleteOrder(@PathVariable int invoiceNum)
@@ -78,4 +77,64 @@ public class InvoiceController
         invoiceService.deleteOrder(invoiceNum);
         return ResponseEntity.status(HttpStatus.OK).body("Order deleted successfully");
     }
+
+    // ✅ For COD & Online Payment (Unified API)
+    @PostMapping("/add-order/{customerEmail}")
+    public ResponseEntity<Map<String, Object>> addOrder(@PathVariable String customerEmail, @RequestBody OrderDTO orderDTO) {
+        try {
+            Map<String, Object> response = invoiceService.addOrder(customerEmail, orderDTO);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/create-order")
+    public ResponseEntity<Map<String, Object>> createOrder(@RequestBody Map<String, Object> request) {
+        try {
+            int amount = (int) request.get("amount"); // Ensure amount is in paise
+            String currency = (String) request.get("currency");
+
+            // 🔴 Check if Razorpay API keys are correct
+            RazorpayClient razorpay = new RazorpayClient("rzp_test_pWCWqEM13KbeBP", "jsUjMcH33tKgEiumJd6Gs3A1");
+
+            // ✅ Convert amount to paise (INR * 100)
+            JSONObject orderRequest = new JSONObject();
+            orderRequest.put("amount", amount * 100); // Razorpay works with paise
+            orderRequest.put("currency", currency);
+            orderRequest.put("payment_capture", 1); // Auto-capture payment
+
+            Order order = razorpay.orders.create(orderRequest);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("id", order.get("id"));
+            response.put("amount", order.get("amount"));
+            response.put("currency", order.get("currency"));
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace(); // 🔴 Print the error to logs
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Collections.singletonMap("error", "Payment Gateway Error: " + e.getMessage()));
+        }
+    }
+
+
+
+    // ✅ Step 2: Verify Razorpay Payment
+    @PostMapping("/verify-payment")
+    public ResponseEntity<String> verifyPayment(@RequestBody VerifyPaymentDTO verifyPaymentDTO) {
+        try {
+//            System.out.println("Invoice number : " + verifyPaymentDTO.getInvoiceNum());
+//            System.out.println("Razor Order id : " + verifyPaymentDTO.getRazorpay_order_id());
+//            System.out.println("Razor Payment id : " + verifyPaymentDTO.getRazorpay_payment_id());
+//            System.out.println("Razor Signature : " + verifyPaymentDTO.getRazorpay_signature());
+
+            invoiceService.verifyPayment(verifyPaymentDTO.getInvoiceNum(), verifyPaymentDTO.getRazorpay_order_id(), verifyPaymentDTO.getRazorpay_payment_id(), verifyPaymentDTO.getRazorpay_signature());
+            return ResponseEntity.ok("Payment verified successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment verification failed: " + e.getMessage());
+        }
+    }
+
 }

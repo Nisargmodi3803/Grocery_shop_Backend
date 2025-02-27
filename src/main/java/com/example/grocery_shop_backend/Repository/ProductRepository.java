@@ -82,4 +82,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer>
     // Sort by Discount (High to Low)
     @Query("SELECT product FROM Product product WHERE product.brand.slug_title = :slugTitle AND product.is_deleted = 1 ORDER BY ((product.mrp - product.discount_amt) / product.mrp) DESC")
     List<Product> findAllProductsByBrandDescendingDiscount(@Param("slugTitle") String slugTitle);
+
+    // Search Products
+    List<Product> findByNameContainingIgnoreCase(String name);
 }

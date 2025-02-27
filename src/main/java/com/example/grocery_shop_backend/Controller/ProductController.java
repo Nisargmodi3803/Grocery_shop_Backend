@@ -6,9 +6,11 @@ import com.example.grocery_shop_backend.Service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -287,6 +289,28 @@ public class ProductController
         try {
             return ResponseEntity.ok(productService.findAllProductsByBrandDescendingDiscount(slugTitle));
         } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Search Products} [Only names]
+//    @GetMapping("/search")
+//    public ResponseEntity<List<String>> searchProducts(@RequestParam String query) {
+//        List<Product> products = productService.searchProducts(query);
+//        List<String> names = products.stream()
+//                .map(Product::getName)
+//                .collect(Collectors.toList());
+//
+//        return ResponseEntity.ok(names);
+//    }
+
+    // GET API {Search Products}
+    @GetMapping("/search")
+    public ResponseEntity<List<Product>> searchProducts(@RequestParam String query) {
+        try{
+            List<Product> products = productService.searchProducts(query);
+            return ResponseEntity.ok(products);
+        }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }

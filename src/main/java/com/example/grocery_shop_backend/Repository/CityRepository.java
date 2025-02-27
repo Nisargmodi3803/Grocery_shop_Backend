@@ -15,4 +15,6 @@ public interface CityRepository extends JpaRepository<City, Integer>
 
     @Query("SELECT city FROM City city WHERE (city.cityId = :cityId AND city.isDeleted=1) AND city.cityIsActive=1")
     City findCityById(int cityId);
+
+//    List<City> findAllCityNameByIsDeleted();
 }

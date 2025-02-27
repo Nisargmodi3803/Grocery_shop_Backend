@@ -98,6 +98,12 @@
             <version>0.12.0</version> <!-- Use the latest version -->
         </dependency>
 
+        <dependency>
+            <groupId>com.razorpay</groupId>
+            <artifactId>razorpay-java</artifactId>
+            <version>1.4.8</version>
+        </dependency>
+
 
     </dependencies>
 

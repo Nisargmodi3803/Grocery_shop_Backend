@@ -391,4 +391,9 @@ public class ProductService
 
         return products;
     }
+
+    // Search Products Service
+    public List<Product> searchProducts(String query) {
+        return productRepository.findByNameContainingIgnoreCase(query);
+    }
 }
