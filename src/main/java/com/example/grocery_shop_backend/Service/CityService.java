@@ -88,4 +88,14 @@ public class CityService
         cityRepository.save(city);
     }
 
+    // Search City Service
+    public List<City> searchCity(String cityName){
+        List<City> cities = cityRepository.searchCity(cityName);
+
+        if(cities.isEmpty()){
+            throw new objectNotFoundException("No city found");
+        }
+        return cities;
+    }
+
 }

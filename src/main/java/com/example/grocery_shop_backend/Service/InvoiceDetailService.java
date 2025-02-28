@@ -31,9 +31,9 @@ public class InvoiceDetailService
     private InvoiceRepository invoiceRepository;
 
     // Find Product Order List by Invoice Num Service
-    public List<ProductOrderListDTO> findProductOrderByInvoiceNum(int invoiceId)
+    public List<InvoiceDetail> findProductOrderByInvoiceNum(int invoiceId)
     {
-        List<ProductOrderListDTO> invoiceDetails = invoiceDetailRepository.findByInvoiceId(invoiceId);
+        List<InvoiceDetail> invoiceDetails = invoiceDetailRepository.findByInvoiceId(invoiceId);
         if(invoiceDetails.isEmpty())
             throw new objectNotFoundException("InvoiceDetail Not Found");
         return invoiceDetails;

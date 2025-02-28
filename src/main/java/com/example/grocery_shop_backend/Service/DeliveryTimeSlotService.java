@@ -32,4 +32,14 @@ public class DeliveryTimeSlotService
             throw new objectNotFoundException("No delivery slot found");
         return deliveryTimeSlot;
     }
+
+    //Search Delivery Time Service
+    public List<DeliveryTimeSlot> searchDeliveryTime(String slot){
+        List<DeliveryTimeSlot> deliveryTimeSlots = deliveryTimeSlotRepository.searchDeliveryTime(slot);
+
+        if(deliveryTimeSlots.isEmpty()){
+            throw new objectNotFoundException("No delivery slots found");
+        }
+        return deliveryTimeSlots;
+    }
 }

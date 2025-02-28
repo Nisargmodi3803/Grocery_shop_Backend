@@ -6,10 +6,7 @@ import com.twilio.http.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,6 +34,16 @@ public class DeliveryTimeSlotController
     {
         try{
             return new ResponseEntity<>(deliveryTimeSlotService.findSlotById(id), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //GET API {Search Delivery Time Slot}
+    @GetMapping("/search-slot")
+    public ResponseEntity<List<DeliveryTimeSlot>> searchDeliveryTime(@RequestParam String slot){
+        try {
+            return new ResponseEntity<>(deliveryTimeSlotService.searchDeliveryTime(slot),HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

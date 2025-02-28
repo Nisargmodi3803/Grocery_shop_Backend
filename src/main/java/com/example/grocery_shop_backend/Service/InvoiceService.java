@@ -66,6 +66,14 @@ public class InvoiceService
         return invoices;
     }
 
+    public List<Invoice> findOrderListByCustomerEmail(String customerEmail)
+    {
+        List<Invoice> invoices = invoiceRepository.findInvoiceByEmail(customerEmail);
+        if (invoices.isEmpty())
+            throw new objectNotFoundException("No order list found for this customer");
+        return invoices;
+    }
+
     // Update Delivery Address Service
     @Transactional
     public Invoice updateDeliveryAddress(int invoiceNum, UpdateDeliveryAddressDTO deliveryAddress)

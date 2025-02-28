@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -52,5 +53,32 @@ public class CityController
     {
         cityService.addCity(cityName);
         return ResponseEntity.ok("Success");
+    }
+
+    // GET API {Search City} [Only Names Testing]
+//    @GetMapping("/search-city")
+//    public ResponseEntity<List<String>> searchCity(@RequestParam String cityName){
+//        try {
+//            List<City> cities = cityService.searchCity(cityName);
+//            List<String> names = cities.stream()
+//                .map(City::getCityName)
+//                .collect(Collectors.toList());
+//
+//            return new ResponseEntity<>(names, HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    // GET API {Search City}
+    @GetMapping("/search-city")
+    public ResponseEntity<List<City>> searchCity(@RequestParam String cityName){
+        try {
+            List<City> cities = cityService.searchCity(cityName);
+
+            return new ResponseEntity<>(cities, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 }

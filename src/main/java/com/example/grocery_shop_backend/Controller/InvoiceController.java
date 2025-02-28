@@ -45,12 +45,24 @@ public class InvoiceController
         return invoiceService.findOrderListByCustomerMobile(mobile);
     }
 
+    // GET API {Find Order List by Customer Email}
+    @GetMapping("/orders/{customerEmail}")
+    public ResponseEntity<List<Invoice>> findOrderListByCustomerEmail(@PathVariable String customerEmail){
+        try {
+            return new ResponseEntity<>(invoiceService.findOrderListByCustomerEmail(customerEmail), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
     // PATCH API {Update Delivery Address}
     @PatchMapping("/update-delivery-address/{invoiceNum}")
     public Invoice updateDeliveryAddress(@PathVariable int invoiceNum,@RequestBody UpdateDeliveryAddressDTO deliveryAddress)
     {
         return invoiceService.updateDeliveryAddress(invoiceNum, deliveryAddress);
     }
+
+
 
     // GET API {Find Order by Invoice Num}
     @GetMapping("/order/{invoiceNum}")

@@ -2,6 +2,7 @@ package com.example.grocery_shop_backend.Controller;
 
 import com.example.grocery_shop_backend.Dto.AddProductOrderDTO;
 import com.example.grocery_shop_backend.Dto.ProductOrderListDTO;
+import com.example.grocery_shop_backend.Entities.InvoiceDetail;
 import com.example.grocery_shop_backend.Service.InvoiceDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class InvoiceDetailController
 
     // GET API {Find Product Order List by Invoice Num}
     @GetMapping("product-order/{invoiceNum}")
-    public ResponseEntity<List<ProductOrderListDTO>> findProductOrderByInvoiceNum(@PathVariable int invoiceNum)
+    public ResponseEntity<List<InvoiceDetail>> findProductOrderByInvoiceNum(@PathVariable int invoiceNum)
     {
         try {
             return new ResponseEntity<>(invoiceDetailService.findProductOrderByInvoiceNum(invoiceNum), HttpStatus.OK);

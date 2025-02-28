@@ -15,4 +15,7 @@ public interface DeliveryTimeSlotRepository extends JpaRepository<DeliveryTimeSl
 
     @Query("SELECT slot FROM DeliveryTimeSlot slot WHERE slot.deliveryTimeSlotId = :id AND slot.isDeleted=1")
     DeliveryTimeSlot getDeliveryTimeSlotById(int id);
+
+    @Query("SELECT slot FROM DeliveryTimeSlot slot WHERE LOWER(slot.deliveryTime) LIKE LOWER(CONCAT('%', :slot ,'%')) AND slot.isDeleted=1")
+    List<DeliveryTimeSlot> searchDeliveryTime(String slot);
 }
