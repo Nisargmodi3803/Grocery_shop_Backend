@@ -19,11 +19,11 @@ public class InvoiceDetailController
     private InvoiceDetailService invoiceDetailService;
 
     // GET API {Find Product Order List by Invoice Num}
-    @GetMapping("product-order/{invoiceNum}")
-    public ResponseEntity<List<InvoiceDetail>> findProductOrderByInvoiceNum(@PathVariable int invoiceNum)
+    @GetMapping("product-order/{invoiceId}")
+    public ResponseEntity<List<InvoiceDetail>> findProductOrderByInvoiceNum(@PathVariable int invoiceId)
     {
         try {
-            return new ResponseEntity<>(invoiceDetailService.findProductOrderByInvoiceNum(invoiceNum), HttpStatus.OK);
+            return new ResponseEntity<>(invoiceDetailService.findProductOrderByInvoiceNum(invoiceId), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

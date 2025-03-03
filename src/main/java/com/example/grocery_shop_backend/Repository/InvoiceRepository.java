@@ -25,6 +25,6 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer>
     @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceId = :invoiceId AND invoice.isDeleted=1")
     Invoice findByInvoiceId(int invoiceId);
 
-    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceEmailId = :email AND invoice.isDeleted=1")
+    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceEmailId = :email AND invoice.isDeleted=1 ORDER BY invoice.invoiceNum DESC")
     List<Invoice> findInvoiceByEmail(String email);
 }

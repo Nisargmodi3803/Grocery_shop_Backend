@@ -131,7 +131,7 @@ public class InvoiceService
         if (customer == null) throw new objectNotFoundException("Customer not found");
 
         int invoiceNum = invoiceRepository.findMaxInvoiceNum() + 1;
-
+//            int invoiceNum = 1;
         // ✅ Formatting Date & Time
         LocalDateTime now = LocalDateTime.now();
         String invoiceDate = now.format(DateTimeFormatter.ofPattern("dd-MM-yyyy"));
@@ -171,13 +171,13 @@ public class InvoiceService
         invoice.setInvoiceSpecialInstruction(orderDTO.getSpecialInstructions());
         invoice.setDeliveryTimeSlot(deliveryTimeSlot);
         invoice.setInvoiceIsHold(2);
-        invoice.setInvoiceStatus(2); // Pending
         invoice.setIsDeleted(1);
         invoice.setcDate(cDate);
 
         if (orderDTO.getPaymentMode() == 1) { // COD
             invoice.setInvoiceRemainingAmount(orderDTO.getTotalAmount());
             invoice.setInvoiceReceivedAmount(0.00);
+            invoice.setInvoiceStatus(1); // Pending
         } else { // Online Payment
             invoice.setInvoiceRemainingAmount(0.00);
             invoice.setInvoiceReceivedAmount(orderDTO.getTotalAmount());

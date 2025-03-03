@@ -75,11 +75,15 @@ public class InvoiceController
     @PatchMapping("/cancel-order/{invoiceNum}")
     public ResponseEntity<String> cancelOrder(@PathVariable int invoiceNum)
     {
-        boolean status = invoiceService.cancelOrder(invoiceNum);
-        if (status)
-            return new ResponseEntity<>("Order cancelled", HttpStatus.OK);
-        else
-            return new ResponseEntity<>("Order Already Cancelled", HttpStatus.BAD_REQUEST);
+        try {
+            boolean status = invoiceService.cancelOrder(invoiceNum);
+            if (status)
+                return new ResponseEntity<>("Order cancelled", HttpStatus.OK);
+            else
+                return new ResponseEntity<>("Order Already Cancelled", HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // PATCH API {Delete Order}

@@ -78,4 +78,10 @@ public class InvoiceDetailService
        }
    }
 
+   // Delete Products here after canceling the order
+   @Transactional
+    public void deleteProductOrder(int orderNum) {
+
+   }
+
 }
