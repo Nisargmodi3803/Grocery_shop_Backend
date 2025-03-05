@@ -12,20 +12,15 @@ import java.util.List;
 @Repository
 public interface CouponCodeRepository extends JpaRepository<CouponCode, Integer>
 {
-    @Query("SELECT coupon FROM CouponCode coupon")
-    List<CouponCode> findAllCouponCode();
+          // For testing
+    @Query("SELECT coupon FROM CouponCode coupon WHERE coupon.couponMinimumBillAmount <= :amount AND coupon.isDeleted=1")
+    List<CouponCode> findAllCouponCode(double amount);
 
-//    @Query("SELECT coupon FROM CouponCode coupon WHERE (coupon.couponCodeFor=2 AND coupon.couponStatus=1) AND coupon.isDeleted=1")
-//    List<CouponCode> findAllGeneralCouponCode();
-
-//    @Query("SELECT coupon FROM CouponCode coupon WHERE (coupon.couponCodeFor=1 AND coupon.couponStatus=1) AND coupon.isDeleted=1")
-//    List<CouponCode> findAllSecretCouponCode();
-
-//    @Query("SELECT coupon FROM CouponCode coupon WHERE (coupon.couponType=1 AND coupon.couponStatus=1) AND coupon.isDeleted=1")
-//    List<CouponCode> findAllFixedAmtCouponCode();
-
-//    @Query("SELECT coupon FROM CouponCode coupon WHERE (coupon.couponType=2 AND coupon.couponStatus=1) AND coupon.isDeleted=1")
-//    List<CouponCode> findAllPercentageCouponCode();
+//    @Query("SELECT coupon FROM CouponCode coupon " +
+//            "WHERE :userDate BETWEEN FUNCTION('STR_TO_DATE', coupon.couponStartDate, '%d-%m-%Y') " +
+//            "AND FUNCTION('STR_TO_DATE', coupon.couponEndDate, '%d-%m-%Y') " +
+//            "AND coupon.isDeleted = 1")
+//    List<CouponCode> findAllCouponCode(LocalDate userDate,double amount);
 
     @Query("SELECT coupon FROM CouponCode coupon " +
             "WHERE :userDate BETWEEN FUNCTION('STR_TO_DATE', coupon.couponStartDate, '%d-%m-%Y') " +

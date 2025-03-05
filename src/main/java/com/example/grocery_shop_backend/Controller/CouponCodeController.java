@@ -6,9 +6,12 @@ import com.example.grocery_shop_backend.Entities.CouponCode;
 import com.example.grocery_shop_backend.Repository.CouponCodeRepository;
 import com.example.grocery_shop_backend.Service.CouponCodeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -20,9 +23,17 @@ public class CouponCodeController
 
     // GET API {Find All Coupons}
     @GetMapping("/coupons")
-    public List<CouponCode> findAllCoupons()
+    public ResponseEntity<List<CouponCode>> findAllCoupons(@RequestParam double amount)
     {
-        return couponCodeService.findAllCoupons();
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        LocalDateTime now = LocalDateTime.now();
+//        String userDate = now.format(formatter);
+
+        try {
+            return new ResponseEntity<>(couponCodeService.findAllCoupons(amount), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find All General Coupons}

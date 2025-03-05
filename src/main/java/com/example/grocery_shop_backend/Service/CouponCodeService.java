@@ -23,9 +23,18 @@ public class CouponCodeService
     private CouponCodeRepository couponCodeRepository;
 
     // Find All Coupon Service
-    public List<CouponCode> findAllCoupons()
+//    public List<CouponCode> findAllCoupons(String userDate,double amount)
+//    {
+//        LocalDate date = LocalDate.parse(userDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        List<CouponCode> couponCodes = couponCodeRepository.findAllCouponCode(date,amount);
+//        if (couponCodes.isEmpty())
+//            throw new objectNotFoundException("No coupons found");
+//        return couponCodes;
+//    }
+
+    public List<CouponCode> findAllCoupons(double amount)
     {
-        List<CouponCode> couponCodes = couponCodeRepository.findAllCouponCode();
+        List<CouponCode> couponCodes = couponCodeRepository.findAllCouponCode(amount);
         if (couponCodes.isEmpty())
             throw new objectNotFoundException("No coupons found");
         return couponCodes;
