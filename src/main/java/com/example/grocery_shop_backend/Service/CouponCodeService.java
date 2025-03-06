@@ -7,6 +7,7 @@ import com.example.grocery_shop_backend.Entities.Offer;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CouponCodeRepository;
 import jakarta.persistence.Temporal;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,12 +33,46 @@ public class CouponCodeService
 //        return couponCodes;
 //    }
 
+//    Find Coupon by Code Service
+//    public List<CouponCode> findCouponByCode(String userDate,String code)
+//    {
+//        LocalDate date = LocalDate.parse(userDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        CouponCode couponCode = couponCodeRepository.findCouponCodeByCode(date,code);
+//        if(couponCode==null)
+//        throw new objectNotFoundException("No coupons found");
+//        return couponCode;
+//    }
+
+    // Find All Coupons for Coupon Code Page Service
+    //    public List<CouponCode> findAllCoupons(String userDate)
+//    {
+//        LocalDate date = LocalDate.parse(userDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+//        CouponCode couponCode = couponCodeRepository.findCouponCodeByCode(date);
+//        if(couponCode==null)
+//        throw new objectNotFoundException("No coupons found");
+//        return couponCode;
+//    }
+
+    public List<CouponCode> findAllCoupons(){
+        List<CouponCode> couponCodes = couponCodeRepository.findAllCouponCode();
+        if(couponCodes.isEmpty())
+            throw new objectNotFoundException("No Coupon Found");
+        return couponCodes;
+    }
+
     public List<CouponCode> findAllCoupons(double amount)
     {
         List<CouponCode> couponCodes = couponCodeRepository.findAllCouponCode(amount);
         if (couponCodes.isEmpty())
             throw new objectNotFoundException("No coupons found");
         return couponCodes;
+    }
+
+    public CouponCode findCouponByCode(String code,double amount){
+        CouponCode couponCode = couponCodeRepository.findCouponCodeByCode(code,amount);
+        if(couponCode==null)
+            throw new objectNotFoundException("No coupons found");
+        return couponCode;
     }
 
     // Find All General Coupons Service

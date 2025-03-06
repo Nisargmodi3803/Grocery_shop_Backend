@@ -36,6 +36,34 @@ public class CouponCodeController
         }
     }
 
+    // Get API {Find All Coupons for Coupon Code Page API}
+    @GetMapping("/all-coupons")
+    public ResponseEntity<List<CouponCode>> findAllCoupons(){
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        LocalDateTime now = LocalDateTime.now();
+//        String userDate = now.format(formatter);
+
+        try {
+            return new ResponseEntity<>(couponCodeService.findAllCoupons(), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Verify the Coupon Code API}
+    @GetMapping("/coupon-code")
+    public ResponseEntity<CouponCode> verifyCouponCode(@RequestParam String code,@RequestParam double amount){
+        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+//        LocalDateTime now = LocalDateTime.now();
+//        String userDate = now.format(formatter);
+
+        try {
+            return new ResponseEntity<>(couponCodeService.findCouponByCode(code,amount), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
     // GET API {Find All General Coupons}
     @GetMapping("/general-coupons")
     public List<CouponCode> findAllGeneralCoupons(@RequestParam String date)

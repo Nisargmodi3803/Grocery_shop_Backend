@@ -16,11 +16,31 @@ public interface CouponCodeRepository extends JpaRepository<CouponCode, Integer>
     @Query("SELECT coupon FROM CouponCode coupon WHERE coupon.couponMinimumBillAmount <= :amount AND coupon.isDeleted=1")
     List<CouponCode> findAllCouponCode(double amount);
 
+    @Query("SELECT coupon FROM CouponCode coupon WHERE coupon.couponCode = :code AND coupon.couponMinimumBillAmount <= :amount AND coupon.isDeleted=1")
+    CouponCode findCouponCodeByCode(String code,double amount);
+
+    @Query("SELECT coupon FROM CouponCode coupon WHERE coupon.isDeleted=1")
+    List<CouponCode> findAllCouponCode();
+
 //    @Query("SELECT coupon FROM CouponCode coupon " +
 //            "WHERE :userDate BETWEEN FUNCTION('STR_TO_DATE', coupon.couponStartDate, '%d-%m-%Y') " +
 //            "AND FUNCTION('STR_TO_DATE', coupon.couponEndDate, '%d-%m-%Y') " +
-//            "AND coupon.isDeleted = 1")
+//            "AND coupon.couponMinimumBillAmount <= :amount AND coupon.isDeleted = 1")
 //    List<CouponCode> findAllCouponCode(LocalDate userDate,double amount);
+
+
+    //    @Query("SELECT coupon FROM CouponCode coupon " +
+//            "WHERE :userDate BETWEEN FUNCTION('STR_TO_DATE', coupon.couponStartDate, '%d-%m-%Y') " +
+//            "AND FUNCTION('STR_TO_DATE', coupon.couponEndDate, '%d-%m-%Y') " +
+//            "AND coupon.couponMinimumBillAmount <= :amount AND coupon.couponCode = :code AND coupon.isDeleted = 1")
+//    CouponCode findCouponCodeByCode(LocalDate userDate,String code);
+
+    //    @Query("SELECT coupon FROM CouponCode coupon " +
+//            "WHERE :userDate BETWEEN FUNCTION('STR_TO_DATE', coupon.couponStartDate, '%d-%m-%Y') " +
+//            "AND FUNCTION('STR_TO_DATE', coupon.couponEndDate, '%d-%m-%Y') " +
+//            "AND coupon.isDeleted = 1")
+//    CouponCode findAllCouponCode(LocalDate userDate);
+
 
     @Query("SELECT coupon FROM CouponCode coupon " +
             "WHERE :userDate BETWEEN FUNCTION('STR_TO_DATE', coupon.couponStartDate, '%d-%m-%Y') " +
