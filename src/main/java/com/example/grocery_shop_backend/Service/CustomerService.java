@@ -7,7 +7,6 @@ import com.example.grocery_shop_backend.Exception.MobileNumberAlreadyExistsExcep
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CityRepository;
 import com.example.grocery_shop_backend.Repository.CustomerRepository;
-import com.google.api.client.util.DateTime;
 import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
