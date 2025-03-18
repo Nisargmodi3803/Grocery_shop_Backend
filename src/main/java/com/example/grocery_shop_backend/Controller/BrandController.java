@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:3000","http://localhost:3001"}, allowCredentials = "true")
 public class BrandController
 {
     @Autowired
@@ -66,9 +68,16 @@ public class BrandController
 
     // PATCH API {Update Brand}
     @PatchMapping("update-brand/{brandId}")
-    public Brand updateBrand(@PathVariable int brandId, @RequestBody BrandDTO brandDTO)
+    public ResponseEntity<String> updateBrand(@PathVariable int brandId, @RequestParam String name,
+                                              @RequestParam(required = false) String description,
+                                              @RequestParam(required = false) MultipartFile imageFile)
     {
-        return brandService.updateBrand(brandId, brandDTO);
+        try {
+            Brand brand = brandService.updateBrand(brandId,name,description,imageFile);
+            return ResponseEntity.ok("Success");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed");
+        }
     }
 
     // PATCH API {Delete Brand}
@@ -88,5 +97,15 @@ public class BrandController
             return ResponseEntity.ok("Brand retrieved successfully");
         else
             return ResponseEntity.badRequest().body("Brand Already Present");
+    }
+
+    // GET API {Search Brand}
+    @GetMapping("/search-brand")
+    public ResponseEntity<List<Brand>> searchBrand(@RequestParam String keyword){
+        try {
+            return ResponseEntity.ok(brandService.searchBrand(keyword));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -4,9 +4,17 @@ import com.example.grocery_shop_backend.Dto.BrandDTO;
 import com.example.grocery_shop_backend.Entities.Brand;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.BrandRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -16,6 +24,9 @@ public class BrandService
 {
     @Autowired
     BrandRepository brandRepository;
+
+    @Value("${upload.dir}")
+    private String uploadDir;
 
     // Find All Brands Service
     public List<Brand> findAllBrands()
@@ -54,26 +65,52 @@ public class BrandService
     }
 
     // Update Brand Service
-    public Brand updateBrand(int brandId,BrandDTO brandDTO)
-    {
+    @Transactional
+    public Brand updateBrand(int brandId, String name, String description, MultipartFile imageFile) throws IOException {
         Brand brand = brandRepository.findBrandById(brandId);
 
-        if(brand!=null)
-        {
-            if(brandDTO.getName()!=null)
-                brand.setName(brandDTO.getName());
-            if (brandDTO.getImage()!=null)
-                brand.setImage_url(brandDTO.getImage());
-            if (brandDTO.getSlugTitle()!=null)
-                brand.setSlug_title(brandDTO.getSlugTitle());
+        if (brand != null) {
+            if (name != null && !name.isEmpty()) {
+                brand.setName(name);
+            }
 
-            brandRepository.save(brand);
-        }
-        else
+            if (description != null && !description.isEmpty()) {
+                brand.setDescription(description);
+            }
+
+            if (imageFile != null && !imageFile.isEmpty()) {
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                // Delete old image if present
+                String oldImageName = brand.getImage_url();
+                if (oldImageName != null && !oldImageName.isEmpty()) {
+                    Path oldImagePath = uploadPath.resolve(oldImageName);
+                    if (Files.exists(oldImagePath)) {
+                        Files.delete(oldImagePath);
+                    }
+                }
+
+                // Always save as brandName.jpg (force .jpg)
+                String fileName = name;
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                // Save only the brand name (no extension)
+                brand.setImage_url(name);
+            }
+
+            return brandRepository.save(brand);
+        } else {
             throw new objectNotFoundException("Brand with ID " + brandId + " not found");
-
-        return brand;
+        }
     }
+
+
+
+
 
     // Delete Brand Service
     public void deleteBrand(int brandId)
@@ -104,4 +141,15 @@ public class BrandService
             return true;
         }
     }
+
+    // Search Brand Service
+    public List<Brand> searchBrand(String keyword){
+        List<Brand> brands = brandRepository.findByNameContainingIgnoreCase(keyword);
+
+        if(brands.isEmpty()){
+            throw new objectNotFoundException("Brand with keyword " + keyword + " not found");
+        }
+        return brands;
+    }
+
 }

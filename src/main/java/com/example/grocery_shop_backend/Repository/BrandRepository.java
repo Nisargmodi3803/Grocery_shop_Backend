@@ -18,4 +18,7 @@ public interface BrandRepository extends JpaRepository<Brand,Integer>
 
     @Query("SELECT brand FROM Brand brand WHERE brand.is_deleted=1")
     public List<Brand> findAllBrands();
+
+    // Search Brand
+    public List<Brand> findByNameContainingIgnoreCase(String name);
 }

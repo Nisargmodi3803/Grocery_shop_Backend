@@ -24,7 +24,8 @@ public class CorsConfig {
         config.setAllowCredentials(true);
 
         // Dynamic allowed origins (Use "*" if you don't need credentials)
-        config.setAllowedOriginPatterns(List.of("http://localhost:3000", "https://your-production-domain.com"));
+        config.setAllowedOriginPatterns(List.of("http://localhost:3000", "http://localhost:3001", "https://your-production-domain.com"));
+
 
         // Allowed headers
         config.setAllowedHeaders(Arrays.asList(

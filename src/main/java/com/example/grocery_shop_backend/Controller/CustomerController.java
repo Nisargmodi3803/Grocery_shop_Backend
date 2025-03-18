@@ -15,7 +15,7 @@ import java.util.Map;
 import static org.springframework.web.servlet.function.ServerResponse.status;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
 public class CustomerController {
 
     @Autowired
