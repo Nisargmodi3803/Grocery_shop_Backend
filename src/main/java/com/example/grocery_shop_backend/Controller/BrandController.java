@@ -54,7 +54,7 @@ public class BrandController
 
     // POST API {Add New Brand}
     @PostMapping("/add-brand")
-    public ResponseEntity<String> addBrand(@RequestBody BrandDTO brandDTO)
+    public ResponseEntity<String> addBrand(@ModelAttribute BrandDTO brandDTO)
     {
         try {
             brandService.addBrand(brandDTO);
@@ -68,12 +68,10 @@ public class BrandController
 
     // PATCH API {Update Brand}
     @PatchMapping("update-brand/{brandId}")
-    public ResponseEntity<String> updateBrand(@PathVariable int brandId, @RequestParam String name,
-                                              @RequestParam(required = false) String description,
-                                              @RequestParam(required = false) MultipartFile imageFile)
-    {
+    public ResponseEntity<String> updateBrand(@PathVariable int brandId, @ModelAttribute BrandDTO brandDTO) {
         try {
-            Brand brand = brandService.updateBrand(brandId,name,description,imageFile);
+            Brand brand = brandService.updateBrand(brandId, brandDTO);
+//            System.out.println(brand);
             return ResponseEntity.ok("Success");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed");
@@ -107,5 +105,11 @@ public class BrandController
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    // GET API {Check Slug Title}
+    @GetMapping("/check-brand-slug-title")
+    public ResponseEntity<Boolean> checkSlugTitle(@RequestParam String slugTitle){
+        return ResponseEntity.ok(brandService.checkSlugTitles(slugTitle));
     }
 }

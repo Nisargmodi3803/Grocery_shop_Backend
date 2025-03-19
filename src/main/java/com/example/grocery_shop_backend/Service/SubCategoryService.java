@@ -7,10 +7,18 @@ import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CategoryRepository;
 import com.example.grocery_shop_backend.Repository.SubCategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +30,9 @@ public class SubCategoryService
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Value("${upload.dir}")
+    private String uploadDir;
 
     // Find All Subcategories Service
     public List<SubCategory> getAllSubCategories()
@@ -74,8 +85,7 @@ public class SubCategoryService
     }
 
     // Add New Subcategory Service
-    public void addSubcategory(SubcategoryDTO subcategoryDTO)
-    {
+    public void addSubcategory(SubcategoryDTO subcategoryDTO) throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String cDate = now.format(formatter);
@@ -88,11 +98,32 @@ public class SubCategoryService
             subCategory.setCategory(category);
             subCategory.setName(subcategoryDTO.getName());
             subCategory.setDescription(subcategoryDTO.getDescription());
-            subCategory.setImage_url(subcategoryDTO.getImage());
             subCategory.setPriority(subcategoryDTO.getPriority());
             subCategory.setSlug_title(subcategoryDTO.getSlugTitle());
             subCategory.setIs_deleted(1);
             subCategory.setC_date(cDate);
+
+            MultipartFile imageFile = subcategoryDTO.getImageFile();
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // Delete old image if present
+            String oldImageName = subCategory.getImage_url();
+            if (oldImageName != null && !oldImageName.isEmpty()) {
+                Path oldImagePath = uploadPath.resolve(oldImageName);
+                if (Files.exists(oldImagePath)) {
+                    Files.delete(oldImagePath);
+                }
+            }
+
+            // Save new image with brand name (force jpg if needed)
+            String fileName = subcategoryDTO.getName();
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            subCategory.setImage_url(subCategory.getName());
             subCategoryRepository.save(subCategory);
         }
         else
@@ -100,8 +131,7 @@ public class SubCategoryService
     }
 
     // Update Subcategory
-    public SubCategory updateSubcategory(int subcategoryId, SubcategoryDTO subcategoryDTO)
-    {
+    public void updateSubcategory(int subcategoryId, SubcategoryDTO subcategoryDTO) throws IOException {
         SubCategory subCategory = subCategoryRepository.findSubCategoryById(subcategoryId);
 
         if(subCategory!=null)
@@ -118,17 +148,46 @@ public class SubCategoryService
                 subCategory.setSlug_title(subcategoryDTO.getSlugTitle());
             if(subcategoryDTO.getCategoryId()!=0)
             {
+                System.out.println("Category id "+subcategoryDTO.getCategoryId());
                 Category category = categoryRepository.findCategoryById(subcategoryDTO.getCategoryId());
-                if (category != null)
+                if (category != null){
+                    System.out.println("Category id "+category.getName());
                     subCategory.setCategory(category);
+
+                    }
                 else
                     throw new objectNotFoundException("Category with id "+subcategoryDTO.getCategoryId()+" not found");
+            }
+
+            MultipartFile imageFile = subcategoryDTO.getImageFile();
+            if (imageFile != null && !imageFile.isEmpty()) {
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                // Delete old image if present
+                String oldImageName = subCategory.getImage_url();
+                if (oldImageName != null && !oldImageName.isEmpty()) {
+                    Path oldImagePath = uploadPath.resolve(oldImageName);
+                    if (Files.exists(oldImagePath)) {
+                        Files.delete(oldImagePath);
+                    }
+                }
+
+                // Save new image with brand name (force jpg if needed)
+                String fileName = subcategoryDTO.getName();
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                subCategory.setImage_url(subCategory.getName());
             }
         }
         else
             throw new objectNotFoundException("Subcategory with id "+subcategoryId+" not found");
 
-        return subCategoryRepository.save(subCategory);
+        subCategoryRepository.save(subCategory);
+        System.out.println("subcategory id "+subCategory.getCategory().getId());
     }
 
     // Delete Subcategory Service
@@ -158,6 +217,26 @@ public class SubCategoryService
             subCategory.setIs_deleted(1);
             subCategoryRepository.save(subCategory);
             return true;
+        }
+    }
+
+    // Search Subcategory Service
+    public List<SubCategory> searchSubcategory(String keyword){
+        List<SubCategory> subCategories = subCategoryRepository.findByNameContainingIgnoreCase(keyword);
+
+        if(subCategories.isEmpty()){
+            throw new objectNotFoundException("Subcategory with name "+keyword+" not found");
+        }
+        return subCategories;
+    }
+
+    // Check Slug Title Service
+    public boolean checkSlugTitles(String slugTitle){
+        String slug_title = subCategoryRepository.checkSlugTitles(slugTitle);
+        if(slug_title != null && !slug_title.isEmpty()){
+            return true;
+        }else{
+            return false;
         }
     }
 }

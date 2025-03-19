@@ -47,37 +47,60 @@ public class BrandService
     }
 
     // Add New Brand Service
-    public void addBrand(BrandDTO brandDTO)
-    {
+    public void addBrand(BrandDTO brandDTO) throws IOException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         String cDate = now.format(formatter);
 
         Brand brand = new Brand();
         brand.setName(brandDTO.getName());
-        brand.setImage_url(brandDTO.getImage());
         brand.setSlug_title(brandDTO.getSlugTitle());
         brand.setDescription(brandDTO.getDescription());
         brand.setIs_deleted(1);
         brand.setC_date(cDate);
+
+        MultipartFile imageFile = brandDTO.getImageFile();
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // Delete old image if present
+        String oldImageName = brand.getImage_url();
+        if (oldImageName != null && !oldImageName.isEmpty()) {
+            Path oldImagePath = uploadPath.resolve(oldImageName);
+            if (Files.exists(oldImagePath)) {
+                Files.delete(oldImagePath);
+            }
+        }
+
+        // Save new image with brand name (force jpg if needed)
+        String fileName = brandDTO.getName();
+        Path filePath = uploadPath.resolve(fileName);
+        Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        brand.setImage_url(brandDTO.getName());
 
         brandRepository.save(brand);
     }
 
     // Update Brand Service
     @Transactional
-    public Brand updateBrand(int brandId, String name, String description, MultipartFile imageFile) throws IOException {
+    public Brand updateBrand(int brandId, BrandDTO brandDTO) throws IOException {
         Brand brand = brandRepository.findBrandById(brandId);
 
         if (brand != null) {
-            if (name != null && !name.isEmpty()) {
-                brand.setName(name);
+            if (brandDTO.getName() != null && !brandDTO.getName().isEmpty()) {
+                brand.setName(brandDTO.getName());
             }
 
-            if (description != null && !description.isEmpty()) {
-                brand.setDescription(description);
+            if(brandDTO.getSlugTitle() != null && !brandDTO.getSlugTitle().isEmpty()) {
+                brand.setSlug_title(brandDTO.getSlugTitle());
             }
 
+            brand.setDescription(brandDTO.getDescription());
+
+            MultipartFile imageFile = brandDTO.getImageFile();
             if (imageFile != null && !imageFile.isEmpty()) {
                 Path uploadPath = Paths.get(uploadDir);
                 if (!Files.exists(uploadPath)) {
@@ -93,13 +116,12 @@ public class BrandService
                     }
                 }
 
-                // Always save as brandName.jpg (force .jpg)
-                String fileName = name;
+                // Save new image with brand name (force jpg if needed)
+                String fileName = brandDTO.getName();
                 Path filePath = uploadPath.resolve(fileName);
                 Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-                // Save only the brand name (no extension)
-                brand.setImage_url(name);
+                brand.setImage_url(brandDTO.getName());
             }
 
             return brandRepository.save(brand);
@@ -107,8 +129,6 @@ public class BrandService
             throw new objectNotFoundException("Brand with ID " + brandId + " not found");
         }
     }
-
-
 
 
 
@@ -152,4 +172,13 @@ public class BrandService
         return brands;
     }
 
+    // Check Slug Title Service
+    public boolean checkSlugTitles(String slugTitle){
+        String slug_title = brandRepository.checkSlugTitles(slugTitle);
+        if(slug_title != null && !slug_title.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

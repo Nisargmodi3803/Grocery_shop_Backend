@@ -21,4 +21,7 @@ public interface BrandRepository extends JpaRepository<Brand,Integer>
 
     // Search Brand
     public List<Brand> findByNameContainingIgnoreCase(String name);
+
+    @Query("SELECT brand.slug_title FROM Brand brand WHERE brand.is_deleted=1 AND brand.slug_title = :slugTitle")
+    public String checkSlugTitles(String slugTitle);
 }

@@ -40,11 +40,11 @@ public class CategoryController
 
     // POST API {Add Category}
     @PostMapping("/add-category")
-    public ResponseEntity<String> addCategory(@RequestBody CategoryDTO categoryDTO)
+    public ResponseEntity<String> addCategory(@ModelAttribute CategoryDTO categoryDTO)
     {
         try {
             categoryService.addCategory(categoryDTO);
-            return new ResponseEntity<>("Category added successfully", HttpStatus.CREATED);
+            return new ResponseEntity<>("Category added successfully", HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -54,17 +54,27 @@ public class CategoryController
 
     // PATCH API {Update Category}
     @PatchMapping("/update-category/{categoryId}")
-    public Category updateCategory(@PathVariable int categoryId, @RequestBody CategoryDTO categoryDTO)
+    public ResponseEntity<String> updateCategory(@PathVariable int categoryId, @ModelAttribute CategoryDTO categoryDTO)
     {
-        return categoryService.updateCategory(categoryId, categoryDTO);
+        try {
+            categoryService.updateCategory(categoryId, categoryDTO);
+            return new ResponseEntity<>("Category updated successfully", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     // PATCH API {Delete Category}
     @PatchMapping("/delete-category/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable int categoryId)
     {
-        categoryService.deleteCategory(categoryId);
-        return new ResponseEntity<>("Category deleted successfully", HttpStatus.OK);
+        try {
+            categoryService.deleteCategory(categoryId);
+            return new ResponseEntity<>("Category deleted successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     // PATCH API {Retrieve Category}
@@ -77,5 +87,21 @@ public class CategoryController
             return new ResponseEntity<>("Category retrieved successfully", HttpStatus.OK);
         else
             return new ResponseEntity<>("Category Already Present", HttpStatus.BAD_REQUEST);
+    }
+
+    // GET API {Search Category}
+    @GetMapping("/search-category")
+    public ResponseEntity<List<Category>> searchCategory(@RequestParam String keyword){
+        try {
+            return ResponseEntity.ok(categoryService.searchCategory(keyword));
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Check Slug Title}
+    @GetMapping("/check-category-slug-title")
+    public ResponseEntity<Boolean> checkSlugTitle(@RequestParam String slugTitle){
+        return ResponseEntity.ok(categoryService.checkSlugTitles(slugTitle));
     }
 }

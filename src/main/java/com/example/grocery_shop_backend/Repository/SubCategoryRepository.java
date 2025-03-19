@@ -24,4 +24,10 @@ public interface SubCategoryRepository extends JpaRepository<SubCategory,Integer
 
     @Query("SELECT subCate FROM SubCategory subCate WHERE subCate.is_deleted=1")
     public List<SubCategory> findAllSubCategories();
+
+    // Search
+    public List<SubCategory> findByNameContainingIgnoreCase(String name);
+
+    @Query("SELECT subcategory.slug_title FROM SubCategory subcategory WHERE subcategory.is_deleted=1 AND subcategory.slug_title = :slugTitle")
+    public String checkSlugTitles(String slugTitle);
 }

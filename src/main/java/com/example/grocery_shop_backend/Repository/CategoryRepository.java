@@ -23,4 +23,10 @@ public interface CategoryRepository extends JpaRepository<Category,Integer>
 
     @Query("SELECT category FROM Category category WHERE category.is_deleted=1")
     List<Category> findAllCategories();
+
+    // Search Category
+    List<Category> findByNameContainingIgnoreCase(String name);
+
+    @Query("SELECT category.slug_title FROM Category category WHERE category.is_deleted=1 AND category.slug_title = :slugTitle")
+    public String checkSlugTitles(String slugTitle);
 }

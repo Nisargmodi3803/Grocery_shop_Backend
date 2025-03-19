@@ -1,5 +1,7 @@
 package com.example.grocery_shop_backend.Dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class SubcategoryDTO
 {
     private int categoryId;
@@ -8,6 +10,7 @@ public class SubcategoryDTO
     private String image;
     private int priority;
     private String slugTitle;
+    private MultipartFile imageFile;
 
     public int getCategoryId() {
         return categoryId;
@@ -55,5 +58,13 @@ public class SubcategoryDTO
 
     public void setSlugTitle(String slugTitle) {
         this.slugTitle = slugTitle;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
     }
 }
