@@ -2,6 +2,7 @@ package com.example.grocery_shop_backend.Controller;
 
 import com.example.grocery_shop_backend.Dto.BlogDTO;
 import com.example.grocery_shop_backend.Entities.Blog;
+import com.example.grocery_shop_backend.Entities.Brand;
 import com.example.grocery_shop_backend.Service.BlogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,11 +53,11 @@ public class BlogController
 
     // POST API {Add Blog}
     @PostMapping("/add-blog")
-    public ResponseEntity<String> addBlog(@RequestBody BlogDTO blogDTO)
+    public ResponseEntity<String> addBlog(@ModelAttribute BlogDTO blogDTO)
     {
         try {
             blogService.addBlog(blogDTO);
-            return new ResponseEntity<>("Successfully added blog", HttpStatus.CREATED);
+            return new ResponseEntity<>("Successfully added blog", HttpStatus.OK);
         }
         catch (Exception e)
         {
@@ -86,8 +87,28 @@ public class BlogController
 
     // PATCH API {Update Blog}
     @PatchMapping("update-blog/{blogId}")
-    public Blog updateBlog(@PathVariable int blogId, @RequestBody BlogDTO blogDTO)
+    public ResponseEntity<String> updateBlog(@PathVariable int blogId, @ModelAttribute BlogDTO blogDTO)
     {
-        return blogService.updateBlog(blogId, blogDTO);
+        try {
+            blogService.updateBlog(blogId,blogDTO);
+            return new ResponseEntity<>("Successfully updated blog", HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/search-blog")
+    public ResponseEntity<List<Blog>> searchBrand(@RequestParam String keyword){
+        try {
+            return ResponseEntity.ok(blogService.searchBrand(keyword));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Check Slug Title}
+    @GetMapping("/check-blog-slug-title")
+    public ResponseEntity<Boolean> checkSlugTitle(@RequestParam String slugTitle){
+        return ResponseEntity.ok(blogService.checkSlugTitles(slugTitle));
     }
 }

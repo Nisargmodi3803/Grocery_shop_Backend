@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
+import java.nio.file.AccessDeniedException;
+
 /*
     EMAIL TYPE [OTP VERIFICATION]
 
@@ -39,34 +41,49 @@ public class EmailOTPController
 
     // POST API {Send Email for Registration}
     @PostMapping("/send-email-registration")
-    public ResponseEntity<Mono<OTPResponseDTO>> sendEmailRegistration(@RequestBody OTPRequestDTO otpRequestDTO)
+    public ResponseEntity<?> sendEmailRegistration(@RequestBody OTPRequestDTO otpRequestDTO)
     {
-        Customer customer = customerRepository.findCustomerByEmail(otpRequestDTO.getEmail());
-        if(customer == null) {
-            Mono<OTPResponseDTO> response = emailOTPService.emailBody(otpRequestDTO, 1);
-            return ResponseEntity.ok(response);
-        }
-        else{
-            OTPResponseDTO otpResponseDTO = new OTPResponseDTO(OtpStatus.FAILED, "Email Already Registered!!! Try a different Email");
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(Mono.just(otpResponseDTO));
+        try {
+            Customer customer = customerRepository.findCustomerByEmail(otpRequestDTO.getEmail());
+            if(customer == null) {
+                Mono<OTPResponseDTO> response = emailOTPService.emailBody(otpRequestDTO, 1);
+                return ResponseEntity.ok(response);
+            }
+            else{
+                OTPResponseDTO otpResponseDTO = new OTPResponseDTO(OtpStatus.FAILED, "Email Already Registered!!! Try a different Email");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(Mono.just(otpResponseDTO));
 
+            }
+        }catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Your account is blocked. Please contact support.");
         }
     }
 
     // POST API {Send Email for Login with OTP}
     @PostMapping("/send-email-login")
-    public ResponseEntity<Mono<OTPResponseDTO>> sendEmailLogin(@RequestBody OTPRequestDTO otpRequestDTO)
+    public ResponseEntity<?> sendEmailLogin(@RequestBody OTPRequestDTO otpRequestDTO)
     {
-        Mono<OTPResponseDTO> response = emailOTPService.emailBody(otpRequestDTO, 2);
-        return ResponseEntity.ok(response);
+        try {
+            Mono<OTPResponseDTO> response = emailOTPService.emailBody(otpRequestDTO, 2);
+            return ResponseEntity.ok(response);
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Your account is blocked. Please contact support.");
+        }
     }
 
     // POST API {Send Email for Forgot Password}
     @PostMapping("/send-email-forgot-password")
-    public ResponseEntity<Mono<OTPResponseDTO>> sendEmailForgotPassword(@RequestBody OTPRequestDTO otpRequestDTO)
+    public ResponseEntity<?> sendEmailForgotPassword(@RequestBody OTPRequestDTO otpRequestDTO)
     {
-        Mono<OTPResponseDTO> response = emailOTPService.emailBody(otpRequestDTO, 3);
-        return ResponseEntity.ok(response);
+        try {
+            Mono<OTPResponseDTO> response = emailOTPService.emailBody(otpRequestDTO, 3);
+            return ResponseEntity.ok(response);
+        }catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Your account is blocked. Please contact support.");
+        }
     }
 
     // POST API {Verify OTP}

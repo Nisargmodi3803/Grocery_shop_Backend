@@ -67,6 +67,9 @@ public class Customer
     @Column(name = "is_deleted")
     private int isDeleted;
 
+    @Column(name = "is_blocked")
+    private int isBlocked; // 1 = no & 2 = yes
+
     public Customer(){}
 
     public Customer(int customerId, String customerName, String customerEmail, String customerMobile, String customerImage, String customerPassword, City customerCity, String customerAddress, String customerPincode, int customerGender, String customerDob, String customerOtp, String customerAndroidToken, String customerIosToken, String cDate, String customerReferralCode, Customer customerReferralBy, double customerPoint, int isDeleted) {
@@ -241,5 +244,13 @@ public class Customer
 
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
+    }
+
+    public int getIsBlocked() {
+        return isBlocked;
+    }
+
+    public void setIsBlocked(int isBlocked) {
+        this.isBlocked = isBlocked;
     }
 }

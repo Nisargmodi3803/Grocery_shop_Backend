@@ -12,12 +12,17 @@ import java.util.List;
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Integer>
 {
-    @Query("SELECT blog FROM Blog blog WHERE blog.id = :blogId AND blog.is_deleted=1")
+    @Query("SELECT blog FROM Blog blog WHERE blog.id = :blogId AND blog.isDeleted=1")
     Blog findBlogById(int blogId);
 
-    @Query("SELECT blog FROM Blog blog WHERE blog.slug_title = :slug_title AND blog.is_deleted=1")
+    @Query("SELECT blog FROM Blog blog WHERE blog.slug_title = :slug_title AND blog.isDeleted=1")
     Blog findBlogBySlugTitle(String slug_title);
 
-    @Query("SELECT blog FROM Blog blog WHERE blog.is_deleted=1 ORDER BY blog.id DESC")
+    @Query("SELECT blog FROM Blog blog WHERE blog.isDeleted=1 ORDER BY blog.id DESC")
     List<Blog> findAllBlogs();
+
+    List<Blog> findByTitleContainingIgnoreCaseAndIsDeleted(String name,int isDeleted);
+
+    @Query("SELECT b.slug_title FROM Blog b WHERE b.isDeleted=1 AND b.slug_title = :slugTitle")
+    public String checkSlugTitles(String slugTitle);
 }

@@ -21,16 +21,16 @@ public interface ProductRepository extends JpaRepository<Product,Integer>
     @Query("SELECT product FROM Product product WHERE product.cat.id = :categoryId AND product.is_deleted=1")
     List<Product> findProductsByCategoryId(int categoryId);
 
-    @Query("SELECT product FROM Product product WHERE product.is_deleted=1 AND (product.cat.slug_title = :categorySlugTitle AND product.cat.is_deleted=1)")
+    @Query("SELECT product FROM Product product WHERE product.is_deleted=1 AND (product.cat.slug_title = :categorySlugTitle AND product.cat.isDeleted=1)")
     List<Product> findProductsByCategorySlugTitle(String categorySlugTitle);
 
-    @Query("SELECT product FROM Product product WHERE product.is_deleted=1 AND (product.subcat.id = :subCategoryId AND product.subcat.is_deleted=1)")
+    @Query("SELECT product FROM Product product WHERE product.is_deleted=1 AND (product.subcat.id = :subCategoryId AND product.subcat.isDeleted=1)")
     List<Product> findProductsBySubCategoryId(int subCategoryId);
 
     @Query("SELECT product FROM Product product WHERE product.is_deleted=1 AND (product.subcat.slug_title = :subCategorySlugTitle AND product.is_deleted=1)")
     List<Product> findProductsBySubCategorySlugTitle(String subCategorySlugTitle);
 
-    @Query("SELECT product FROM Product product WHERE product.is_deleted=1 AND (product.brand.id = :brandId AND product.brand.is_deleted=1)")
+    @Query("SELECT product FROM Product product WHERE product.is_deleted=1 AND (product.brand.id = :brandId AND product.brand.isDeleted=1)")
     List<Product> findProductsByBrandId(int brandId);
 
     @Query("SELECT product FROM Product product WHERE product.is_deleted=1 AND (product.brand.slug_title = :brandSlugTitle AND product.is_deleted=1)")

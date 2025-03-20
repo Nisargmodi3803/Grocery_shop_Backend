@@ -13,9 +13,13 @@ public interface CityRepository extends JpaRepository<City, Integer>
     @Query("SELECT city FROM City city WHERE city.isDeleted=1 AND city.cityIsActive=1")
     List<City> findAllCities();
 
+    @Query("SELECT city FROM City city WHERE city.isDeleted=1")
+    List<City> findAllAdminCities();
+
     @Query("SELECT city FROM City city WHERE (city.cityId = :cityId AND city.isDeleted=1) AND city.cityIsActive=1")
     City findCityById(int cityId);
 
     @Query("SELECT city FROM City city WHERE LOWER(city.cityName) LIKE LOWER(CONCAT('%', :cityName, '%')) AND city.isDeleted=1")
     List<City> searchCity(String cityName);
+
 }

@@ -56,7 +56,7 @@ public class BrandService
         brand.setName(brandDTO.getName());
         brand.setSlug_title(brandDTO.getSlugTitle());
         brand.setDescription(brandDTO.getDescription());
-        brand.setIs_deleted(1);
+        brand.setIsDeleted(1);
         brand.setC_date(cDate);
 
         MultipartFile imageFile = brandDTO.getImageFile();
@@ -139,7 +139,7 @@ public class BrandService
 
         if(brand!=null)
         {
-            brand.setIs_deleted(2);
+            brand.setIsDeleted(2);
             brandRepository.save(brand);
         }
         else
@@ -152,11 +152,11 @@ public class BrandService
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new objectNotFoundException("Brand with ID " + brandId + " not found"));
 
-        if(brand.getIs_deleted()==1)
+        if(brand.getIsDeleted()==1)
             return false;
         else
         {
-            brand.setIs_deleted(1);
+            brand.setIsDeleted(1);
             brandRepository.save(brand);
             return true;
         }
@@ -164,7 +164,7 @@ public class BrandService
 
     // Search Brand Service
     public List<Brand> searchBrand(String keyword){
-        List<Brand> brands = brandRepository.findByNameContainingIgnoreCase(keyword);
+        List<Brand> brands = brandRepository.findByNameContainingIgnoreCaseAndIsDeleted(keyword,1);
 
         if(brands.isEmpty()){
             throw new objectNotFoundException("Brand with keyword " + keyword + " not found");

@@ -33,24 +33,10 @@ public class SubCategory
    private String slug_title;
 
    @Column(name = "is_deleted")
-   private int is_deleted; // 1 => Not Delete & 2 => Delete
+   private int isDeleted; // 1 => Not Delete & 2 => Delete
 
    @Column(name = "c_date")
    private String c_date;
-
-   public SubCategory(){}
-
-    public SubCategory(int id, Category category, String name, String image_url, String description, int priority, String slug_title, int is_deleted, String c_date) {
-        this.id = id;
-        this.category = category;
-        this.name = name;
-        this.image_url = image_url;
-        this.description = description;
-        this.priority = priority;
-        this.slug_title = slug_title;
-        this.is_deleted = is_deleted;
-        this.c_date = c_date;
-    }
 
     public int getId() {
         return id;
@@ -108,12 +94,12 @@ public class SubCategory
         this.slug_title = slug_title;
     }
 
-    public int getIs_deleted() {
-        return is_deleted;
+    public int getIsDeleted() {
+        return isDeleted;
     }
 
-    public void setIs_deleted(int is_deleted) {
-        this.is_deleted = is_deleted;
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public String getC_date() {

@@ -72,4 +72,8 @@ public class City
     public void setcDate(String cDate) {
         this.cDate = cDate;
     }
+
+    public int getCityIsActive() {
+        return cityIsActive;
+    }
 }

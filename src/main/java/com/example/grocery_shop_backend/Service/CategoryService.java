@@ -67,7 +67,7 @@ public class CategoryService
         category.setDescription(categoryDTO.getDescription());
         category.setSlug_title(categoryDTO.getSlugTitle());
         category.setPriority(categoryDTO.getPriority());
-        category.setIs_deleted(1);
+        category.setIsDeleted(1);
         category.setC_date(cDate);
 
         MultipartFile imageFile = categoryDTO.getImageFile();
@@ -149,7 +149,7 @@ public class CategoryService
 
         if (category != null)
         {
-            category.setIs_deleted(2);
+            category.setIsDeleted(2);
             categoryRepository.save(category);
         }
         else
@@ -162,11 +162,11 @@ public class CategoryService
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new objectNotFoundException("Category with id "+categoryId+" not found"));
 
-        if(category.getIs_deleted() == 1)
+        if(category.getIsDeleted() == 1)
             return false;
         else
         {
-            category.setIs_deleted(1);
+            category.setIsDeleted(1);
             categoryRepository.save(category);
             return true;
         }
@@ -174,7 +174,7 @@ public class CategoryService
 
     // Search Category Service
     public List<Category> searchCategory(String keyword){
-        List<Category> categories = categoryRepository.findByNameContainingIgnoreCase(keyword);
+        List<Category> categories = categoryRepository.findByNameContainingIgnoreCaseAndIsDeleted(keyword,1);
 
         if(categories == null){
             throw new objectNotFoundException("Category with name "+keyword+" not found");

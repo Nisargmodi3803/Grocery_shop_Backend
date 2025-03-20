@@ -29,6 +29,17 @@ public class CityController
        }
     }
 
+    @GetMapping("/all-cities")
+    public ResponseEntity<List<City>> findAllAdminCities()
+    {
+       try{
+           return new ResponseEntity<>(cityService.findAllAdminCities(), HttpStatus.OK);
+       }catch (Exception e){
+           return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+       }
+    }
+
+
     // GET API {Find City By ID}
     @GetMapping("/city/{id}")
     public ResponseEntity<City> findCityById(@PathVariable int id)
@@ -42,17 +53,27 @@ public class CityController
 
     // PATCH API {Update City}
     @PatchMapping("update-city/{id}")
-    public City updateCity(@PathVariable int id, @RequestBody CityUpdateDTO updateCity)
+    public ResponseEntity<String> updateCity(@PathVariable int id, @RequestBody CityUpdateDTO updateCity)
     {
-        return cityService.updateCity(id, updateCity);
+        try {
+            cityService.updateCity(id, updateCity);
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     //POST API {Add City}
     @PostMapping("/add-city")
-    public ResponseEntity<String> addCity(@RequestParam String cityName)
+    public ResponseEntity<String> addCity(@RequestBody CityUpdateDTO cityDto)
     {
-        cityService.addCity(cityName);
-        return ResponseEntity.ok("Success");
+        try {
+            cityService.addCity(cityDto);
+            return ResponseEntity.ok("Success");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+
     }
 
     // GET API {Search City} [Only Names Testing]
@@ -72,11 +93,22 @@ public class CityController
 
     // GET API {Search City}
     @GetMapping("/search-city")
-    public ResponseEntity<List<City>> searchCity(@RequestParam String cityName){
+    public ResponseEntity<List<City>> searchCity(@RequestParam String keyword){
         try {
-            List<City> cities = cityService.searchCity(cityName);
+            List<City> cities = cityService.searchCity(keyword);
 
             return new ResponseEntity<>(cities, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // PATCH API {Delete City}
+    @PatchMapping("/delete-city/{id}")
+    public ResponseEntity<String> deleteCity(@PathVariable int id){
+        try {
+            cityService.deleteCity(id);
+            return new ResponseEntity<>("Success", HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

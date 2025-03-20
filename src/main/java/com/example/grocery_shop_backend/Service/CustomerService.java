@@ -11,20 +11,20 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class CustomerService {
@@ -114,15 +114,16 @@ public class CustomerService {
         return true;
     }
 
-    public boolean login(CustomerLoginDTO loginDTO) {
-//        System.out.println("Email : "+loginDTO.getEmail());
-//        System.out.println("Password : "+loginDTO.getPassword());
-        String hashPassword = customerRepository.getHashedPassword(loginDTO.getEmail());
-//        System.out.println(hashPassword);
-        if (hashPassword == null) {
+    public boolean login(CustomerLoginDTO loginDTO) throws AccessDeniedException {
+
+        Customer customer = customerRepository.findCustomerByEmail(loginDTO.getEmail());
+        if (customer == null) {
             throw new objectNotFoundException("Email not found");
         }
-
+        if(customer.getIsBlocked()==2){
+            throw new AccessDeniedException("Account blocked");
+        }
+        String hashPassword = customerRepository.getHashedPassword(loginDTO.getEmail());
         if (passwordEncoder.matches(loginDTO.getPassword(), hashPassword)) {
             return true; // Return the customer data directly (no token needed)
         } else {
@@ -358,5 +359,43 @@ public class CustomerService {
 
             customerPointService.addCustomerPoint(customerEmail,customerPointDTO);
         }
+    }
+
+    // Find All Customers Service
+    public List<Customer> findAllCustomers() {
+        List<Customer> customers = customerRepository.findAllCustomers();
+        if(customers.isEmpty()) {
+            throw new objectNotFoundException("Customer list is empty");
+        }
+        return customers;
+    }
+
+    // Search Customer Service
+    public List<Customer> searchCustomers(String searchText) {
+        List<Customer> customers = customerRepository.searchCustomerByKeyword(searchText);
+        if(customers.isEmpty()) {
+            throw new objectNotFoundException("Customer list is empty");
+        }
+        return customers;
+    }
+
+    // Block Customer
+    public void blockCustomer(String customerEmail) {
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
+        if(customer == null) {
+            throw new objectNotFoundException("Customer with email " + customerEmail + " not found");
+        }
+        customer.setIsBlocked(2);
+        customerRepository.save(customer);
+    }
+
+    // Unblock Customer
+    public void unblockCustomer(String customerEmail) {
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
+        if(customer == null) {
+            throw new objectNotFoundException("Customer with email " + customerEmail + " not found");
+        }
+        customer.setIsBlocked(1);
+        customerRepository.save(customer);
     }
 }

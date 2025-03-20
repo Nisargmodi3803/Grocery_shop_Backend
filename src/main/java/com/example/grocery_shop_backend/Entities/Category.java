@@ -27,23 +27,10 @@ public class Category
     private int priority;
 
     @Column(name = "is_deleted")
-    private int is_deleted; // 1 => Not Delete & 2 => Delete
+    private int isDeleted; // 1 => Not Delete & 2 => Delete
 
     @Column(name = "c_date")
     private String c_date;
-
-    public Category(int id, String name, String image_url, String description, String slug_title,int priority, int is_deleted, String c_date) {
-        this.id = id;
-        this.name = name;
-        this.image_url = image_url;
-        this.description = description;
-        this.slug_title = slug_title;
-        this.is_deleted = is_deleted;
-        this.c_date = c_date;
-        this.priority = priority;
-    }
-
-    public Category(){}
 
     public int getId() {
         return id;
@@ -85,12 +72,20 @@ public class Category
         this.slug_title = slug_title;
     }
 
-    public int getIs_deleted() {
-        return is_deleted;
+    public int getPriority() {
+        return priority;
     }
 
-    public void setIs_deleted(int is_deleted) {
-        this.is_deleted = is_deleted;
+    public void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    public int getIsDeleted() {
+        return isDeleted;
+    }
+
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public String getC_date() {
@@ -99,13 +94,5 @@ public class Category
 
     public void setC_date(String c_date) {
         this.c_date = c_date;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    public void setPriority(int priority) {
-        this.priority = priority;
     }
 }

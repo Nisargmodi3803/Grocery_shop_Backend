@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.nio.file.AccessDeniedException;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.web.servlet.function.ServerResponse.status;
@@ -41,16 +44,16 @@ public class CustomerController {
     // POST API {Login API}
     @PostMapping("/login")
     public ResponseEntity<String> loginCustomer(@RequestBody CustomerLoginDTO loginDTO) {
-        boolean result = customerService.login(loginDTO);
-        if(result)
-        {
-            return ResponseEntity.ok("Login successful");
-//                return "success";
-        }
-        else
-        {
-            return ResponseEntity.badRequest().body("Email or Password is incorrect");
-//            return "fail";
+        try {
+            boolean result = customerService.login(loginDTO);
+            if (result) {
+                return ResponseEntity.ok("Login successful");
+            } else {
+                return ResponseEntity.badRequest().body("Email or Password is incorrect");
+            }
+        }catch (AccessDeniedException e){
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body("Your account is blocked. Please contact support.");
         }
     }
 
@@ -122,8 +125,12 @@ public class CustomerController {
     // PATCH API {Delete Customer}
     @PatchMapping("/delete-customer/{customerId}")
     public ResponseEntity<String> deleteCustomer(@PathVariable int customerId) {
-        customerService.deleteCustomer(customerId);
-        return ResponseEntity.ok("Customer deleted successfully!");
+        try {
+            customerService.deleteCustomer(customerId);
+            return ResponseEntity.ok("Customer deleted successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     // PATCH API {Retrieve Customer}
@@ -193,6 +200,45 @@ public class CustomerController {
             customerService.updateCustomer(customerEmail, customerUpdatePlaceOrderDTO);
             return ResponseEntity.ok("Customer updated successfully");
         }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/customers")
+    public ResponseEntity<List<Customer>> getCustomers() {
+        try {
+            return ResponseEntity.ok(customerService.findAllCustomers());
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search-customer")
+    public ResponseEntity<List<Customer>> searchCustomer(@RequestParam String keyword) {
+        try {
+            return ResponseEntity.ok(customerService.searchCustomers(keyword));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/block-customer/{email}")
+    public ResponseEntity<String> blockCustomer(@PathVariable String email) {
+        try {
+            customerService.blockCustomer(email);
+            return ResponseEntity.ok("Customer blocked successfully");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/unblock-customer/{email}")
+    public ResponseEntity<String> unblockCustomer(@PathVariable String email) {
+        try {
+            customerService.unblockCustomer(email);
+            return ResponseEntity.ok("Customer unblocked successfully");
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

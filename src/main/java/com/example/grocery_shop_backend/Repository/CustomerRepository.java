@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer,Integer>
 {
@@ -27,5 +29,15 @@ public interface CustomerRepository extends JpaRepository<Customer,Integer>
     @Query("SELECT customer FROM Customer customer WHERE customer.customerReferralCode = :referralCode AND customer.isDeleted=1")
     public Customer findCustomerByReferralCode(String referralCode);
 
+    @Query("SELECT customer FROM Customer customer WHERE customer.isDeleted=1")
+    public List<Customer> findAllCustomers();
+
+    @Query("SELECT c FROM Customer c " +
+            "WHERE c.isDeleted = 1 AND (" +
+            "CAST(c.customerId AS string) LIKE %:keyword% OR " +
+            "LOWER(c.customerName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "c.customerEmail LIKE %:keyword% OR " +
+            "c.customerMobile LIKE %:keyword%)")
+    List<Customer> searchCustomerByKeyword(@Param("keyword") String keyword);
 
 }

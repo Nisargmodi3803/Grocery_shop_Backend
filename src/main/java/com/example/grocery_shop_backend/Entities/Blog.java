@@ -40,7 +40,7 @@ public class Blog
     private String c_date;
 
     @Column(name = "is_deleted")
-    private int is_deleted; // 1 => Not Delete & 2 => Delete
+    private int isDeleted; // 1 => Not Delete & 2 => Delete
 
     public Blog(int id, String title, String image_url, String description, String long_description, String date, String keywords, String slug_title, String c_date, int is_deleted) {
         this.id = id;
@@ -52,7 +52,7 @@ public class Blog
         this.keywords = keywords;
         this.slug_title = slug_title;
         this.c_date = c_date;
-        this.is_deleted = is_deleted;
+        this.isDeleted = is_deleted;
     }
 
     public Blog(){}
@@ -131,10 +131,10 @@ public class Blog
     }
 
     public int getIs_deleted() {
-        return is_deleted;
+        return isDeleted;
     }
 
     public void setIs_deleted(int is_deleted) {
-        this.is_deleted = is_deleted;
+        this.isDeleted = is_deleted;
     }
 }

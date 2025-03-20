@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
 import reactor.core.publisher.Mono;
 
+import java.nio.file.AccessDeniedException;
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,7 +73,7 @@ public class EmailOTPService {
         mailSender.send(mimeMessage);
     }
 
-    public Mono<OTPResponseDTO> emailBody(OTPRequestDTO otpRequestDTO, int mailType) {
+    public Mono<OTPResponseDTO> emailBody(OTPRequestDTO otpRequestDTO, int mailType) throws AccessDeniedException {
         String to = otpRequestDTO.getEmail();
         Customer customer = customerRepository.findCustomerByEmail(to);
         String customerName = "";
@@ -85,6 +86,12 @@ public class EmailOTPService {
             customerName = otpRequestDTO.getName();
         else
             customerName = customer.getCustomerName();
+
+        if(mailType!=1){
+            if(customer.getIsBlocked()==2){
+                throw new AccessDeniedException("Account blocked");
+            }
+        }
 
         try {
             String OTP = generateOTP();

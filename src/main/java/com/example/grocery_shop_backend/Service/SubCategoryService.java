@@ -100,7 +100,7 @@ public class SubCategoryService
             subCategory.setDescription(subcategoryDTO.getDescription());
             subCategory.setPriority(subcategoryDTO.getPriority());
             subCategory.setSlug_title(subcategoryDTO.getSlugTitle());
-            subCategory.setIs_deleted(1);
+            subCategory.setIsDeleted(1);
             subCategory.setC_date(cDate);
 
             MultipartFile imageFile = subcategoryDTO.getImageFile();
@@ -132,16 +132,16 @@ public class SubCategoryService
 
     // Update Subcategory
     public void updateSubcategory(int subcategoryId, SubcategoryDTO subcategoryDTO) throws IOException {
+        System.out.println("Subcategory id "+subcategoryId);
         SubCategory subCategory = subCategoryRepository.findSubCategoryById(subcategoryId);
-
+        System.out.println("Subcategory "+subcategoryDTO.getName());
         if(subCategory!=null)
         {
             if(subcategoryDTO.getName()!=null)
                 subCategory.setName(subcategoryDTO.getName());
-            if(subcategoryDTO.getDescription()!=null)
-                subCategory.setDescription(subcategoryDTO.getDescription());
-            if (subcategoryDTO.getImage()!=null)
-                subCategory.setImage_url(subcategoryDTO.getImage());
+
+            subCategory.setDescription(subcategoryDTO.getDescription());
+
             if(subcategoryDTO.getPriority()!=0)
                 subCategory.setPriority(subcategoryDTO.getPriority());
             if(subcategoryDTO.getSlugTitle()!=null)
@@ -197,7 +197,7 @@ public class SubCategoryService
 
         if(subCategory!=null)
         {
-            subCategory.setIs_deleted(2);
+            subCategory.setIsDeleted(2);
             subCategoryRepository.save(subCategory);
         }
         else
@@ -210,11 +210,11 @@ public class SubCategoryService
         SubCategory subCategory = subCategoryRepository.findById(subcategoryId)
                 .orElseThrow(() -> new objectNotFoundException("Subcategory with id "+subcategoryId+" not found"));
 
-        if(subCategory.getIs_deleted()==1)
+        if(subCategory.getIsDeleted()==1)
             return false;
         else
         {
-            subCategory.setIs_deleted(1);
+            subCategory.setIsDeleted(1);
             subCategoryRepository.save(subCategory);
             return true;
         }
@@ -222,7 +222,7 @@ public class SubCategoryService
 
     // Search Subcategory Service
     public List<SubCategory> searchSubcategory(String keyword){
-        List<SubCategory> subCategories = subCategoryRepository.findByNameContainingIgnoreCase(keyword);
+        List<SubCategory> subCategories = subCategoryRepository.findByNameContainingIgnoreCaseAndIsDeleted(keyword,1);
 
         if(subCategories.isEmpty()){
             throw new objectNotFoundException("Subcategory with name "+keyword+" not found");

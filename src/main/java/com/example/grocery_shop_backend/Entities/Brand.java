@@ -24,20 +24,20 @@ public class Brand
     private String slug_title;
 
     @Column(name = "is_deleted")
-    private int is_deleted; // 1 => Not Delete & 2 => Delete
+    private int isDeleted; // 1 => Not Delete & 2 => Delete
 
     @Column(name = "c_date")
     private String c_date;
 
     public Brand(){}
 
-    public Brand(int id, String name, String image_url, String description, String slug_title, int is_deleted, String c_date) {
+    public Brand(int id, String name, String image_url, String description, String slug_title, int isDeleted, String c_date) {
         this.id = id;
         this.name = name;
         this.image_url = image_url;
         this.description = description;
         this.slug_title = slug_title;
-        this.is_deleted = is_deleted;
+        this.isDeleted = isDeleted;
         this.c_date = c_date;
     }
 
@@ -65,6 +65,14 @@ public class Brand
         this.image_url = image_url;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getSlug_title() {
         return slug_title;
     }
@@ -73,12 +81,12 @@ public class Brand
         this.slug_title = slug_title;
     }
 
-    public int getIs_deleted() {
-        return is_deleted;
+    public int getIsDeleted() {
+        return isDeleted;
     }
 
-    public void setIs_deleted(int is_deleted) {
-        this.is_deleted = is_deleted;
+    public void setIsDeleted(int isDeleted) {
+        this.isDeleted = isDeleted;
     }
 
     public String getC_date() {
@@ -87,13 +95,5 @@ public class Brand
 
     public void setC_date(String c_date) {
         this.c_date = c_date;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 }

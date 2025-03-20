@@ -1,12 +1,16 @@
 package com.example.grocery_shop_backend.Dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class BlogDTO
 {
     private String title;
     private String image;
     private String description;
+    private String date;
     private String keywords;
     private String slugTitle;
+    private MultipartFile imageFile;
 
     public String getTitle() {
         return title;
@@ -46,5 +50,21 @@ public class BlogDTO
 
     public void setSlugTitle(String slugTitle) {
         this.slugTitle = slugTitle;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
