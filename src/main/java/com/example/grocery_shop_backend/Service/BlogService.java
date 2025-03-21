@@ -2,7 +2,6 @@ package com.example.grocery_shop_backend.Service;
 
 import com.example.grocery_shop_backend.Dto.BlogDTO;
 import com.example.grocery_shop_backend.Entities.Blog;
-import com.example.grocery_shop_backend.Entities.Brand;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -140,7 +139,7 @@ public class BlogService
 
     // Update Blog Service
     @Transactional
-    public Blog updateBlog(int blogId,BlogDTO blogDTO) throws IOException {
+    public void updateBlog(int blogId, BlogDTO blogDTO) throws IOException {
         Blog blog = blogRepository.findBlogById(blogId);
 
         if (blog != null)
@@ -153,6 +152,9 @@ public class BlogService
                 blog.setKeywords(blogDTO.getKeywords());
             if(blogDTO.getSlugTitle() != null)
                 blog.setSlug_title(blogDTO.getSlugTitle());
+            if(blogDTO.getDate() != null){
+                blog.setDate(blogDTO.getDate());
+            }
 
             MultipartFile imageFile = blogDTO.getImageFile();
             if (imageFile != null && !imageFile.isEmpty()) {
@@ -181,7 +183,7 @@ public class BlogService
         else
             throw new objectNotFoundException("Blog with id " + blogId + " not found");
 
-        return blogRepository.save(blog);
+        blogRepository.save(blog);
     }
 
     public List<Blog> searchBrand(String keyword){

@@ -18,10 +18,14 @@ public class ProductReviewController
     private ProductReviewService productReviewService;
 
     // GET API {Find Product Reviews by Product ID}
-    @GetMapping("/product-reviews-product/{productId}")
-    public List<ProductReview> findProductReviewsByProductId(@PathVariable int productId)
+    @GetMapping("/product-reviews/{slugTitle}")
+    public ResponseEntity<List<ProductReview>> findProductReviewsByProductSlug(@PathVariable String slugTitle)
     {
-        return productReviewService.findProductReviewsByProductId(productId);
+        try {
+            return new ResponseEntity<>(productReviewService.findProductReviewsByProductSlug(slugTitle), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find Product Reviews by Customer ID}
@@ -40,16 +44,16 @@ public class ProductReviewController
     }
 
     // POST API {Add Product Review}
-    @PostMapping("add-product-review")
+    @PostMapping("/add-product-review")
     public ResponseEntity<String> addProductReview(@RequestBody ProductReviewDTO productReviewDTO)
     {
-//        try {
+        try {
             productReviewService.insertProductReview(productReviewDTO);
             return new ResponseEntity<>("Product Review added", HttpStatus.OK);
-//        }
-//        catch (Exception e)
-//        {
-//            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-//        }
+        }
+        catch (Exception e)
+        {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

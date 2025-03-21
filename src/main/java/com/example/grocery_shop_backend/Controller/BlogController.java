@@ -86,7 +86,7 @@ public class BlogController
     }
 
     // PATCH API {Update Blog}
-    @PatchMapping("update-blog/{blogId}")
+    @PatchMapping("/update-blog/{blogId}")
     public ResponseEntity<String> updateBlog(@PathVariable int blogId, @ModelAttribute BlogDTO blogDTO)
     {
         try {

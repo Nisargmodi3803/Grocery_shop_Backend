@@ -10,6 +10,7 @@ import com.example.grocery_shop_backend.Repository.ProductInquiryRepository;
 import com.example.grocery_shop_backend.Repository.ProductRepository;
 import jakarta.persistence.Table;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +31,11 @@ public class ProductInquiryService
     private CustomerRepository customerRepository;
 
     // Find Product Inquiries By Customer ID Service
-    public List<ProductInquiry> findInquiriesByCustomerId(int customerId)
+    public List<ProductInquiry> findInquiriesByCustomerId(String customerEmail)
     {
-        List<ProductInquiry> inquiries = productInquiryRepository.findInquiriesByCustomerId(customerId);
+        List<ProductInquiry> inquiries = productInquiryRepository.findInquiriesByCustomerEmail(customerEmail);
         if (inquiries.isEmpty())
-            throw new objectNotFoundException("Product Inquiry Not Found with Customer Id: " + customerId);
+            throw new objectNotFoundException("Product Inquiry Not Found with Customer Id: " + customerEmail);
         return inquiries;
     }
 
@@ -78,5 +79,34 @@ public class ProductInquiryService
         productInquiry.setIsDeleted(1);
         productInquiry.setcDate(cDate);
         productInquiryRepository.save(productInquiry);
+    }
+
+    // Find All Inquiries Service
+    public List<ProductInquiry> findAllInquires(){
+        List<ProductInquiry> inquiries = productInquiryRepository.findAllInquiry();
+
+        if(inquiries.isEmpty()){
+            throw new objectNotFoundException("Product Inquiry Not Found");
+
+        }
+        return inquiries;
+    }
+
+    // Search Inquiry Service
+    public List<ProductInquiry> searchInquires(String searchText) {
+        List<ProductInquiry> inquiries = productInquiryRepository.searchInquiryByKeyword(searchText);
+        if(inquiries.isEmpty()) {
+            throw new objectNotFoundException("Customer list is empty");
+        }
+        return inquiries;
+    }
+
+    public void deleteInquiry(int id) {
+        ProductInquiry inquiry = productInquiryRepository.findProductInquiryById(id);
+        if (inquiry == null)
+            throw new objectNotFoundException("Product Inquiry Not Found");
+        inquiry.setIsDeleted(2);
+        productInquiryRepository.save(inquiry);
+
     }
 }

@@ -36,13 +36,13 @@ public class ProductReviewService
     @Autowired
     private CustomerRepository customerRepository;
 
-    // Find Product Review by Product ID Service [Get Product Review of specific Product for all Customers to See]
-    public List<ProductReview> findProductReviewsByProductId(int productId)
+    // Find Product Review by Product Slug Service [Get Product Review of specific Product for all Customers to See]
+    public List<ProductReview> findProductReviewsByProductSlug(String productSlug)
     {
-        List<ProductReview> productReviews = productReviewRepository.findProductReviewsByProductId(productId);
+        List<ProductReview> productReviews = productReviewRepository.findProductReviewsByProductSlug(productSlug);
 
         if(productReviews.isEmpty())
-            throw new objectNotFoundException("No Product Reviews found for productId: " + productId);
+            throw new objectNotFoundException("No Product Reviews found for productSlug: " + productSlug);
         return productReviews;
     }
 
@@ -78,7 +78,7 @@ public class ProductReviewService
     @Transactional
     public void insertProductReview(ProductReviewDTO productReviewDTO)
     {
-        Customer customer = customerRepository.findCustomerById(productReviewDTO.getCustomerId());
+        Customer customer = customerRepository.findCustomerByEmail(productReviewDTO.getCustomerEmail());
         Product product = productRepository.findProductById(productReviewDTO.getProductId());
         Invoice invoice = invoiceRepository.findByInvoiceId(productReviewDTO.getInvoiceId());
 

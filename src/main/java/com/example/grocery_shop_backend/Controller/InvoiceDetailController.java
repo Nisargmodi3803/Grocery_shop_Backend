@@ -2,6 +2,7 @@ package com.example.grocery_shop_backend.Controller;
 
 import com.example.grocery_shop_backend.Dto.AddProductOrderDTO;
 import com.example.grocery_shop_backend.Dto.ProductOrderListDTO;
+import com.example.grocery_shop_backend.Entities.Customer;
 import com.example.grocery_shop_backend.Entities.InvoiceDetail;
 import com.example.grocery_shop_backend.Service.InvoiceDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,4 +41,13 @@ public class InvoiceDetailController
 //            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 //        }
 //    }
+
+    @GetMapping("/search-invoice")
+    public ResponseEntity<List<InvoiceDetail>> searchCustomer(@RequestParam String keyword) {
+        try {
+            return ResponseEntity.ok(invoiceDetailService.searchInvoice(keyword));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

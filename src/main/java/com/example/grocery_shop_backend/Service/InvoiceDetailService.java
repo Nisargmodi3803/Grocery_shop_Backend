@@ -2,10 +2,7 @@ package com.example.grocery_shop_backend.Service;
 
 import com.example.grocery_shop_backend.Dto.AddProductOrderDTO;
 import com.example.grocery_shop_backend.Dto.ProductOrderListDTO;
-import com.example.grocery_shop_backend.Entities.Cart;
-import com.example.grocery_shop_backend.Entities.Invoice;
-import com.example.grocery_shop_backend.Entities.InvoiceDetail;
-import com.example.grocery_shop_backend.Entities.Product;
+import com.example.grocery_shop_backend.Entities.*;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.InvoiceDetailRepository;
 import com.example.grocery_shop_backend.Repository.InvoiceRepository;
@@ -83,5 +80,14 @@ public class InvoiceDetailService
     public void deleteProductOrder(int orderNum) {
 
    }
+
+    // Search Customer Service
+    public List<InvoiceDetail> searchInvoice(String searchText) {
+        List<InvoiceDetail> invoiceDetails = invoiceDetailRepository.searchInvoiceByKeyword(searchText);
+        if(invoiceDetails.isEmpty()) {
+            throw new objectNotFoundException("Customer list is empty");
+        }
+        return invoiceDetails;
+    }
 
 }

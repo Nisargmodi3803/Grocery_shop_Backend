@@ -158,32 +158,32 @@ public class InvoiceController
     }
 
 
-    // GET API {Find All Last 30 days' Invoice}
-    @GetMapping("/invoice-30-days/customerEmail")
-    public ResponseEntity<List<Invoice>> findAllLast30DaysInvoice(@PathVariable String customerEmail){
-        System.out.println("Email"+customerEmail);
-            return new ResponseEntity<>(invoiceService.findAllLast30DaysInvoice(customerEmail), HttpStatus.OK);
-
-    }
-
-
-    // GET API {Find All Last 3 Months' Invoice}
-    @GetMapping("/invoice-90-days/customerEmail")
-    public ResponseEntity<List<Invoice>> findAllLast90DaysInvoice(@PathVariable String customerEmail){
-        try {
-            return new ResponseEntity<>(invoiceService.findAllLast90DaysInvoice(customerEmail), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }
-
-    // GET API {Find All Last 3 Months' Invoice}
-    @GetMapping("/invoice-180-days/customerEmail")
-    public ResponseEntity<List<Invoice>> findAllLast180DaysInvoice(@PathVariable String customerEmail){
-        try {
-            return new ResponseEntity<>(invoiceService.findAllLast180DaysInvoice(customerEmail), HttpStatus.OK);
-        }catch (Exception e){
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
-    }
+//    // GET API {Find All Last 30 days' Invoice}
+//    @GetMapping("/invoice-30-days/customerEmail")
+//    public ResponseEntity<List<Invoice>> findAllLast30DaysInvoice(@PathVariable String customerEmail){
+//        System.out.println("Email"+customerEmail);
+//            return new ResponseEntity<>(invoiceService.findAllLast30DaysInvoice(customerEmail), HttpStatus.OK);
+//
+//    }
+//
+//
+//    // GET API {Find All Last 3 Months' Invoice}
+//    @GetMapping("/invoice-90-days/customerEmail")
+//    public ResponseEntity<List<Invoice>> findAllLast90DaysInvoice(@PathVariable String customerEmail){
+//        try {
+//            return new ResponseEntity<>(invoiceService.findAllLast90DaysInvoice(customerEmail), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//    }
+//
+//    // GET API {Find All Last 3 Months' Invoice}
+//    @GetMapping("/invoice-180-days/customerEmail")
+//    public ResponseEntity<List<Invoice>> findAllLast180DaysInvoice(@PathVariable String customerEmail){
+//        try {
+//            return new ResponseEntity<>(invoiceService.findAllLast180DaysInvoice(customerEmail), HttpStatus.OK);
+//        }catch (Exception e){
+//            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+//        }
+//    }
 }

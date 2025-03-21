@@ -249,34 +249,34 @@ public class InvoiceService
         }
     }
 
-    //Find All Last 30 day's Invoice Service
-    public List<Invoice> findAllLast30DaysInvoice(String email){
-        System.out.println("Hi");
-        List<Invoice> invoices = invoiceRepository.findAllLast30DaysInvoice(email);
-        System.out.println("Invoices: "+invoices);
-        if(invoices.isEmpty()){
-            throw new objectNotFoundException("No Invoice Found");
-        }
-        return invoices;
-    }
-
-    //Find All Last 3 Months' Invoice Service
-    public List<Invoice> findAllLast90DaysInvoice(String email){
-        List<Invoice> invoices = invoiceRepository.findAllLast90DaysInvoice(email);
-
-        if(invoices.isEmpty()){
-            throw new objectNotFoundException("No Invoice Found");
-        }
-        return invoices;
-    }
-
-    //Find All Last 6 Months' Invoice Service
-    public List<Invoice> findAllLast180DaysInvoice(String email){
-        List<Invoice> invoices = invoiceRepository.findAllLast180DaysInvoice(email);
-
-        if(invoices.isEmpty()){
-            throw new objectNotFoundException("No Invoice Found");
-        }
-        return invoices;
-    }
+//    //Find All Last 30 day's Invoice Service
+//    public List<Invoice> findAllLast30DaysInvoice(String email){
+//        System.out.println("Hi");
+//        List<Invoice> invoices = invoiceRepository.findAllLast30DaysInvoice(email);
+//        System.out.println("Invoices: "+invoices);
+//        if(invoices.isEmpty()){
+//            throw new objectNotFoundException("No Invoice Found");
+//        }
+//        return invoices;
+//    }
+//
+//    //Find All Last 3 Months' Invoice Service
+//    public List<Invoice> findAllLast90DaysInvoice(String email){
+//        List<Invoice> invoices = invoiceRepository.findAllLast90DaysInvoice(email);
+//
+//        if(invoices.isEmpty()){
+//            throw new objectNotFoundException("No Invoice Found");
+//        }
+//        return invoices;
+//    }
+//
+//    //Find All Last 6 Months' Invoice Service
+//    public List<Invoice> findAllLast180DaysInvoice(String email){
+//        List<Invoice> invoices = invoiceRepository.findAllLast180DaysInvoice(email);
+//
+//        if(invoices.isEmpty()){
+//            throw new objectNotFoundException("No Invoice Found");
+//        }
+//        return invoices;
+//    }
 }

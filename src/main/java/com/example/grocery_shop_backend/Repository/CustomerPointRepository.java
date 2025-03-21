@@ -20,5 +20,6 @@ public interface CustomerPointRepository extends JpaRepository<CustomerPoint, In
     List<CustomerPoint> findPointsByCustomerId(int customerId);
 
     @Query("SELECT point FROM CustomerPoint point WHERE point.customer.customerEmail = :customerEmail AND point.isDeleted=1")
-    CustomerPoint findPointsByCustomerEmail(String customerEmail);
+    List<CustomerPoint> findPointsByCustomerEmail(String customerEmail);
+
 }

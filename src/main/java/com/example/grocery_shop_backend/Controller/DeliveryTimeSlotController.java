@@ -41,9 +41,39 @@ public class DeliveryTimeSlotController
 
     //GET API {Search Delivery Time Slot}
     @GetMapping("/search-slot")
-    public ResponseEntity<List<DeliveryTimeSlot>> searchDeliveryTime(@RequestParam String slot){
+    public ResponseEntity<List<DeliveryTimeSlot>> searchDeliveryTime(@RequestParam String keyword){
         try {
-            return new ResponseEntity<>(deliveryTimeSlotService.searchDeliveryTime(slot),HttpStatus.OK);
+            return new ResponseEntity<>(deliveryTimeSlotService.searchDeliveryTime(keyword),HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/add-slot")
+    public ResponseEntity<String> addSlot(@RequestParam String slot, @RequestParam int priority){
+        try {
+            deliveryTimeSlotService.addTimeSlot(slot, priority);
+            return new ResponseEntity<>(slot, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/update-slot/{id}")
+    public ResponseEntity<String> updateSlot(@RequestParam String slot, @RequestParam int priority, @PathVariable int id){
+        try {
+            deliveryTimeSlotService.updateTimeSlot(id, slot, priority);
+            return new ResponseEntity<>(slot, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/delete-slot/{id}")
+    public ResponseEntity<String> deleteSlot(@PathVariable int id){
+        try {
+            deliveryTimeSlotService.deleteTimeSlot(id);
+            return ResponseEntity.ok("Success");
         }catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

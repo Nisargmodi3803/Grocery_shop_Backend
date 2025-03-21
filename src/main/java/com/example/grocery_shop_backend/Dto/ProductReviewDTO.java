@@ -4,7 +4,7 @@ import com.example.grocery_shop_backend.Entities.Customer;
 
 public class ProductReviewDTO
 {
-    private int customerId;
+    private String customerEmail;
     private int productId;
     private int invoiceId;
     private int rating;
@@ -12,12 +12,12 @@ public class ProductReviewDTO
 
     public ProductReviewDTO() {}
 
-    public int getCustomerId() {
-        return customerId;
+    public String getCustomerEmail() {
+        return customerEmail;
     }
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
+    public void setCustomerEmail(String customerEmail) {
+        this.customerEmail = customerEmail;
     }
 
     public int getProductId() {

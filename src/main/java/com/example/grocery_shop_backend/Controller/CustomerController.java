@@ -242,4 +242,13 @@ public class CustomerController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
+    @GetMapping("/check-block-customer/{customerEmail}")
+    public boolean checkBlockCustomer(@PathVariable String customerEmail) throws AccessDeniedException {
+        if(customerService.chechBlockCustomer(customerEmail)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

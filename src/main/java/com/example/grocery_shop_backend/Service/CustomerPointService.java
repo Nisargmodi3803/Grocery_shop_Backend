@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -90,5 +91,12 @@ public class CustomerPointService
         customerPoint.setC_date(cDate);
         customerPointRepository.save(customerPoint);
         customerRepository.save(customer);
+    }
+
+    public List<CustomerPoint> findPointsByEmail(String email){
+        List<CustomerPoint> customerPoints = customerPointRepository.findPointsByCustomerEmail(email);
+        if (customerPoints.isEmpty())
+            throw new objectNotFoundException("Customer Point Not Found");
+        return customerPoints;
     }
 }

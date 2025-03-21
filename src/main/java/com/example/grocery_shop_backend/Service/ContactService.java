@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @Service
 public class ContactService
@@ -38,5 +39,32 @@ public class ContactService
         contact.setC_date(currentDateTime);
         contact.setIsDeleted(1);
         contactRepository.save(contact);
+    }
+
+    // Find All Contacts
+    public List<Contact>  findAllContacts(){
+        List<Contact> contacts = contactRepository.findAllContacts();
+        if (contacts.isEmpty())
+            throw new objectNotFoundException("No contacts found");
+        return contacts;
+    }
+
+    // Delete Contacts
+    public void deleteContact(int id){
+        Contact contact = contactRepository.findContactById(id);
+        if(contact == null){
+            throw new objectNotFoundException("No contact found");
+        }
+        contact.setIsDeleted(2);
+        contactRepository.save(contact);
+    }
+
+    // Search Contact Service
+    public List<Contact> searchContact(String searchText) {
+        List<Contact> contacts = contactRepository.searchCustomerByKeyword(searchText);
+        if(contacts.isEmpty()) {
+            throw new objectNotFoundException("Customer list is empty");
+        }
+        return contacts;
     }
 }

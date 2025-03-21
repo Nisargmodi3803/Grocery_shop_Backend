@@ -398,4 +398,13 @@ public class CustomerService {
         customer.setIsBlocked(1);
         customerRepository.save(customer);
     }
+
+    public boolean chechBlockCustomer(String customerEmail) throws AccessDeniedException {
+        Customer customer = customerRepository.findCustomerByEmail(customerEmail);
+        if(customer.getIsBlocked()==2) {
+            return false;
+        }else{
+            return true;
+        }
+    }
 }

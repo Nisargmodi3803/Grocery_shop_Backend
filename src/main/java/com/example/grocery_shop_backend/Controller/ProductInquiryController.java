@@ -1,9 +1,11 @@
 package com.example.grocery_shop_backend.Controller;
 
 import com.example.grocery_shop_backend.Dto.ProductInquiryDTO;
+import com.example.grocery_shop_backend.Entities.Customer;
 import com.example.grocery_shop_backend.Entities.ProductInquiry;
 import com.example.grocery_shop_backend.Service.ProductInquiryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
@@ -17,12 +19,6 @@ public class ProductInquiryController
     @Autowired
     private ProductInquiryService productInquiryService;
 
-    // GET API {Find Product Inquires by Customer ID}
-    @GetMapping("/product-inquires-customer-id/{customerId}")
-    public List<ProductInquiry> findInquiresByCustomerId(@PathVariable int customerId)
-    {
-        return productInquiryService.findInquiriesByCustomerId(customerId);
-    }
 
     // GET API {Find Product Inquires by Product ID}
     @GetMapping("/product-inquires-product-id/{productId}")
@@ -44,5 +40,33 @@ public class ProductInquiryController
     {
         productInquiryService.addInquiry(productInquiryDTO);
         return ResponseEntity.ok("Success");
+    }
+
+    @GetMapping("/inquiries")
+    public ResponseEntity<List<ProductInquiry>> findAllInquires(){
+        try {
+            return new ResponseEntity<>(productInquiryService.findAllInquires(), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/search-inquiry")
+    public ResponseEntity<List<ProductInquiry>> searchInquiry(@RequestParam String keyword) {
+        try {
+            return ResponseEntity.ok(productInquiryService.searchInquires(keyword));
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PatchMapping("/delete-inquiry/{id}")
+    public ResponseEntity<String> deleteInquiry(@PathVariable int id) {
+        try {
+            productInquiryService.deleteInquiry(id);
+            return ResponseEntity.ok("Success");
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 }

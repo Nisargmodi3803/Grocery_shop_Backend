@@ -29,12 +29,14 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer>
     @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceEmailId = :email AND invoice.isDeleted=1 ORDER BY invoice.invoiceNum DESC")
     List<Invoice> findInvoiceByEmail(String email);
 
-    @Query(value = "SELECT * FROM Invoice WHERE invoice_email_id = :email AND is_deleted = 1 AND invoice_date >= CURDATE() - INTERVAL 30 DAY ORDER BY invoice_num DESC", nativeQuery = true)
-    List<Invoice> findAllLast30DaysInvoice(String email);
+//    @Query(value = "SELECT * FROM Invoice WHERE invoice_email_id = :email AND is_deleted = 1 AND invoice_date >= CURDATE() - INTERVAL 30 DAY ORDER BY invoice_num DESC", nativeQuery = true)
+//    List<Invoice> findAllLast30DaysInvoice(String email);
+//
+//    @Query(value = "SELECT * FROM Invoice WHERE invoiceEmailId = :email AND is_deleted = 1 AND invoice_date >= CURDATE() - INTERVAL 90 DAY ORDER BY invoiceNum DESC", nativeQuery = true)
+//    List<Invoice> findAllLast90DaysInvoice(String email);
+//
+//    @Query(value = "SELECT * FROM Invoice WHERE invoiceEmailId = :email AND is_deleted = 1 AND invoice_date >= CURDATE() - INTERVAL 180 DAY ORDER BY invoiceNum DESC", nativeQuery = true)
+//    List<Invoice> findAllLast180DaysInvoice(String email);
 
-    @Query(value = "SELECT * FROM Invoice WHERE invoiceEmailId = :email AND is_deleted = 1 AND invoice_date >= CURDATE() - INTERVAL 90 DAY ORDER BY invoiceNum DESC", nativeQuery = true)
-    List<Invoice> findAllLast90DaysInvoice(String email);
 
-    @Query(value = "SELECT * FROM Invoice WHERE invoiceEmailId = :email AND is_deleted = 1 AND invoice_date >= CURDATE() - INTERVAL 180 DAY ORDER BY invoiceNum DESC", nativeQuery = true)
-    List<Invoice> findAllLast180DaysInvoice(String email);
 }

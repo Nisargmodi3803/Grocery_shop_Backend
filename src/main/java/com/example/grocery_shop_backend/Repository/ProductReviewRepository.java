@@ -19,8 +19,8 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, In
 //            "AND review.isDeleted = 1")
 //    List<ProductReviewsByProductDTO> findProductReviewsByProductId(@Param("productId") int productId);
 
-    @Query("SELECT review FROM ProductReview review WHERE review.product.id = :productId AND review.isDeleted=1 AND review.product.is_deleted=1")
-    List<ProductReview> findProductReviewsByProductId(@Param("productId") int productId);
+    @Query("SELECT review FROM ProductReview review WHERE review.product.slug_title = :productSlug AND review.isDeleted=1 AND review.product.is_deleted=1")
+    List<ProductReview> findProductReviewsByProductSlug(String productSlug);
 
     @Query("SELECT review FROM ProductReview review WHERE review.customer.customerId = :customerId AND review.isDeleted=1 AND review.customer.isDeleted=1")
     List<ProductReview> findProductReviewsByCustomerId(@Param("customerId") int customerId);
