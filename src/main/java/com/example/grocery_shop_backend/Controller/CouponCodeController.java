@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -23,46 +24,37 @@ public class CouponCodeController
 
     // GET API {Find All Coupons}
     @GetMapping("/coupons")
-    public ResponseEntity<List<CouponCode>> findAllCoupons(@RequestParam double amount)
-    {
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        LocalDateTime now = LocalDateTime.now();
-//        String userDate = now.format(formatter);
-
+    public ResponseEntity<List<CouponCode>> findAllCoupons(@RequestParam double amount) {
         try {
-            return new ResponseEntity<>(couponCodeService.findAllCoupons(amount), HttpStatus.OK);
-        }catch (Exception e){
+            LocalDate userDate = LocalDate.now();
+            return new ResponseEntity<>(couponCodeService.findAllCouponsAmt(userDate, amount), HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
-    // Get API {Find All Coupons for Coupon Code Page API}
+    // GET API {Find All Coupons for Coupon Code Page API}
     @GetMapping("/all-coupons")
-    public ResponseEntity<List<CouponCode>> findAllCoupons(){
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        LocalDateTime now = LocalDateTime.now();
-//        String userDate = now.format(formatter);
-
+    public ResponseEntity<List<CouponCode>> findAllCoupons() {
         try {
-            return new ResponseEntity<>(couponCodeService.findAllCoupons(), HttpStatus.OK);
-        }catch (Exception e){
+            LocalDate userDate = LocalDate.now();
+            return new ResponseEntity<>(couponCodeService.findAllCoupons(userDate), HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
     // GET API {Verify the Coupon Code API}
     @GetMapping("/coupon-code")
-    public ResponseEntity<CouponCode> verifyCouponCode(@RequestParam String code,@RequestParam double amount){
-        //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-//        LocalDateTime now = LocalDateTime.now();
-//        String userDate = now.format(formatter);
-
+    public ResponseEntity<CouponCode> verifyCouponCode(@RequestParam String code, @RequestParam double amount) {
         try {
-            return new ResponseEntity<>(couponCodeService.findCouponByCode(code,amount), HttpStatus.OK);
-        }catch (Exception e){
+            LocalDate userDate = LocalDate.now();
+            return new ResponseEntity<>(couponCodeService.findCouponCodeByCode(userDate, code, amount), HttpStatus.OK);
+        } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
+
 
     // GET API {Find All General Coupons}
     @GetMapping("/general-coupons")
@@ -93,10 +85,15 @@ public class CouponCodeController
     }
 
     // PATCH API {Update start-date & end-date}
-    @PatchMapping("/update-coupon-dates/{id}")
-    public CouponCode updateDates(@PathVariable int id,@RequestBody CouponDatesUpdateDTO couponDates)
+    @PatchMapping("/update-coupon-code/{id}")
+    public ResponseEntity<String> updateDates(@PathVariable int id,@RequestBody CouponCodeDTO couponCodeDTO)
     {
-        return couponCodeService.updateDates(id, couponDates);
+        try {
+            couponCodeService.updateCoupon(id, couponCodeDTO);
+            return new ResponseEntity<>("Success", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // PATCH API {Delete Coupon Code}
@@ -108,7 +105,7 @@ public class CouponCodeController
     }
 
     // POST API {Insert Coupon Code}
-    @PostMapping("/insert-coupon-code")
+    @PostMapping("/add-coupon-code")
     public ResponseEntity<String> insertCoupon(@RequestBody CouponCodeDTO couponCodeDTO)
     {
         try {
@@ -133,6 +130,41 @@ public class CouponCodeController
         catch (Exception e)
         {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // GET API {Find All Coupon Code for Admin}
+    @GetMapping("/admin/coupon-codes")
+    public ResponseEntity<List<CouponCode>> findAllCouponCodeForAdmin(){
+        try {
+            return ResponseEntity.ok(couponCodeService.findAllCouponCodesForAdmin());
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Search Coupon Code}
+    @GetMapping("/search-coupon-code")
+    public ResponseEntity<List<CouponCode>> findAllCouponCodeForSearch(@RequestParam String keyword){
+        try {
+            return new ResponseEntity<>(couponCodeService.searchCouponCodes(keyword), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Check Slug Title}
+    @GetMapping("/check-coupon-code")
+    public ResponseEntity<Boolean> checkCode(@RequestParam String code){
+        return ResponseEntity.ok(couponCodeService.checkCode(code));
+    }
+
+    @GetMapping("/admin/coupon/{id}")
+    public ResponseEntity<CouponCode> findCouponById(@PathVariable int id){
+        try {
+            return new ResponseEntity(couponCodeService.findCouponCodeById(id), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 }

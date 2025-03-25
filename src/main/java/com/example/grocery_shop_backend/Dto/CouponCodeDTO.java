@@ -11,6 +11,7 @@ public class CouponCodeDTO
     private double value;
     private double minValue;
     private double maxDiscount;
+    private int status;
 
     public String getCode() {
         return code;
@@ -82,5 +83,13 @@ public class CouponCodeDTO
 
     public void setMaxDiscount(double maxDiscount) {
         this.maxDiscount = maxDiscount;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

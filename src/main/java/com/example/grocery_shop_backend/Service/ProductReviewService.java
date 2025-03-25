@@ -2,10 +2,7 @@ package com.example.grocery_shop_backend.Service;
 
 import com.example.grocery_shop_backend.Dto.ProductReviewDTO;
 import com.example.grocery_shop_backend.Dto.ProductReviewsByProductDTO;
-import com.example.grocery_shop_backend.Entities.Customer;
-import com.example.grocery_shop_backend.Entities.Invoice;
-import com.example.grocery_shop_backend.Entities.Product;
-import com.example.grocery_shop_backend.Entities.ProductReview;
+import com.example.grocery_shop_backend.Entities.*;
 import com.example.grocery_shop_backend.Exception.objectNotFoundException;
 import com.example.grocery_shop_backend.Repository.CustomerRepository;
 import com.example.grocery_shop_backend.Repository.InvoiceRepository;
@@ -64,9 +61,6 @@ public class ProductReviewService
 
         if(productReview != null)
         {
-            if (productReview.getCustomer().getCustomerId() == 0)
-                throw new objectNotFoundException("Customer ID cannot be null or zero");
-
             productReview.setIsDeleted(2);
             productReviewRepository.save(productReview);
         }
@@ -129,5 +123,83 @@ public class ProductReviewService
         }
         else
             throw new objectNotFoundException("Any of Invoice or Product or Customer or All are null");
+    }
+
+    // Find All Reviews Service
+    public List<ProductReview> findAllReviews(){
+        List<ProductReview> productReviews = productReviewRepository.findAllProductReviews();
+        if(productReviews.isEmpty()){
+            throw new objectNotFoundException("No Product Reviews found");
+        }
+        return productReviews;
+    }
+
+    // Search Reviews Service
+    public List<ProductReview> searchInquires(String searchText) {
+        List<ProductReview> reviews = productReviewRepository.searchReviewsByKeyword(searchText);
+        if(reviews.isEmpty()) {
+            throw new objectNotFoundException("Customer list is empty");
+        }
+        return reviews;
+    }
+
+    // Find All Reviews by Status Pending Service
+    public List<ProductReview> findAllPendingReviews(){
+        List<ProductReview> reviews = productReviewRepository.findAllProductReviewsByPendingStatus();
+        if(reviews.isEmpty()) {
+            throw new objectNotFoundException("No Product Reviews found");
+        }
+        return reviews;
+    }
+
+    // Find All Reviews by Status Approved Service
+    public List<ProductReview> findAllApprovedReviews(){
+        List<ProductReview> reviews = productReviewRepository.findAllProductReviewsByApprovedStatus();
+        if(reviews.isEmpty()) {
+            throw new objectNotFoundException("No Product Reviews found");
+        }
+        return reviews;
+    }
+
+    // Find All Reviews by Status Rejected Service
+    public List<ProductReview> findAllRejectedReviews(){
+        List<ProductReview> reviews = productReviewRepository.findByProductReviewRejectedStatus();
+        if(reviews.isEmpty()) {
+            throw new objectNotFoundException("No Product Reviews found");
+        }
+        return reviews;
+    }
+
+    // Change to Pending Review Service
+    public void changeToPendingReview(int id){
+        ProductReview review = productReviewRepository.findProductReviewByRatingId(id);
+
+        if (review == null) {
+            throw new objectNotFoundException("No Product Review found for id: " + id);
+        }
+        review.setStatus(1);
+        productReviewRepository.save(review);
+    }
+
+    // Change to Approved Review Service
+    public void changeToApprovedReview(int id){
+        ProductReview review = productReviewRepository.findProductReviewByRatingId(id);
+
+        if (review == null) {
+            throw new objectNotFoundException("No Product Review found for id: " + id);
+        }
+        review.setStatus(2);
+        productReviewRepository.save(review);
+    }
+
+    // Change to Rejected Review Service
+    public void changeToRejectedReview(int id){
+        ProductReview review = productReviewRepository.findProductReviewByRatingId(id);
+
+        if (review == null) {
+            throw new objectNotFoundException("No Product Review found for id: " + id);
+        }
+        review.setStatus(3);
+        productReviewRepository.save(review);
     }
 }
