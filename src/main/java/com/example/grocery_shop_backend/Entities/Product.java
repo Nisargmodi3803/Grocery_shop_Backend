@@ -87,7 +87,7 @@ public class Product
     private int productIsActive; // 1=Buy now, 2=Out of stock,3=Coming soon,4=Inquiry Now
 
     @Column(name = "is_deleted")
-    private int is_deleted;
+    private int isDeleted;
 
     @Column(name = "c_date")
     private String c_date;
@@ -118,7 +118,7 @@ public class Product
         this.no_of_rating = no_of_rating;
         this.average_rating = average_rating;
         this.productIsActive = productIsActive;
-        this.is_deleted = is_deleted;
+        this.isDeleted = is_deleted;
         this.c_date = c_date;
     }
 
@@ -307,11 +307,11 @@ public class Product
     }
 
     public int getIs_deleted() {
-        return is_deleted;
+        return isDeleted;
     }
 
     public void setIs_deleted(int is_deleted) {
-        this.is_deleted = is_deleted;
+        this.isDeleted = is_deleted;
     }
 
     public String getC_date() {

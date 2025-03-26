@@ -21,9 +21,13 @@ public class ProductController
 
     // GET API {Find All Products}
     @GetMapping("/products")
-    public List<Product> getAllProducts()
+    public ResponseEntity<List<Product>> getAllProducts()
     {
-        return productService.getAllProducts();
+        try {
+            return new ResponseEntity<>(productService.getAllProducts(), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // GET API {Find Product by ID}
@@ -122,7 +126,7 @@ public class ProductController
 
     // POST API {Add New Product}
     @PostMapping("/add-product")
-    public ResponseEntity<String> addNewProduct(@RequestBody  ProductDTO productDTO)
+    public ResponseEntity<String> addNewProduct(@ModelAttribute  ProductDTO productDTO)
     {
         try {
             productService.addNewProduct(productDTO);
@@ -132,19 +136,40 @@ public class ProductController
         }
     }
 
+    // POST API {Duplicate Product}
+    @PostMapping("/duplicate-product/{productId}")
+    public ResponseEntity<String> duplicateProduct(@PathVariable int productId,@ModelAttribute  ProductDTO productDTO)
+    {
+        try {
+            productService.duplicateProduct(productId,productDTO);
+            return new ResponseEntity<>("Product added successfully", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Something went wrong", HttpStatus.BAD_REQUEST);
+        }
+    }
+
     // PATCH API {Update Product}
     @PatchMapping("/update-product/{productId}")
-    public Product updateProduct(@PathVariable int productId, @RequestBody ProductDTO productDTO)
+    public ResponseEntity<String> updateProduct(@PathVariable int productId, @ModelAttribute ProductDTO productDTO)
     {
-        return productService.updateProduct(productId, productDTO);
+        try {
+            productService.updateProduct(productId,productDTO);
+            return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Something went wrong", HttpStatus.BAD_REQUEST);
+        }
     }
 
     // PATCH API {Delete Product}
     @PatchMapping("/delete-product/{productId}")
     public ResponseEntity<String> deleteProduct(@PathVariable int productId)
     {
-        productService.deleteProduct(productId);
-        return new ResponseEntity<>("Product deleted successfully", HttpStatus.OK);
+        try {
+            productService.deleteProduct(productId);
+            return new ResponseEntity<>("Product deleted successfully", HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>("Something went wrong", HttpStatus.BAD_REQUEST);
+        }
     }
 
     // PATCH API {Retrieve Product}
@@ -313,5 +338,20 @@ public class ProductController
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/search-product")
+    public ResponseEntity<List<Product>> searchProductsByKeywordForAdmin(@RequestParam String keyword) {
+        try {
+            return new ResponseEntity<>(productService.searchProductsbyKeywordForAdmin(keyword), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    // GET API {Check Slug Title}
+    @GetMapping("/check-product-slug-title")
+    public ResponseEntity<Boolean> checkSlugTitle(@RequestParam String slugTitle){
+        return ResponseEntity.ok(productService.checkSlugTitles(slugTitle));
     }
 }

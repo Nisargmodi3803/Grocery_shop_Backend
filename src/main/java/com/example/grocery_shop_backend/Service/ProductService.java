@@ -12,12 +12,21 @@ import com.example.grocery_shop_backend.Repository.ProductRepository;
 import com.example.grocery_shop_backend.Repository.SubCategoryRepository;
 import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -35,10 +44,38 @@ public class ProductService
     @Autowired
     private BrandRepository brandRepository;
 
+    @Value("${upload.dir}")
+    private String uploadDir;
+
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ123456789";
+    private static final SecureRandom random = new SecureRandom();
+
+    public String generateUniqueReferenceCode(){
+        String code;
+
+        do{
+            code = generateReferenceCode();
+        }while (productRepository.getReferenceCode(code) == code);
+
+        return code;
+    }
+
+    public String generateReferenceCode(){
+        StringBuilder referenceCode = new StringBuilder(8);
+        for(int i = 0; i < 20; i++){
+            referenceCode.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+        return referenceCode.toString();
+    }
+
+
     // Find All Products Service
     public List<Product> getAllProducts()
     {
-        return productRepository.findAll();
+        List<Product> products = productRepository.findAllProducts();
+        if(products.isEmpty())
+            throw new objectNotFoundException("No products found");
+        return products;
     }
 
     // Find Product by ID Service
@@ -130,8 +167,7 @@ public class ProductService
     }
 
     // Add New Product Service
-    public void addNewProduct(ProductDTO productDTO)
-    {
+    public void addNewProduct(ProductDTO productDTO) throws IOException {
         Category category = categoryRepository.findCategoryById(productDTO.getCategoryId());
         SubCategory subCategory = subCategoryRepository.findSubCategoryById(productDTO.getSubcategoryId());
         Brand brand = brandRepository.findBrandById(productDTO.getBrandId());
@@ -149,9 +185,9 @@ public class ProductService
             product.setName(productDTO.getName());
             product.setVariantName(productDTO.getVariantName());
             product.setDescription(productDTO.getDescription());
-            product.setImage_url(productDTO.getImageUrl());
+            product.setLong_description(productDTO.getLongDescription());
             product.setBasePrice(productDTO.getBasePrice());
-            product.setIsInclusiveTax(productDTO.getIsInclusiveTax());
+            product.setIsInclusiveTax(2);
             product.setCgst(productDTO.getCgst());
             product.setSgst(productDTO.getSgst());
             product.setIgst(productDTO.getIgst());
@@ -160,8 +196,102 @@ public class ProductService
             product.setWholesaler_amt(productDTO.getWholesalePrice());
             product.setIs_main(productDTO.getIsMain());
             product.setSlug_title(productDTO.getSlugTitle());
+            product.setProductIsActive(productDTO.getStatus());
             product.setIs_deleted(1);
             product.setC_date(cDate);
+
+            String referenceCode = generateUniqueReferenceCode();
+            product.setReferenceCode(referenceCode);
+
+            MultipartFile imageFile = productDTO.getImageFile();
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            // Delete old image if present
+            String oldImageName = product.getImage_url();
+            if (oldImageName != null && !oldImageName.isEmpty()) {
+                Path oldImagePath = uploadPath.resolve(oldImageName);
+                if (Files.exists(oldImagePath)) {
+                    Files.delete(oldImagePath);
+                }
+            }
+
+            // Save new image with brand name (force jpg if needed)
+            String fileName = productDTO.getName();
+            Path filePath = uploadPath.resolve(fileName);
+            Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+            product.setImage_url(product.getName());
+            productRepository.save(product);
+        }
+        else
+            throw new objectNotFoundException("Any of Category or SubCategory or Brand or All not Found");
+    }
+
+    // Duplicate Product Service
+    public void duplicateProduct(int productID,ProductDTO productDTO) throws IOException {
+        Product existingProduct = productRepository.findProductById(productID);
+        System.out.println("Product Id: " + productID);
+        if(existingProduct==null)
+            throw new objectNotFoundException("Product with id " + productID + " not found");
+
+        System.out.println("Product Name: " + existingProduct.getName());
+        Category category = categoryRepository.findCategoryById(productDTO.getCategoryId());
+        SubCategory subCategory = subCategoryRepository.findSubCategoryById(productDTO.getSubcategoryId());
+        Brand brand = brandRepository.findBrandById(productDTO.getBrandId());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime now = LocalDateTime.now();
+        String cDate = now.format(formatter);
+
+        if(category!=null && subCategory!=null && brand!=null)
+        {
+            Product product = new Product();
+            product.setCat(category);
+            product.setSubcat(subCategory);
+            product.setBrand(brand);
+            product.setName(productDTO.getName());
+            product.setVariantName(productDTO.getVariantName());
+            product.setDescription(productDTO.getDescription());
+            product.setLong_description(productDTO.getLongDescription());
+            product.setBasePrice(productDTO.getBasePrice());
+            product.setIsInclusiveTax(2);
+            product.setCgst(productDTO.getCgst());
+            product.setSgst(productDTO.getSgst());
+            product.setIgst(productDTO.getIgst());
+            product.setMrp(productDTO.getMrp());
+            product.setDiscount_amt(productDTO.getDiscountPrice());
+            product.setWholesaler_amt(productDTO.getWholesalePrice());
+            product.setIs_main(productDTO.getIsMain());
+            product.setSlug_title(productDTO.getSlugTitle());
+            product.setProductIsActive(productDTO.getStatus());
+            product.setIs_deleted(1);
+            product.setC_date(cDate);
+
+            product.setReferenceCode(existingProduct.getReferenceCode());
+
+            MultipartFile imageFile = productDTO.getImageFile();
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            if (imageFile != null && !imageFile.isEmpty()) {
+                // Save new image with product name
+                String fileName = productDTO.getName();
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+                product.setImage_url(fileName);
+            } else if (productDTO.getExistingImageUrl() != null && !productDTO.getExistingImageUrl().isEmpty()) {
+                // Use existing image from URL
+                String existingImageName = productDTO.getExistingImageUrl().replace("http://localhost:9000/uploads/", "");
+                product.setImage_url(existingImageName);
+            } else {
+                // Fallback to existing product image
+                product.setImage_url(existingProduct.getImage_url());
+            }
             productRepository.save(product);
         }
         else
@@ -169,8 +299,7 @@ public class ProductService
     }
 
     // Update Product Service
-    public Product updateProduct(int productId, ProductDTO productDTO)
-    {
+    public void updateProduct(int productId, ProductDTO productDTO) throws IOException {
         Product product = productRepository.findProductById(productId);
 
         if(product!=null)
@@ -181,8 +310,6 @@ public class ProductService
                 product.setVariantName(productDTO.getVariantName());
             if(productDTO.getDescription()!=null)
                 product.setDescription(productDTO.getDescription());
-            if(productDTO.getImageUrl()!=null)
-                product.setImage_url(productDTO.getImageUrl());
             if(productDTO.getBasePrice()!=0)
                 product.setBasePrice(productDTO.getBasePrice());
             if(productDTO.getIsInclusiveTax()!=0)
@@ -203,6 +330,8 @@ public class ProductService
                 product.setIs_main(productDTO.getIsMain());
             if(productDTO.getSlugTitle()!=null)
                 product.setSlug_title(productDTO.getSlugTitle());
+            if(productDTO.getStatus()!=0)
+                product.setProductIsActive(productDTO.getStatus());
             if(productDTO.getCategoryId()!=0)
             {
                 Category category = categoryRepository.findCategoryById(productDTO.getCategoryId());
@@ -230,7 +359,31 @@ public class ProductService
                     throw new objectNotFoundException("Subcategory with id " + productDTO.getSubcategoryId() + " not found");
             }
 
-            return productRepository.save(product);
+            MultipartFile imageFile = productDTO.getImageFile();
+            if (imageFile != null && !imageFile.isEmpty()) {
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                // Delete old image if present
+                String oldImageName = product.getImage_url();
+                if (oldImageName != null && !oldImageName.isEmpty()) {
+                    Path oldImagePath = uploadPath.resolve(oldImageName);
+                    if (Files.exists(oldImagePath)) {
+                        Files.delete(oldImagePath);
+                    }
+                }
+
+                // Save new image with brand name (force jpg if needed)
+                String fileName = productDTO.getName();
+                Path filePath = uploadPath.resolve(fileName);
+                Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                product.setImage_url(product.getName());
+            }
+
+            productRepository.save(product);
         }
         else
             throw new objectNotFoundException("Product with id " + productId + " not found");
@@ -394,6 +547,23 @@ public class ProductService
 
     // Search Products Service
     public List<Product> searchProducts(String query) {
-        return productRepository.findByNameContainingIgnoreCase(query);
+        return productRepository.findByNameContainingIgnoreCaseAndIsDeleted(query,1);
+    }
+
+    public List<Product> searchProductsbyKeywordForAdmin(String keyword) {
+        List<Product> products = productRepository.searchProductByKeyword(keyword);
+        if(products.isEmpty())
+            throw new objectNotFoundException("Product with name " + keyword + " not found");
+        return products;
+    }
+
+    // Check Slug Title Service
+    public boolean checkSlugTitles(String slugTitle){
+        String slug_title = productRepository.checkSlugTitle(slugTitle);
+        if(slug_title != null && !slug_title.isEmpty()){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

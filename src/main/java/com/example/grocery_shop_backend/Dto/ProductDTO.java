@@ -1,5 +1,7 @@
 package com.example.grocery_shop_backend.Dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class ProductDTO
 {
     private int categoryId;
@@ -8,7 +10,7 @@ public class ProductDTO
     private String name;
     private String variantName;
     private String description;
-    private String imageUrl;
+    private String longDescription;
     private int isInclusiveTax; // 1 = yes , 2 = no
     private double basePrice;
     private double cgst;
@@ -19,6 +21,9 @@ public class ProductDTO
     private double wholesalePrice;
     private int isMain; // 1 = yes(Show in list) and 2 = no
     private String slugTitle;
+    private MultipartFile imageFile;
+    private int status;
+    private String existingImageUrl;
 
     public int getCategoryId() {
         return categoryId;
@@ -58,14 +63,6 @@ public class ProductDTO
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public int getIsInclusiveTax() {
@@ -154,5 +151,37 @@ public class ProductDTO
 
     public void setVariantName(String variantName) {
         this.variantName = variantName;
+    }
+
+    public String getLongDescription() {
+        return longDescription;
+    }
+
+    public void setLongDescription(String longDescription) {
+        this.longDescription = longDescription;
+    }
+
+    public MultipartFile getImageFile() {
+        return imageFile;
+    }
+
+    public void setImageFile(MultipartFile imageFile) {
+        this.imageFile = imageFile;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public String getExistingImageUrl() {
+        return existingImageUrl;
+    }
+
+    public void setExistingImageUrl(String existingImageUrl) {
+        this.existingImageUrl = existingImageUrl;
     }
 }
