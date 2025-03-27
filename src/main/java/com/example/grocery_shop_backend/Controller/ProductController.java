@@ -354,4 +354,15 @@ public class ProductController
     public ResponseEntity<Boolean> checkSlugTitle(@RequestParam String slugTitle){
         return ResponseEntity.ok(productService.checkSlugTitles(slugTitle));
     }
+
+    //PATCH API {Update Bulk Price}
+    @PatchMapping("/bulk-price")
+    public ResponseEntity<String> bulkPrice(@RequestBody List<Product> products) {
+        try {
+            productService.bulkPriceUpdate(products);
+            return ResponseEntity.ok("Bulk price updated");
+        }catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }

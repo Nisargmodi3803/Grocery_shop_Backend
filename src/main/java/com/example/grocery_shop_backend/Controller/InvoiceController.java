@@ -94,8 +94,12 @@ public class InvoiceController
     @PatchMapping("/delete-order/{invoiceNum}")
     public ResponseEntity<String> deleteOrder(@PathVariable int invoiceNum)
     {
-        invoiceService.deleteOrder(invoiceNum);
-        return ResponseEntity.status(HttpStatus.OK).body("Order deleted successfully");
+        try {
+            invoiceService.deleteOrder(invoiceNum);
+            return ResponseEntity.status(HttpStatus.OK).body("Order deleted successfully");
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
     }
 
     // ✅ For COD & Online Payment (Unified API)
@@ -154,6 +158,16 @@ public class InvoiceController
             return ResponseEntity.ok("Payment verified successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment verification failed: " + e.getMessage());
+        }
+    }
+
+    // GET API {Find Invoices Between Dates}
+    @GetMapping("/invoices-between-dates")
+    public ResponseEntity<List<Invoice>> findInvoicesBetweenDates(@RequestParam String startDate, @RequestParam String endDate) {
+        try {
+            return ResponseEntity.ok(invoiceService.findAllInvoiceBetweenDates(startDate,endDate));
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 

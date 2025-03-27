@@ -232,7 +232,7 @@ public class InvoiceService
     @Transactional
     public void deleteOrder(int invoiceNum)
     {
-        Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
+        Invoice invoice = invoiceRepository.findByInvoiceId(invoiceNum);
         if(invoice==null)
             throw new objectNotFoundException("No Invoice found for order BI - "+invoiceNum);
         else
@@ -247,6 +247,15 @@ public class InvoiceService
                 invoiceDetailRepository.save(invoiceDetail);
             }
         }
+    }
+
+    // Find Invoice between Dates Service
+    public List<Invoice> findAllInvoiceBetweenDates(String startDate, String endDate)
+    {
+        List<Invoice> invoices = invoiceRepository.findInvoiceBetweenDates(startDate, endDate);
+        if(invoices==null)
+            throw new objectNotFoundException("No Invoice found");
+        return invoices;
     }
 
 //    //Find All Last 30 day's Invoice Service

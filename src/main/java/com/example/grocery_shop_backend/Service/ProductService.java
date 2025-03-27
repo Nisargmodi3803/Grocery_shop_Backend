@@ -566,4 +566,15 @@ public class ProductService
             return false;
         }
     }
+
+    // Bulk Price update
+    public void bulkPriceUpdate(List<Product> products) {
+        for (Product product : products) {
+            Product oldProduct = productRepository.findProductById(product.getId());
+            oldProduct.setMrp(product.getMrp());
+            oldProduct.setDiscount_amt(product.getDiscount_amt());
+            oldProduct.setWholesaler_amt(product.getWholesaler_amt());
+            productRepository.save(oldProduct);
+        }
+    }
 }

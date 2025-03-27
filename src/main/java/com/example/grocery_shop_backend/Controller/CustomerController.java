@@ -27,7 +27,11 @@ public class CustomerController {
     // GET API {Customer By ID}
     @GetMapping("/customer/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable int id) {
-        return ResponseEntity.ok(customerService.getCustomerById(id));
+        try {
+            return ResponseEntity.ok(customerService.getCustomerById(id));
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     // POST API {Registration API}

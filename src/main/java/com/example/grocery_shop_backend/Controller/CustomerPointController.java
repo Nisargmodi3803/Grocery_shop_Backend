@@ -31,12 +31,16 @@ public class CustomerPointController
         return customerPointService.findAllOutCustomerPoints();
     }
 
-//    // GET API {Find All Customer Points by Customer ID}
-//    @GetMapping("/points/{customerId}")
-//    public List<CustomerPoint> findPointsByCustomerId(@PathVariable int customerId)
-//    {
-//        return customerPointService.findPointsByCustomerId(customerId);
-//    }
+    // GET API {Find All Customer Points by Customer ID}
+    @GetMapping("/admin/points/{customerId}")
+    public ResponseEntity<List<CustomerPoint>> findPointsByCustomerId(@PathVariable int customerId)
+    {
+        try {
+            return new ResponseEntity<>(customerPointService.findPointsByCustomerId(customerId), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+    }
 
     // POST API {Insert into Customer Point}
     @PostMapping("/customer-point/{customerEmail}")

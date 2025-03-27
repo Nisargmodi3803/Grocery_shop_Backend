@@ -40,4 +40,5 @@ public interface CustomerRepository extends JpaRepository<Customer,Integer>
             "c.customerMobile LIKE %:keyword%)")
     List<Customer> searchCustomerByKeyword(@Param("keyword") String keyword);
 
+
 }
