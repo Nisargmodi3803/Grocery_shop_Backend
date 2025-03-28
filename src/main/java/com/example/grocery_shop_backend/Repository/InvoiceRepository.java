@@ -34,6 +34,35 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer>
     @Query("SELECT i FROM Invoice i WHERE STR_TO_DATE(i.invoiceDate, '%d-%m-%Y') BETWEEN STR_TO_DATE(:start, '%d-%m-%Y') AND STR_TO_DATE(:end, '%d-%m-%Y') AND i.isDeleted=1")
     List<Invoice> findInvoiceBetweenDates(@Param("start") String start, @Param("end") String end);
 
+    @Query("SELECT COUNT(invoice) FROM Invoice invoice WHERE invoice.isDeleted=1")
+    int countInvoice();
+
+    @Query("SELECT COUNT(invoice) FROM Invoice invoice WHERE invoice.invoiceStatus=1 AND invoice.isDeleted=1")
+    int countPendingInvoice();
+
+    @Query("SELECT COUNT(invoice) FROM Invoice invoice WHERE invoice.invoiceStatus=2 AND invoice.isDeleted=1")
+    int countConfirmInvoice();
+
+    @Query("SELECT COUNT(invoice) FROM Invoice invoice WHERE invoice.invoiceStatus=3 AND invoice.isDeleted=1")
+    int countDispatchedInvoice();
+
+    @Query("SELECT COUNT(invoice) FROM Invoice invoice WHERE invoice.invoiceStatus=4 AND invoice.isDeleted=1")
+    int countDeliveredInvoice();
+
+    @Query("SELECT COUNT(invoice) FROM Invoice invoice WHERE invoice.invoiceStatus=5 AND invoice.isDeleted=1")
+    int countRejectedInvoice();
+
+    @Query("SELECT COUNT(invoice) FROM Invoice invoice WHERE invoice.invoiceStatus=6 AND invoice.isDeleted=1")
+    int countCanceledInvoice();
+
+    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceStatus=1 AND invoice.invoiceDate= :date AND invoice.isDeleted=1")
+    List<Invoice> findInvoiceByDatePending(String date);
+
+    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceStatus=2 AND invoice.invoiceDate= :date AND invoice.isDeleted=1")
+    List<Invoice> findInvoiceByDateConfirm(String date);
+
+    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceStatus=4 AND invoice.invoiceDate= :date AND invoice.isDeleted=1")
+    List<Invoice> findInvoiceByDateDelivered(String date);
 
 
 //    @Query(value = "SELECT * FROM Invoice WHERE invoice_email_id = :email AND is_deleted = 1 AND invoice_date >= CURDATE() - INTERVAL 30 DAY ORDER BY invoice_num DESC", nativeQuery = true)

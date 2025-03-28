@@ -171,6 +171,97 @@ public class InvoiceController
         }
     }
 
+    // PATCH API {Assign Delivery Boy}
+    @PatchMapping("/admin/assign-boy")
+    public ResponseEntity<String> assignDeliveryBoy(@RequestParam int deliveryBoyId,@RequestParam int invoiceNum){
+        try {
+            invoiceService.AssignDeliveryBoy(deliveryBoyId,invoiceNum);
+            return ResponseEntity.ok("Assign Delivery Boy successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Assign Delivery Boy failed: " + e.getMessage());
+        }
+    }
+
+    // GET API {Count Total Invoice}
+    @GetMapping("/admin/count-invoice")
+    public ResponseEntity<Integer> countInvoice() {
+        return ResponseEntity.ok(invoiceService.countInvoice());
+    }
+
+    // GET API {Count Total Pending Invoice}
+    @GetMapping("/admin/count-pending-invoice")
+    public ResponseEntity<Integer> countPendingInvoice() {
+        return ResponseEntity.ok(invoiceService.countPendingInvoice());
+    }
+
+    // GET API {Count Total Delivered Invoice}
+    @GetMapping("/admin/count-delivered-invoice")
+    public ResponseEntity<Integer> countDeliveredInvoice() {
+        return ResponseEntity.ok(invoiceService.countDeliveredInvoice());
+    }
+
+    // GET API {Count Total Confirm Invoice}
+    @GetMapping("/admin/count-confirm-invoice")
+    public ResponseEntity<Integer> countConfirmInvoice() {
+        return ResponseEntity.ok(invoiceService.countConfirmInvoice());
+    }
+
+    // GET API {Count Total Dispatched Invoice}
+    @GetMapping("/admin/count-dispatched-invoice")
+    public ResponseEntity<Integer> countDispatchedInvoice() {
+        return ResponseEntity.ok(invoiceService.countDispatchedInvoice());
+    }
+
+    // GET API {Count Total Rejected Invoice}
+    @GetMapping("/admin/count-rejected-invoice")
+    public ResponseEntity<Integer> countRejectedInvoice() {
+        return ResponseEntity.ok(invoiceService.countRejectedInvoice());
+    }
+
+    // GET API {Count Total  Canceled Invoice}
+    @GetMapping("/admin/count-canceled-invoice")
+    public ResponseEntity<Integer> countCanceledInvoice() {
+        return ResponseEntity.ok(invoiceService.countCanceledInvoice());
+    }
+
+    // PATCH API {Change Status of Invoice}
+    @PatchMapping("/change-status")
+    public ResponseEntity<String> changeStatusAndDeliveryDate(@RequestParam int invoiceNum,@RequestParam int status,@RequestParam String date){
+        try {
+            invoiceService.changeStatusAndDeliveryDate(invoiceNum,status,date);
+            return ResponseEntity.ok("Change status successfully");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Change status failed: " + e.getMessage());
+        }
+    }
+
+    // GET API {Today's Pending Orders}
+    @GetMapping("/admin/today-pending")
+    public ResponseEntity<List<Invoice>> findInvoiceByDatePending(@RequestParam String date) {
+        try {
+            return ResponseEntity.ok(invoiceService.findInvoiceByDatePending(date));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonList(new Invoice()));
+        }
+    }
+
+    // GET API {Today's Confirm Orders}
+    @GetMapping("/admin/today-confirm")
+    public ResponseEntity<List<Invoice>> findInvoiceByDateConfirm(@RequestParam String date) {
+        try {
+            return ResponseEntity.ok(invoiceService.findInvoiceByDateConfirm(date));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonList(new Invoice()));
+        }
+    } // GET API {Today's Delivered Orders}
+    @GetMapping("/admin/today-delivered")
+    public ResponseEntity<List<Invoice>> findInvoiceByDateDelivered(@RequestParam String date) {
+        try {
+            return ResponseEntity.ok(invoiceService.findInvoiceByDateDelivered(date));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonList(new Invoice()));
+        }
+    }
 
 //    // GET API {Find All Last 30 days' Invoice}
 //    @GetMapping("/invoice-30-days/customerEmail")
@@ -200,4 +291,6 @@ public class InvoiceController
 //            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
 //        }
 //    }
+
+
 }

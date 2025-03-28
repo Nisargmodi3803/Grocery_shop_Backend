@@ -20,7 +20,7 @@ public class InvoiceDetailController
     private InvoiceDetailService invoiceDetailService;
 
     // GET API {Find Product Order List by Invoice Num}
-    @GetMapping("product-order/{invoiceId}")
+    @GetMapping("/product-order/{invoiceId}")
     public ResponseEntity<List<InvoiceDetail>> findProductOrderByInvoiceNum(@PathVariable int invoiceId)
     {
         try {

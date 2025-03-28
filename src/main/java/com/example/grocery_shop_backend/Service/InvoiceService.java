@@ -19,8 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class InvoiceService
-{
+public class InvoiceService {
     @Autowired
     private InvoiceRepository invoiceRepository;
 
@@ -48,9 +47,11 @@ public class InvoiceService
     @Autowired
     private RazorpayService razorpayService;
 
+    @Autowired
+    private DeliveryBoyRepository deliveryBoyRepository;
+
     // find order list by customerId Service
-    public List<Invoice> findOrderListByCustomerId(int customerId)
-    {
+    public List<Invoice> findOrderListByCustomerId(int customerId) {
         List<Invoice> invoices = invoiceRepository.findByCustomerId(customerId);
         if (invoices.isEmpty())
             throw new objectNotFoundException("No order list found for this customer");
@@ -58,16 +59,14 @@ public class InvoiceService
     }
 
     // find order list by customerMobile Service
-    public List<Invoice> findOrderListByCustomerMobile(String customerMobile)
-    {
+    public List<Invoice> findOrderListByCustomerMobile(String customerMobile) {
         List<Invoice> invoices = invoiceRepository.findByCustomerMobile(customerMobile);
         if (invoices.isEmpty())
             throw new objectNotFoundException("No order list found for this customer");
         return invoices;
     }
 
-    public List<Invoice> findOrderListByCustomerEmail(String customerEmail)
-    {
+    public List<Invoice> findOrderListByCustomerEmail(String customerEmail) {
         List<Invoice> invoices = invoiceRepository.findInvoiceByEmail(customerEmail);
         if (invoices.isEmpty())
             throw new objectNotFoundException("No order list found for this customer");
@@ -76,47 +75,39 @@ public class InvoiceService
 
     // Update Delivery Address Service
     @Transactional
-    public Invoice updateDeliveryAddress(int invoiceNum, UpdateDeliveryAddressDTO deliveryAddress)
-    {
+    public Invoice updateDeliveryAddress(int invoiceNum, UpdateDeliveryAddressDTO deliveryAddress) {
         Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         LocalDateTime dateTime = LocalDateTime.now();
         String date = dateTime.format(dateFormat);
 
-        if (invoice!=null)
-        {
-            if(deliveryAddress!=null) {
+        if (invoice != null) {
+            if (deliveryAddress != null) {
                 invoice.setInvoiceAddress(deliveryAddress.getDeliveryAddress());
                 invoice.setInvoiceUpdatedDate(date);
-            }
-            else
+            } else
                 throw new objectNotFoundException("No Update delivery address found for this invoice");
-        }
-        else
-            throw new objectNotFoundException("No Invoice found for order BI - "+invoiceNum);
+        } else
+            throw new objectNotFoundException("No Invoice found for order BI - " + invoiceNum);
         return invoiceRepository.save(invoice);
     }
 
     // Find Order details by Invoice Num Service
-    public Invoice findOrderByInvoiceNum(int invoiceNum)
-    {
+    public Invoice findOrderByInvoiceNum(int invoiceNum) {
         Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
-        if (invoice==null)
-            throw new objectNotFoundException("No Invoice found for order BI - "+invoiceNum);
+        if (invoice == null)
+            throw new objectNotFoundException("No Invoice found for order BI - " + invoiceNum);
         return invoice;
     }
 
     // Cancel order Service
     @Transactional
-    public boolean cancelOrder(int invoiceNum)
-    {
+    public boolean cancelOrder(int invoiceNum) {
         Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
-        if (invoice==null) {
+        if (invoice == null) {
             throw new objectNotFoundException("No Invoice found for order BI - " + invoiceNum);
-        }
-        else
-        {
-            if(invoice.getInvoiceStatus()==6)
+        } else {
+            if (invoice.getInvoiceStatus() == 6)
                 return false;
             invoice.setInvoiceStatus(6);// 1 => Pending, 2 => Confirm, 3 => Dispatched, 4 => Delivered, 5 => Rejected, 6 => Canceled
             invoiceRepository.save(invoice);
@@ -230,19 +221,16 @@ public class InvoiceService
 
     // Delete Order Service [Admin]
     @Transactional
-    public void deleteOrder(int invoiceNum)
-    {
+    public void deleteOrder(int invoiceNum) {
         Invoice invoice = invoiceRepository.findByInvoiceId(invoiceNum);
-        if(invoice==null)
-            throw new objectNotFoundException("No Invoice found for order BI - "+invoiceNum);
-        else
-        {
+        if (invoice == null)
+            throw new objectNotFoundException("No Invoice found for order BI - " + invoiceNum);
+        else {
             invoice.setIsDeleted(2);
             invoiceRepository.save(invoice);
 
             List<InvoiceDetail> invoiceDetails = invoiceDetailRepository.autoDeleteByInvoiceNum(invoiceNum);
-            for (InvoiceDetail invoiceDetail : invoiceDetails)
-            {
+            for (InvoiceDetail invoiceDetail : invoiceDetails) {
                 invoiceDetail.setIsDeleted(2);
                 invoiceDetailRepository.save(invoiceDetail);
             }
@@ -250,10 +238,9 @@ public class InvoiceService
     }
 
     // Find Invoice between Dates Service
-    public List<Invoice> findAllInvoiceBetweenDates(String startDate, String endDate)
-    {
+    public List<Invoice> findAllInvoiceBetweenDates(String startDate, String endDate) {
         List<Invoice> invoices = invoiceRepository.findInvoiceBetweenDates(startDate, endDate);
-        if(invoices==null)
+        if (invoices == null)
             throw new objectNotFoundException("No Invoice found");
         return invoices;
     }
@@ -288,4 +275,88 @@ public class InvoiceService
 //        }
 //        return invoices;
 //    }
+
+    // Assign Delivery Boy Service
+    public void AssignDeliveryBoy(int deliveryBoyId, int invoiceNum) {
+        DeliveryBoy deliveryBoy = deliveryBoyRepository.getDeliveryBoyById(deliveryBoyId);
+        Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
+        if (deliveryBoy == null && invoice == null)
+            throw new objectNotFoundException("Not Found");
+
+        invoice.setDeliveryBoy(deliveryBoy);
+        invoiceRepository.save(invoice);
+    }
+
+    // Count Total Invoice Service
+    public int countInvoice() {
+        return invoiceRepository.countInvoice();
+    }
+
+    // Count Total Pending Invoice Service
+    public int countPendingInvoice() {
+        return invoiceRepository.countPendingInvoice();
+    }
+
+    // Count Total Delivered Invoice Service
+    public int countDeliveredInvoice() {
+        return invoiceRepository.countDeliveredInvoice();
+    }
+
+    // Count Total Dispatched Invoice Service
+    public int countDispatchedInvoice() {
+        return invoiceRepository.countDispatchedInvoice();
+    }
+
+    // Count Total Confirm Invoice Service
+    public int countConfirmInvoice() {
+        return invoiceRepository.countConfirmInvoice();
+    }
+
+    // Count Total Rejected Invoice Service
+    public int countRejectedInvoice() {
+        return invoiceRepository.countRejectedInvoice();
+    }
+
+    // Count Total Canceled Invoice Service
+    public int countCanceledInvoice() {
+        return invoiceRepository.countCanceledInvoice();
+    }
+
+    // Change Status of Invoice Service
+    public void changeStatusAndDeliveryDate(int invoiceNum, int status, String deliveryDate) {
+        Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
+        if (invoice == null) throw new objectNotFoundException("Invoice not found");
+        invoice.setInvoiceStatus(status);
+        if (status == 4 || status == 3) {
+            invoice.setInvoiceDeliveryDate(deliveryDate);
+        }
+        invoiceRepository.save(invoice);
+    }
+
+    // Today's Pending Orders Service
+    public List<Invoice> findInvoiceByDatePending(String date) {
+        List<Invoice> invoices = invoiceRepository.findInvoiceByDatePending(date);
+        if (invoices == null)
+            throw new objectNotFoundException("No Invoice found");
+        return invoices;
+    }
+
+
+    // Today's confirm Orders Service
+    public List<Invoice> findInvoiceByDateConfirm(String date) {
+        List<Invoice> invoices = invoiceRepository.findInvoiceByDateConfirm(date);
+        if (invoices == null)
+            throw new objectNotFoundException("No Invoice found");
+        return invoices;
+    }
+
+
+    // Today's Delivered Orders Service
+    public List<Invoice> findInvoiceByDateDelivered(String date) {
+        List<Invoice> invoices = invoiceRepository.findInvoiceByDateDelivered(date);
+        if (invoices == null)
+            throw new objectNotFoundException("No Invoice found");
+        return invoices;
+    }
+
 }
