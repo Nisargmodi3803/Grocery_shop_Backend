@@ -407,4 +407,9 @@ public class CustomerService {
             return true;
         }
     }
+
+    // Customer Count
+    public int getCustomerCount() {
+        return customerRepository.getCustomerCount();
+    }
 }

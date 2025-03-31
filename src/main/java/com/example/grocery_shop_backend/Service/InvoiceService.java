@@ -163,6 +163,7 @@ public class InvoiceService {
         invoice.setDeliveryTimeSlot(deliveryTimeSlot);
         invoice.setInvoiceIsHold(2);
         invoice.setIsDeleted(1);
+        invoice.setInvoiceUpdatedDate(invoiceDate);
         invoice.setcDate(cDate);
 
         if (orderDTO.getPaymentMode() == 1) { // COD
@@ -326,7 +327,13 @@ public class InvoiceService {
     public void changeStatusAndDeliveryDate(int invoiceNum, int status, String deliveryDate) {
         Invoice invoice = invoiceRepository.findByInvoiceNum(invoiceNum);
         if (invoice == null) throw new objectNotFoundException("Invoice not found");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        LocalDateTime date = LocalDateTime.now();
+        String updatedDate = date.format(formatter);
+
         invoice.setInvoiceStatus(status);
+        invoice.setInvoiceUpdatedDate(updatedDate);
         if (status == 4 || status == 3) {
             invoice.setInvoiceDeliveryDate(deliveryDate);
         }

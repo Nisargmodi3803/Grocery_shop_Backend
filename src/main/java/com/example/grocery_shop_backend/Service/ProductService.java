@@ -577,4 +577,9 @@ public class ProductService
             productRepository.save(oldProduct);
         }
     }
+
+    // Get Product Count
+    public int getProductCount() {
+        return productRepository.getProductCount();
+    }
 }

@@ -108,4 +108,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
 
     @Query("SELECT product.referenceCode FROM Product product WHERE product.referenceCode= :referenceCode AND product.isDeleted=1")
     String getReferenceCode(String referenceCode);
+
+    @Query("SELECT COUNT(product) FROM Product product WHERE product.isDeleted=1")
+    int getProductCount();
 }

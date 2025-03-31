@@ -38,11 +38,14 @@ public class CustomerController {
     @PostMapping("/register")
     public ResponseEntity<String> saveCustomer(@RequestBody CustomerRegistrationDTO registrationDTO) {
         boolean result = customerService.saveCustomer(registrationDTO);
-        if (result) {
-            return ResponseEntity.ok("Customer registered successfully");
+        try {
+            if (result) {
+                return ResponseEntity.ok("Customer registered successfully");
+            } else
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Mobile Number already exists");
         }
-        else
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email already exists");
     }
 
     // POST API {Login API}
@@ -254,5 +257,10 @@ public class CustomerController {
         }else{
             return false;
         }
+    }
+
+    @GetMapping("/admin/customer-count")
+    public ResponseEntity<Integer> getCustomerCount() {
+        return ResponseEntity.ok(customerService.getCustomerCount());
     }
 }

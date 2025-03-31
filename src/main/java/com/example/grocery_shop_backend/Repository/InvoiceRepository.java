@@ -55,13 +55,13 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Integer>
     @Query("SELECT COUNT(invoice) FROM Invoice invoice WHERE invoice.invoiceStatus=6 AND invoice.isDeleted=1")
     int countCanceledInvoice();
 
-    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceStatus=1 AND invoice.invoiceDate= :date AND invoice.isDeleted=1")
+    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceStatus=1 AND invoice.invoiceUpdatedDate= :date  AND invoice.isDeleted=1")
     List<Invoice> findInvoiceByDatePending(String date);
 
-    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceStatus=2 AND invoice.invoiceDate= :date AND invoice.isDeleted=1")
+    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceStatus=2 AND invoice.invoiceUpdatedDate= :date  AND invoice.isDeleted=1")
     List<Invoice> findInvoiceByDateConfirm(String date);
 
-    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceStatus=4 AND invoice.invoiceDate= :date AND invoice.isDeleted=1")
+    @Query("SELECT invoice FROM Invoice invoice WHERE invoice.invoiceStatus=4 AND invoice.invoiceUpdatedDate= :date AND invoice.isDeleted=1")
     List<Invoice> findInvoiceByDateDelivered(String date);
 
 

@@ -40,5 +40,6 @@ public interface CustomerRepository extends JpaRepository<Customer,Integer>
             "c.customerMobile LIKE %:keyword%)")
     List<Customer> searchCustomerByKeyword(@Param("keyword") String keyword);
 
-
+    @Query("SELECT COUNT(customer) FROM Customer customer WHERE customer.isDeleted=1")
+    public int getCustomerCount();
 }

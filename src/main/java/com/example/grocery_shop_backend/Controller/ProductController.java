@@ -365,4 +365,10 @@ public class ProductController
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    // GET API{Get product Count}
+    @GetMapping("/admin/product-count")
+    public ResponseEntity<Integer> getProductCount() {
+        return ResponseEntity.ok(productService.getProductCount());
+    }
 }
